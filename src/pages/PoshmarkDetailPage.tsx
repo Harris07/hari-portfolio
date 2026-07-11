@@ -266,7 +266,7 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          CHAPTER 1 — THE SYSTEM
+          CHAPTER 1, THE SYSTEM
       ═══════════════════════════════════════════ */}
       <ChapterDivider label="The System" />
 
@@ -276,7 +276,7 @@ export default function PoshmarkDetailPage() {
           <FadeUp className="mb-10">
             <SectionLabel>The Two Styles</SectionLabel>
             <Heading>One rule decides everything.</Heading>
-            <Body className="mt-4 max-w-xl">Every illustration decision begins here — pick the right style and every other rule follows automatically.</Body>
+            <Body className="mt-4 max-w-xl">Every illustration decision begins here, pick the right style and every other rule follows automatically.</Body>
           </FadeUp>
           <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="rounded-2xl overflow-hidden flex flex-col"
@@ -287,7 +287,7 @@ export default function PoshmarkDetailPage() {
                   <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>Single-Tone</span>
                 </div>
                 <p className="text-2xl font-semibold leading-snug mb-4" style={{ color: WHITE }}>Clarity over<br />expression.</p>
-                <Body>For screens where the message needs to land fast — no distractions, no visual noise.</Body>
+                <Body>For screens where the message needs to land fast, no distractions, no visual noise.</Body>
               </div>
               <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(0,179,255,0.12)` }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Use for</p>
@@ -313,7 +313,7 @@ export default function PoshmarkDetailPage() {
                   <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>Multi-Tone</span>
                 </div>
                 <p className="text-2xl font-semibold leading-snug mb-4" style={{ color: WHITE }}>Storytelling<br />over clarity.</p>
-                <Body>For screens that need to engage, delight, or introduce something new — emotion first.</Body>
+                <Body>For screens that need to engage, delight, or introduce something new, emotion first.</Body>
               </div>
               <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(74,143,212,0.12)` }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Use for</p>
@@ -335,7 +335,7 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          CHAPTER 2 — SINGLE-TONE SPECIFICATION
+          CHAPTER 2, SINGLE-TONE SPECIFICATION
       ═══════════════════════════════════════════ */}
       <ChapterDivider label="Single-Tone Specification" />
 
@@ -371,7 +371,7 @@ export default function PoshmarkDetailPage() {
           <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
               { src: '/images/p3-st-card1.png', title: 'Icon Stroke',          specs: ['#2A2A2A', '2px width', 'rounded caps'],        bullets: ['All strokes must share the same 2px weight', 'No mixed thicknesses across elements', 'Round both start and end caps'],                                          d: 0.05 },
-              { src: '/images/p3-st-card2.png', title: 'Fill State',            specs: ['#2A2A2A', '15% opacity', 'one element only'],  bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio — stroke dominant'],                      d: 0.12 },
+              { src: '/images/p3-st-card2.png', title: 'Fill State',            specs: ['#2A2A2A', '15% opacity', 'one element only'],  bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio, stroke dominant'],                      d: 0.12 },
               { src: '/images/p3-st-card3.png', title: 'Disconnected Points',   specs: ['max 2 points', 'intersections only'],          bullets: ['Maximum of 2 points per icon', 'Place only at object intersections', 'Reinforces depth hierarchy'],                                                        d: 0.19 },
             ].map(({ src, title, specs, bullets, d }) => (
               <motion.div key={title}
@@ -410,18 +410,18 @@ export default function PoshmarkDetailPage() {
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="text-center mb-16">
             <SectionLabel>Single-Tone Examples</SectionLabel>
-            <Heading>Only Text — three section layouts.</Heading>
+            <Heading>Only Text, three section layouts.</Heading>
             <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
-              Three pre-defined layouts for text-only states — one section, two sections, or three sections.
+              Three pre-defined layouts for text-only states, one section, two sections, or three sections.
             </p>
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-col1img1.png', label: '01 — News',              sub: 'Single section · Icon only',  d: 0.05 },
-              { src: '/images/p3-col2img.png',  label: '02 — Active Offers',   sub: 'Two sections · Icon + text',  d: 0.12 },
-              { src: '/images/p3-col1img2.png', label: '03 — Promoted Closet', sub: 'Three sections · Stacked',    d: 0.19 },
+              { src: '/images/p3-col1img1.png', label: '01, News',              sub: 'Single section · Icon only',  d: 0.05 },
+              { src: '/images/p3-col2img.png',  label: '02, Active Offers',   sub: 'Two sections · Icon + text',  d: 0.12 },
+              { src: '/images/p3-col1img2.png', label: '03, Promoted Closet', sub: 'Three sections · Stacked',    d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
@@ -440,18 +440,18 @@ export default function PoshmarkDetailPage() {
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="text-center mb-16">
             <SectionLabel>Single-Tone Examples</SectionLabel>
-            <Heading>Text + CTA — with action buttons.</Heading>
+            <Heading>Text + CTA, with action buttons.</Heading>
             <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
-              CTA placed below body text with fixed padding — one or two actions supported.
+              CTA placed below body text with fixed padding, one or two actions supported.
             </p>
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-cta-poshparty.png', label: '01 — Posh Party',  sub: 'Title · Sub text',                d: 0.05 },
-              { src: '/images/p3-cta-bundles.png',   label: '02 — Bundles',     sub: 'Title · Sub text with link',      d: 0.12 },
-              { src: '/images/p3-cta-news.png',      label: '03 — News',        sub: 'Title · Sub text with link text', d: 0.19 },
+              { src: '/images/p3-cta-poshparty.png', label: '01, Posh Party',  sub: 'Title · Sub text',                d: 0.05 },
+              { src: '/images/p3-cta-bundles.png',   label: '02, Bundles',     sub: 'Title · Sub text with link',      d: 0.12 },
+              { src: '/images/p3-cta-news.png',      label: '03, News',        sub: 'Title · Sub text with link text', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
@@ -477,9 +477,9 @@ export default function PoshmarkDetailPage() {
           {(() => {
             const pairs = [
               { rule: 'Stroke Weight',      doImg: '/images/p3-dd1-do.png',   doText: 'All elements share the same 2px stroke',           dontImg: '/images/p3-dd1-dont.png', dontText: "Don't mix stroke weights in the same icon" },
-              { rule: 'Fill Ratio',          doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element — 80:20 ratio, 15% opacity', dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40 — removes hierarchy" },
+              { rule: 'Fill Ratio',          doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element, 80:20 ratio, 15% opacity', dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40, removes hierarchy" },
               { rule: 'Secondary Elements',  doImg: '/images/p3-dd3-do.png',   doText: 'Keep smaller elements minimal, stroke only',       dontImg: '/images/p3-dd3-dont.png', dontText: "Don't add complex detail to small elements" },
-              { rule: 'Highlight Count',     doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon',           dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements — erases hierarchy" },
+              { rule: 'Highlight Count',     doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon',           dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements, erases hierarchy" },
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
@@ -524,7 +524,7 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          CHAPTER 3 — MULTI-TONE SPECIFICATION
+          CHAPTER 3, MULTI-TONE SPECIFICATION
       ═══════════════════════════════════════════ */}
       <ChapterDivider label="Multi-Tone Specification" />
 
@@ -542,7 +542,7 @@ export default function PoshmarkDetailPage() {
           <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
               { src: '/images/p3-mt-card1.png', title: 'Background Shapes',     specs: ['amorphic forms', '20–50% opacity'],         bullets: ['Soft organic shapes behind the illustration', 'Use brand colours at low opacity', 'Light mode: 20% · Dark mode: 50%'],                              d: 0.05 },
-              { src: '/images/p3-mt-card2.png', title: 'Foreground Illustration', specs: ['6 fill colours', '1px stroke #4A4A4A'],    bullets: ['Use exactly 6 brand fill colours', 'Stroke colour #4A4A4A or #FFFFFF', 'One filled element — rest stay as strokes'],                            d: 0.12 },
+              { src: '/images/p3-mt-card2.png', title: 'Foreground Illustration', specs: ['6 fill colours', '1px stroke #4A4A4A'],    bullets: ['Use exactly 6 brand fill colours', 'Stroke colour #4A4A4A or #FFFFFF', 'One filled element, rest stay as strokes'],                            d: 0.12 },
               { src: '/images/p3-mt-card3.png', title: 'Foreground + Images',   specs: ['Poshmark imagery', 'no stock photos'],       bullets: ['Mix illustrations with real product images', 'Use Poshmark photoshoot or listing images', 'Avoid stock or paid image libraries'],                  d: 0.19 },
             ].map(({ src, title, specs, bullets, d }) => (
               <motion.div key={title}
@@ -621,7 +621,7 @@ export default function PoshmarkDetailPage() {
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="text-center mb-16">
             <SectionLabel>Multi-Tone Examples</SectionLabel>
-            <Heading>Small artboard — icon scale.</Heading>
+            <Heading>Small artboard, icon scale.</Heading>
             <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
               At 100px, Multi-Tone compositions appear as compact cards and list items.
             </p>
@@ -630,9 +630,9 @@ export default function PoshmarkDetailPage() {
         <FadeIn delay={0.1}>
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-sm-addmyinfo.png', label: '01 — Thumbnail',             sub: 'Single illustration · CTA',      d: 0.05 },
-              { src: '/images/p3-sm-landing.png',   label: '02 — Multiple Illustrations', sub: 'Inline icons · numbered steps',  d: 0.12 },
-              { src: '/images/p3-sm-week1.png',     label: '03 — Actionsheet',            sub: 'Hero at top · text below',       d: 0.19 },
+              { src: '/images/p3-sm-addmyinfo.png', label: '01, Thumbnail',             sub: 'Single illustration · CTA',      d: 0.05 },
+              { src: '/images/p3-sm-landing.png',   label: '02, Multiple Illustrations', sub: 'Inline icons · numbered steps',  d: 0.12 },
+              { src: '/images/p3-sm-week1.png',     label: '03, Actionsheet',            sub: 'Hero at top · text below',       d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
@@ -652,18 +652,18 @@ export default function PoshmarkDetailPage() {
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="text-center mb-16">
             <SectionLabel>Multi-Tone Examples</SectionLabel>
-            <Heading>With real images — photographic.</Heading>
+            <Heading>With real images, photographic.</Heading>
             <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
-              Transparent PNGs replacing illustrations — same background shape rules apply.
+              Transparent PNGs replacing illustrations, same background shape rules apply.
             </p>
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
           <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-ri-consignment.png', label: '01 — My Consignment',  sub: 'Product photo · CTA',           d: 0.05 },
-              { src: '/images/p3-ri-shows.png',       label: '02 — Posh Shows',      sub: 'Photography + illustration',    d: 0.12 },
-              { src: '/images/p3-ri-welcome.png',     label: '03 — Welcome Screen',  sub: 'Multi-photo grid · onboarding', d: 0.19 },
+              { src: '/images/p3-ri-consignment.png', label: '01, My Consignment',  sub: 'Product photo · CTA',           d: 0.05 },
+              { src: '/images/p3-ri-shows.png',       label: '02, Posh Shows',      sub: 'Photography + illustration',    d: 0.12 },
+              { src: '/images/p3-ri-welcome.png',     label: '03, Welcome Screen',  sub: 'Multi-photo grid · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
@@ -687,10 +687,10 @@ export default function PoshmarkDetailPage() {
 
           {(() => {
             const pairs = [
-              { rule: 'Single Object Fill',   doImg: '/images/p3-ill1-do.png',   doText: 'Fill one part, stroke the rest — avoid multiple fills for shadows or highlights', dontImg: '/images/p3-ill1-dont.png', dontText: 'Avoid building filled objects with stroke alone' },
+              { rule: 'Single Object Fill',   doImg: '/images/p3-ill1-do.png',   doText: 'Fill one part, stroke the rest, avoid multiple fills for shadows or highlights', dontImg: '/images/p3-ill1-dont.png', dontText: 'Avoid building filled objects with stroke alone' },
               { rule: 'Highlight Strokes',    doImg: '/images/p3-ill2-do.png',   doText: 'Use only #FFFFFF for highlight strokes on filled objects',                         dontImg: '/images/p3-ill2-dont.png', dontText: 'Avoid any other colour for highlight strokes on filled objects' },
-              { rule: 'Similar Objects',      doImg: '/images/p3-ill3-do.png',   doText: 'Make one object filled and the other an outline — avoid filling both',            dontImg: '/images/p3-ill3-dont.png', dontText: 'Avoid imbalanced illustrations — majorly fill with minor stroke or vice versa' },
-              { rule: 'Real Images',          doImg: '/images/p3-ill4-do.png',   doText: 'Use a balanced mix of real images and illustrations — avoid overusing one',       dontImg: '/images/p3-ill4-dont.png', dontText: 'Avoid stock or paid images — use Poshmark brand photoshoots or listings' },
+              { rule: 'Similar Objects',      doImg: '/images/p3-ill3-do.png',   doText: 'Make one object filled and the other an outline, avoid filling both',            dontImg: '/images/p3-ill3-dont.png', dontText: 'Avoid imbalanced illustrations, majorly fill with minor stroke or vice versa' },
+              { rule: 'Real Images',          doImg: '/images/p3-ill4-do.png',   doText: 'Use a balanced mix of real images and illustrations, avoid overusing one',       dontImg: '/images/p3-ill4-dont.png', dontText: 'Avoid stock or paid images, use Poshmark brand photoshoots or listings' },
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
@@ -759,13 +759,13 @@ export default function PoshmarkDetailPage() {
 
       {/* ── REFLECTION ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: '#080a0f' }}>
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <FadeUp>
             <SectionLabel>Reflection</SectionLabel>
             <Heading size="md">Systems thinking starts with naming things.</Heading>
           </FadeUp>
           <FadeUp delay={0.1} className="mt-6">
-            <Body>The hardest part of this project wasn't the visual decisions — it was naming the distinction. Once "Single-Tone" and "Multi-Tone" existed as clear categories with defined purposes, every other decision became straightforward. When you give teams the right vocabulary, they stop guessing and start building.</Body>
+            <Body>The hardest part of this project wasn't the visual decisions, it was naming the distinction. Once "Single-Tone" and "Multi-Tone" existed as clear categories with defined purposes, every other decision became straightforward. When you give teams the right vocabulary, they stop guessing and start building.</Body>
           </FadeUp>
         </div>
       </section>
