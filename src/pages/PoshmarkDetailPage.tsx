@@ -193,10 +193,10 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>Overview</SectionLabel>
-              <Heading>A visual language Poshmark didn't have — so I built one.</Heading>
+              <Heading>Defining how illustrations should work across the entire product.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>As Poshmark scaled, its product surface expanded rapidly — but illustration usage grew without structure. Different screens carried different visual treatments, and there was no documented standard to point to. I identified the gap, defined the system from the ground up, and delivered a complete set of guidelines covering both illustration styles, their rules, and real usage examples — giving the product a consistent visual language it could scale with.</Body>
+              <Body>I designed and documented Poshmark's first illustration system — a complete framework covering two distinct styles, their construction rules, usage guidelines, and real-screen examples. The system gave the product a clear, repeatable visual language: one style for clarity-first contexts like empty states, another for emotional engagement in onboarding and feature moments. Delivered as a 21-slide specification, it defined every decision from stroke weight to colour palette to artboard size.</Body>
               <div className="mt-8 flex flex-wrap gap-3">
                 {['Design System', 'Illustration', 'Empty States', 'Onboarding', 'Documentation'].map(t => (
                   <span key={t} className="text-xs font-medium px-3 py-1.5 rounded-full"
@@ -207,9 +207,9 @@ export default function PoshmarkDetailPage() {
           </div>
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '2', d: 'Distinct illustration styles, each with a clear purpose and ruleset' },
-              { v: '21', d: 'Specification slides covering every usage rule and edge case' },
-              { v: '100%', d: 'Coverage across all illustration use cases in the product' },
+              { v: '2', d: 'Illustration styles defined — each with distinct rules and use cases' },
+              { v: '21', d: 'Specification slides covering construction, colour, sizing, and usage' },
+              { v: '1st', d: 'Illustration system ever documented for Poshmark\'s product' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
                 <span className="font-semibold block mb-2" style={{ color: B, fontSize: 'clamp(2.4rem,4vw,3.2rem)', lineHeight: 1 }}>{v}</span>
@@ -226,17 +226,17 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>The Problem</SectionLabel>
-              <Heading>Illustrations were everywhere — but no one had defined what they should do.</Heading>
+              <Heading>No framework for when to use what — or how to build it.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Illustrations serve two fundamentally different jobs in a product. In utility contexts — empty states, errors, confirmations — the goal is to communicate clearly without distraction. In engagement contexts — onboarding, feature discovery, campaigns — the goal is to build emotional connection and motivate action. Poshmark had no framework to distinguish between the two. Empty states were visually noisy. Feature introductions were flat and forgettable. I saw that the root issue wasn't execution — it was the absence of intent. Without a clear decision-making model, the same problem was being solved differently on every screen.</Body>
+              <Body>Illustrations serve two very different purposes in a product: in utility moments — empty states, errors, confirmations — clarity is the goal; in engagement moments — onboarding, campaigns, feature introductions — emotional resonance is. Without a framework to separate these two jobs, the wrong style kept ending up in the wrong context. Empty states were visually overloaded. Onboarding screens felt generic. There was no documented rule for stroke weight, fill colour, artboard size, or when to use a real image versus an illustration. Every screen was a fresh decision with no reference to anchor it.</Body>
             </FadeUp>
           </div>
           <FadeUp delay={0.15} className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '0', d: 'Existing documentation — no guidelines, no standards, no starting point' },
-              { v: '100s', d: 'Screens carrying inconsistent illustration styles and complexity' },
-              { v: '2×', d: 'Rework per screen when illustration decisions were revisited in review' },
+              { v: '0', d: 'Documentation existed — no rules, no standards, no reference to work from' },
+              { v: '2', d: 'Distinct illustration jobs in the product — with no system separating them' },
+              { v: '∞', d: 'Decisions made ad hoc, with no consistent logic across screens' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
                 <span className="font-semibold block mb-2" style={{ color: B, fontSize: 'clamp(2rem,3.5vw,2.8rem)', lineHeight: 1 }}>{v}</span>
