@@ -419,13 +419,13 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
-          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
               { src: '/images/p3-col1img1.png', label: '01 — News',              sub: 'Single section · Icon only',  d: 0.05 },
               { src: '/images/p3-col2img.png',  label: '02 — Active Offers',   sub: 'Two sections · Icon + text',  d: 0.12 },
               { src: '/images/p3-col1img2.png', label: '03 — Promoted Closet', sub: 'Three sections · Stacked',    d: 0.19 },
             ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
@@ -449,13 +449,13 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
-          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
               { src: '/images/p3-cta-poshparty.png', label: '01 — Posh Party',  sub: 'Title · Sub text',                d: 0.05 },
               { src: '/images/p3-cta-bundles.png',   label: '02 — Bundles',     sub: 'Title · Sub text with link',      d: 0.12 },
               { src: '/images/p3-cta-news.png',      label: '03 — News',        sub: 'Title · Sub text with link text', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
@@ -621,13 +621,13 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
-          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
               { src: '/images/p3-sm-addmyinfo.png', label: '01 — Thumbnail',             sub: 'Single illustration · CTA',      d: 0.05 },
               { src: '/images/p3-sm-landing.png',   label: '02 — Multiple Illustrations', sub: 'Inline icons · numbered steps',  d: 0.12 },
               { src: '/images/p3-sm-week1.png',     label: '03 — Actionsheet',            sub: 'Hero at top · text below',       d: 0.19 },
             ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
@@ -652,13 +652,13 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
-          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
               { src: '/images/p3-ri-consignment.png', label: '01 — My Consignment',  sub: 'Product photo · CTA',           d: 0.05 },
               { src: '/images/p3-ri-shows.png',       label: '02 — Posh Shows',      sub: 'Photography + illustration',    d: 0.12 },
               { src: '/images/p3-ri-welcome.png',     label: '03 — Welcome Screen',  sub: 'Multi-photo grid · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1" style={{ maxWidth: 320, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
