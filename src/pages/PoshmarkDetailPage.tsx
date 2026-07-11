@@ -375,7 +375,15 @@ export default function PoshmarkDetailPage() {
               { src: '/images/p3-st-card3.png', label: '03 — Disconnected Points',   sub: 'Max 2 points · intersections only',      d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 260, gap: 24 }}>
-                <Screen src={src} alt={label} delay={d} />
+                <motion.div
+                  ref={null}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-30px' }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: d }}
+                  style={{ borderRadius: 16, overflow: 'hidden', background: '#ffffff', boxShadow: '0 24px 48px rgba(0,0,0,0.6)' }}>
+                  <img src={src} alt={label} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                </motion.div>
                 <FadeUp delay={d + 0.1} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
                   <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
