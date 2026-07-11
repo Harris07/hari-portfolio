@@ -51,13 +51,13 @@ function ProjectCard({ project }: { project: (typeof PROJECTS)[0] }) {
           </div>
         </div>
 
-        <div className="mb-4 rounded-2xl overflow-hidden flex-1"
-          style={{ marginLeft: 20, marginRight: 20, minHeight: 'clamp(90px, 13vw, 170px)' }}>
+        <div className="mb-4 rounded-2xl overflow-hidden"
+          style={{ marginLeft: 20, marginRight: 20 }}>
           <motion.img
             src={project.coverImage}
             alt={project.name}
             loading="lazy"
-            className="w-full h-full object-cover"
+            className="w-full h-auto block"
             whileHover={{ scale: 1.07 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
           />
