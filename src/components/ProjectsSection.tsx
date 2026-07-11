@@ -26,7 +26,8 @@ function ProjectCard({ project }: { project: (typeof PROJECTS)[0] }) {
   return (
     <Link
       to={`/project/${project.id}`}
-      style={{ textDecoration: 'none', flexShrink: 0, width: 'clamp(340px, 44vw, 600px)', maxWidth: '100%' }}
+      className="w-full sm:w-[clamp(340px,44vw,600px)] sm:flex-none"
+      style={{ textDecoration: 'none', maxWidth: '100%' }}
     >
       <motion.div
         className="flex flex-col rounded-3xl overflow-hidden"
