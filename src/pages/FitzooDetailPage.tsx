@@ -155,17 +155,17 @@ export default function FitzooDetailPage() {
         </motion.div>
 
         {/* 3 phones fan */}
-        <motion.div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-center gap-6 sm:gap-8 px-6"
+        <motion.div className="relative z-10 flex items-end justify-center gap-4 sm:gap-8 px-6"
           style={{ marginBottom: '-80px' }}
           initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}>
-          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)' }}>
+          <div style={{ width: 'clamp(155px, 25vw, 250px)' }}>
             <Phone src="/images/fitzoo/splash.png" alt="Splash" delay={0.55} rotate={-6} />
           </div>
-          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)', marginBottom: '0px' }}>
+          <div style={{ width: 'clamp(155px, 25vw, 250px)', marginBottom: '40px' }}>
             <Phone src="/images/fitzoo/hero-center.png" alt="Home screen" delay={0.45} rotate={0} />
           </div>
-          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)' }}>
+          <div style={{ width: 'clamp(155px, 25vw, 250px)' }}>
             <Phone src="/images/fitzoo/hero-right.png" alt="Game" delay={0.6} rotate={6} />
           </div>
         </motion.div>
@@ -292,13 +292,13 @@ export default function FitzooDetailPage() {
           </FadeUp>
         </div>
         <FadeIn delay={0.1}>
-          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
               { src: '/images/fitzoo/getstarted1.png', label: '01 — Play', sub: 'Fall in Love with Working Out', rot: -6, d: 0.05 },
               { src: '/images/fitzoo/getstarted2.png', label: '02 — Eat', sub: 'Simplified Diets for Everyone', rot: 0, d: 0.12 },
               { src: '/images/fitzoo/getstarted3.png', label: '03 — Track', sub: 'Learn from Your Progress', rot: 6, d: 0.19 },
             ].map(({ src, label, sub, rot, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[250px] mx-auto sm:mx-0" style={{ gap: 40 }}>
                 <Phone src={src} alt={label} delay={d} rotate={rot} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: O }}>{label}</span>
