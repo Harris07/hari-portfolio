@@ -674,16 +674,16 @@ export default function PoshmarkDetailPage() {
       <section className="py-24 overflow-hidden" style={{ background: '#0d0e12' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="mb-16">
-            <SectionLabel>Illustration Do's &amp; Don'ts</SectionLabel>
-            <Heading>Fill, stroke, and balance.</Heading>
+            <SectionLabel>Illustration</SectionLabel>
+            <Heading>Do's and Don'ts</Heading>
           </FadeUp>
 
           {(() => {
             const pairs = [
-              { rule: '01 — Single Object Fill',   doImg: '/images/p3-ill1-do.png',   doText: 'Fill one part, stroke the rest — avoid multiple fills for shadows or highlights', dontImg: '/images/p3-ill1-dont.png', dontText: 'Avoid building filled objects with stroke alone' },
-              { rule: '02 — Highlight Strokes',    doImg: '/images/p3-ill2-do.png',   doText: 'Use only #FFFFFF for highlight strokes on filled objects',                         dontImg: '/images/p3-ill2-dont.png', dontText: 'Avoid any other colour for highlight strokes on filled objects' },
-              { rule: '03 — Similar Objects',      doImg: '/images/p3-ill3-do.png',   doText: 'Make one object filled and the other an outline — avoid filling both',            dontImg: '/images/p3-ill3-dont.png', dontText: 'Avoid imbalanced illustrations — majorly fill with minor stroke or vice versa' },
-              { rule: '04 — Real Images',          doImg: '/images/p3-ill4-do.png',   doText: 'Use a balanced mix of real images and illustrations — avoid overusing one',       dontImg: '/images/p3-ill4-dont.png', dontText: 'Avoid stock or paid images — use Poshmark brand photoshoots or listings' },
+              { rule: 'Single Object Fill',   doImg: '/images/p3-ill1-do.png',   doText: 'Fill one part, stroke the rest — avoid multiple fills for shadows or highlights', dontImg: '/images/p3-ill1-dont.png', dontText: 'Avoid building filled objects with stroke alone' },
+              { rule: 'Highlight Strokes',    doImg: '/images/p3-ill2-do.png',   doText: 'Use only #FFFFFF for highlight strokes on filled objects',                         dontImg: '/images/p3-ill2-dont.png', dontText: 'Avoid any other colour for highlight strokes on filled objects' },
+              { rule: 'Similar Objects',      doImg: '/images/p3-ill3-do.png',   doText: 'Make one object filled and the other an outline — avoid filling both',            dontImg: '/images/p3-ill3-dont.png', dontText: 'Avoid imbalanced illustrations — majorly fill with minor stroke or vice versa' },
+              { rule: 'Real Images',          doImg: '/images/p3-ill4-do.png',   doText: 'Use a balanced mix of real images and illustrations — avoid overusing one',       dontImg: '/images/p3-ill4-dont.png', dontText: 'Avoid stock or paid images — use Poshmark brand photoshoots or listings' },
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
