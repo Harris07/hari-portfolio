@@ -306,25 +306,25 @@ export default function PoshmarkDetailPage() {
             </div>
 
             <div className="rounded-2xl overflow-hidden flex flex-col"
-              style={{ border: `1px solid rgba(123,97,255,0.2)`, background: 'rgba(123,97,255,0.04)' }}>
+              style={{ border: `1px solid rgba(74,143,212,0.2)`, background: 'rgba(74,143,212,0.04)' }}>
               <div className="px-7 pt-7 pb-5">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#7B61FF', boxShadow: '0 0 8px #7B61FF' }} />
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#4A8FD4', boxShadow: '0 0 8px #4A8FD4' }} />
                   <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>Multi-Tone</span>
                 </div>
                 <p className="text-2xl font-semibold leading-snug mb-4" style={{ color: WHITE }}>Storytelling<br />over clarity.</p>
                 <Body>For screens that need to engage, delight, or introduce something new — emotion first.</Body>
               </div>
-              <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(123,97,255,0.12)` }}>
+              <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(74,143,212,0.12)` }}>
                 <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Use for</p>
                 {['Onboarding screens', 'Feature introductions', 'Monetisation entry', 'Posh Show'].map(u => (
                   <div key={u} className="flex items-center gap-2.5">
-                    <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#7B61FF' }} />
+                    <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#4A8FD4' }} />
                     <span className="text-sm font-light" style={{ color: MUTED }}>{u}</span>
                   </div>
                 ))}
               </div>
-              <div className="px-7 py-4 flex flex-wrap gap-2" style={{ borderTop: `1px solid rgba(123,97,255,0.12)` }}>
+              <div className="px-7 py-4 flex flex-wrap gap-2" style={{ borderTop: `1px solid rgba(74,143,212,0.12)` }}>
                 <Spec>3 artboard sizes</Spec>
                 <Spec>6 brand fill colours</Spec>
                 <Spec>amorphic shapes</Spec>
