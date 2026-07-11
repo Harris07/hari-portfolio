@@ -580,22 +580,24 @@ export default function PoshmarkDetailPage() {
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="mb-12">
             <SectionLabel>Brand Palette</SectionLabel>
-            <Heading>Six colours. No more.</Heading>
-            <Body className="mt-4 max-w-xl">All Multi-Tone foreground illustrations are built exclusively from these 6 brand fill colours. Background shapes use the same palette at reduced opacity.</Body>
+            <Heading>Eight colours. No more.</Heading>
+            <Body className="mt-4 max-w-xl">All Multi-Tone foreground illustrations are built exclusively from these 8 brand fill colours. Background shapes use the same palette at reduced opacity.</Body>
           </FadeUp>
 
-          <FadeUp delay={0.1} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          <FadeUp delay={0.1} className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4">
             {[
-              { hex: '#E1253E', name: 'Posh Red' },
-              { hex: '#B51D30', name: 'Deep Red' },
-              { hex: '#F47B5E', name: 'Coral' },
-              { hex: '#F9B997', name: 'Peach' },
-              { hex: '#D4B8E0', name: 'Lilac' },
-              { hex: '#B8D4E8', name: 'Sky Blue' },
+              { hex: '#7F0353', name: 'Posh Berry' },
+              { hex: '#B7A52A', name: 'Olive Gold' },
+              { hex: '#ABD2DB', name: 'Mist Blue' },
+              { hex: '#F9825C', name: 'Coral' },
+              { hex: '#094074', name: 'Navy' },
+              { hex: '#43C7CF', name: 'Teal' },
+              { hex: '#4A4A4A', name: 'Charcoal' },
+              { hex: '#FFFFFF', name: 'White' },
             ].map(({ hex, name }) => (
               <div key={hex} className="flex flex-col rounded-2xl overflow-hidden"
                 style={{ border: `1px solid ${BORDER}` }}>
-                <div style={{ background: hex, height: 100 }} />
+                <div style={{ background: hex, height: 100, borderBottom: hex === '#FFFFFF' ? '1px solid rgba(255,255,255,0.12)' : undefined }} />
                 <div className="px-3 py-3 flex flex-col gap-0.5"
                   style={{ background: 'rgba(255,255,255,0.03)' }}>
                   <code className="text-xs font-mono font-medium block" style={{ color: WHITE }}>{hex}</code>
