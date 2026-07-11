@@ -196,7 +196,7 @@ export default function PoshmarkDetailPage() {
               <Heading>Design a unified icon and graphic guideline for Poshmark's product.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Poshmark's product had grown to cover hundreds of screens — empty states, onboarding flows, feature introductions, campaigns — each using illustrations in their own way. There was no documented standard for style, construction, or usage. My goal was to change that: design a complete illustration system from scratch, covering every context the product needed, and document it clearly enough that it could be applied consistently going forward.</Body>
+              <Body>Poshmark's product had grown to cover hundreds of screens: empty states, onboarding flows, feature introductions, and campaigns, each using illustrations in their own way. There was no documented standard for style, construction, or usage. My goal was to change that: design a complete illustration system from scratch, covering every context the product needed, and document it clearly enough that it could be applied consistently going forward.</Body>
               <div className="mt-8 flex flex-wrap gap-3">
                 {['Design System', 'Illustration', 'Empty States', 'Onboarding', 'Documentation'].map(t => (
                   <span key={t} className="text-xs font-medium px-3 py-1.5 rounded-full"
@@ -207,7 +207,7 @@ export default function PoshmarkDetailPage() {
           </div>
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '2', d: 'Illustration styles defined — each with distinct rules and use cases' },
+              { v: '2', d: 'Illustration styles defined, each with distinct rules and use cases' },
               { v: '21', d: 'Specification slides covering construction, colour, sizing, and usage' },
               { v: '1st', d: 'Illustration system ever documented for Poshmark\'s product' },
             ].map(({ v, d }) => (
@@ -226,16 +226,16 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>The Problem</SectionLabel>
-              <Heading>No framework for when to use what — or how to build it.</Heading>
+              <Heading>No framework for when to use what or how to build it.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Illustrations serve two very different purposes in a product: in utility moments — empty states, errors, confirmations — clarity is the goal; in engagement moments — onboarding, campaigns, feature introductions — emotional resonance is. Without a framework to separate these two jobs, the wrong style kept ending up in the wrong context. Empty states were visually overloaded. Onboarding screens felt generic. There was no documented rule for stroke weight, fill colour, artboard size, or when to use a real image versus an illustration. Every screen was a fresh decision with no reference to anchor it.</Body>
+              <Body>Illustrations serve two very different purposes in a product. In utility moments like empty states, errors, and confirmations, clarity is the goal. In engagement moments like onboarding, campaigns, and feature introductions, emotional resonance is. Without a framework to separate these two jobs, the wrong style kept ending up in the wrong context. Empty states were visually overloaded. Onboarding screens felt generic. There was no documented rule for stroke weight, fill colour, artboard size, or when to use a real image versus an illustration. Every screen was a fresh decision with no reference to anchor it.</Body>
             </FadeUp>
           </div>
           <FadeUp delay={0.15} className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '0', d: 'Documentation existed — no rules, no standards, no reference to work from' },
-              { v: '2', d: 'Distinct illustration jobs in the product — with no system separating them' },
+              { v: '0', d: 'Documentation existed. No rules, no standards, no reference to work from' },
+              { v: '2', d: 'Distinct illustration jobs in the product, with no system separating them' },
               { v: '∞', d: 'Decisions made ad hoc, with no consistent logic across screens' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
