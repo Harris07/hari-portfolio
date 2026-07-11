@@ -471,17 +471,17 @@ export default function PoshmarkDetailPage() {
       <section className="py-24 overflow-hidden" style={{ background: '#0d0e12' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="mb-16">
-            <SectionLabel>Single-Tone Do's &amp; Don'ts</SectionLabel>
-            <Heading>Four rules. No exceptions.</Heading>
+            <SectionLabel>Single Tone</SectionLabel>
+            <Heading>Do's and Don'ts</Heading>
           </FadeUp>
 
           {/* 2 groups per row, each group = DO + DON'T pair */}
           {(() => {
             const pairs = [
-              { rule: '01 — Stroke Weight',      doImg: '/images/p3-dd1-do.png',   doText: 'All elements share the same 2px stroke',           dontImg: '/images/p3-dd1-dont.png', dontText: "Don't mix stroke weights in the same icon" },
-              { rule: '02 — Fill Ratio',          doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element — 80:20 ratio, 15% opacity', dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40 — removes hierarchy" },
-              { rule: '03 — Secondary Elements',  doImg: '/images/p3-dd3-do.png',   doText: 'Keep smaller elements minimal, stroke only',       dontImg: '/images/p3-dd3-dont.png', dontText: "Don't add complex detail to small elements" },
-              { rule: '04 — Highlight Count',     doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon',           dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements — erases hierarchy" },
+              { rule: 'Stroke Weight',      doImg: '/images/p3-dd1-do.png',   doText: 'All elements share the same 2px stroke',           dontImg: '/images/p3-dd1-dont.png', dontText: "Don't mix stroke weights in the same icon" },
+              { rule: 'Fill Ratio',          doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element — 80:20 ratio, 15% opacity', dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40 — removes hierarchy" },
+              { rule: 'Secondary Elements',  doImg: '/images/p3-dd3-do.png',   doText: 'Keep smaller elements minimal, stroke only',       dontImg: '/images/p3-dd3-dont.png', dontText: "Don't add complex detail to small elements" },
+              { rule: 'Highlight Count',     doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon',           dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements — erases hierarchy" },
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
@@ -489,7 +489,7 @@ export default function PoshmarkDetailPage() {
                 {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
                   <div key={rule} className="flex flex-col gap-4">
                     {/* Rule label */}
-                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.5)' }}>{rule}</span>
+                    <span className="font-semibold text-sm" style={{ color: WHITE }}>{rule}</span>
                     {/* DO + DON'T cards side by side */}
                     <div className="grid grid-cols-2 gap-3">
                       {/* DO */}
@@ -690,7 +690,7 @@ export default function PoshmarkDetailPage() {
               <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-2 gap-10 mb-14">
                 {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
                   <div key={rule} className="flex flex-col gap-4">
-                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.5)' }}>{rule}</span>
+                    <span className="font-semibold text-sm" style={{ color: WHITE }}>{rule}</span>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex flex-col gap-3">
                         <div className="rounded-xl overflow-hidden"
