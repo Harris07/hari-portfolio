@@ -26,7 +26,7 @@ function ProjectCard({ project }: { project: (typeof PROJECTS)[0] }) {
   return (
     <Link
       to={`/project/${project.id}`}
-      style={{ textDecoration: 'none', flexShrink: 0, width: 'clamp(340px, 44vw, 600px)' }}
+      style={{ textDecoration: 'none', flexShrink: 0, width: 'clamp(340px, 44vw, 600px)', maxWidth: '100%' }}
     >
       <motion.div
         className="flex flex-col rounded-3xl overflow-hidden"
@@ -51,13 +51,13 @@ function ProjectCard({ project }: { project: (typeof PROJECTS)[0] }) {
           </div>
         </div>
 
-        <div className="mb-4 rounded-2xl overflow-hidden"
-          style={{ marginLeft: 20, marginRight: 20 }}>
+        <div className="mb-4 rounded-2xl overflow-hidden flex-1"
+          style={{ marginLeft: 20, marginRight: 20, minHeight: 'clamp(90px, 13vw, 170px)' }}>
           <motion.img
             src={project.coverImage}
             alt={project.name}
             loading="lazy"
-            className="w-full h-auto block"
+            className="w-full h-full object-cover"
             whileHover={{ scale: 1.07 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
           />
@@ -125,7 +125,7 @@ export default function ProjectsSection() {
         </FadeUp>
       </div>
 
-      {/* Scrollable track */}
+      {/* Scrollable track — horizontal on sm+, stacked on mobile */}
       <div
         ref={scrollRef}
         onMouseDown={onMouseDown}
@@ -142,7 +142,7 @@ export default function ProjectsSection() {
           msOverflowStyle: 'none',
           WebkitOverflowScrolling: 'touch',
         }}
-        className="hide-scrollbar"
+        className="hide-scrollbar flex-col sm:flex-row"
       >
         {PROJECTS.map((project) => (
           <ProjectCard key={project.id} project={project} />
