@@ -387,12 +387,7 @@ export default function PoshmarkDetailPage() {
                 </div>
                 {/* spec text */}
                 <div className="p-5 flex flex-col gap-3">
-                  <div>
-                    <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {specs.map(s => <Spec key={s}>{s}</Spec>)}
-                    </div>
-                  </div>
+                  <span className="font-semibold text-sm block" style={{ color: WHITE }}>{title}</span>
                   <ul className="flex flex-col gap-1.5">
                     {bullets.map(b => (
                       <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
@@ -400,6 +395,9 @@ export default function PoshmarkDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  <div className="flex flex-wrap gap-1.5 pt-3 mt-1" style={{ borderTop: `1px solid ${BORDER}` }}>
+                    {specs.map(s => <Spec key={s}>{s}</Spec>)}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -558,12 +556,7 @@ export default function PoshmarkDetailPage() {
                   <img src={src} alt={title} style={{ display: 'block', width: '100%', height: 'auto' }} />
                 </div>
                 <div className="p-5 flex flex-col gap-3">
-                  <div>
-                    <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {specs.map(s => <Spec key={s}>{s}</Spec>)}
-                    </div>
-                  </div>
+                  <span className="font-semibold text-sm block" style={{ color: WHITE }}>{title}</span>
                   <ul className="flex flex-col gap-1.5">
                     {bullets.map(b => (
                       <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
@@ -571,6 +564,9 @@ export default function PoshmarkDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  <div className="flex flex-wrap gap-1.5 pt-3 mt-1" style={{ borderTop: `1px solid ${BORDER}` }}>
+                    {specs.map(s => <Spec key={s}>{s}</Spec>)}
+                  </div>
                 </div>
               </motion.div>
             ))}
