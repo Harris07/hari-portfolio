@@ -534,34 +534,50 @@ export default function PoshmarkDetailPage() {
       <section className="py-20 overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #080c14 0%, #0a0c18 60%, #080c14 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-10">
+          <FadeUp className="mb-14">
             <SectionLabel>Multi-Tone Guide</SectionLabel>
             <Heading>Background shapes + foreground illustration.</Heading>
             <Body className="mt-4 max-w-2xl">Multi-Tone is a layered system: amorphic background shapes at low opacity, topped with a foreground illustration using exactly 6 brand fill colours.</Body>
           </FadeUp>
 
-          {/* Artboard size spec tiles */}
-          <FadeUp delay={0.05} className="grid grid-cols-3 gap-4 mb-12">
+          {/* 3 unified cards — image + specs combined */}
+          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
-              { size: 'Small',  px: '100px', use: 'Cards, list items' },
-              { size: 'Medium', px: '150px', use: 'Feature callouts' },
-              { size: 'Large',  px: '350px', use: 'Full-screen hero' },
-            ].map(({ size, px, use }) => (
-              <div key={size} className="p-5 rounded-2xl flex flex-col gap-2 text-center"
-                style={{ background: 'rgba(123,97,255,0.06)', border: '1px solid rgba(123,97,255,0.18)' }}>
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#7B61FF' }}>{size}</span>
-                <code className="font-mono font-semibold" style={{ color: WHITE, fontSize: '1.3rem' }}>{px}</code>
-                <span className="text-xs font-light" style={{ color: MUTED }}>{use}</span>
-              </div>
+              { src: '/images/p3-mt-card1.png', title: 'Background Shapes',     specs: ['amorphic forms', '20–50% opacity'],         bullets: ['Soft organic shapes behind the illustration', 'Use brand colours at low opacity', 'Light mode: 20% · Dark mode: 50%'],                              d: 0.05 },
+              { src: '/images/p3-mt-card2.png', title: 'Foreground Illustration', specs: ['6 fill colours', '1px stroke #4A4A4A'],    bullets: ['Use exactly 6 brand fill colours', 'Stroke colour #4A4A4A or #FFFFFF', 'One filled element — rest stay as strokes'],                            d: 0.12 },
+              { src: '/images/p3-mt-card3.png', title: 'Foreground + Images',   specs: ['Poshmark imagery', 'no stock photos'],       bullets: ['Mix illustrations with real product images', 'Use Poshmark photoshoot or listing images', 'Avoid stock or paid image libraries'],                  d: 0.19 },
+            ].map(({ src, title, specs, bullets, d }) => (
+              <motion.div key={title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: d }}
+                className="rounded-2xl overflow-hidden flex flex-col"
+                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+                <div style={{ background: 'rgba(255,255,255,0.06)' }}>
+                  <img src={src} alt={title} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                </div>
+                <div className="p-5 flex flex-col gap-3">
+                  <div>
+                    <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {specs.map(s => <Spec key={s}>{s}</Spec>)}
+                    </div>
+                  </div>
+                  <ul className="flex flex-col gap-1.5">
+                    {bullets.map(b => (
+                      <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
+                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ background: B }} />{b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
             ))}
           </FadeUp>
 
-          <FadeIn delay={0.08}>
-            <Screen src="/images/p3-multitone-guide.png" alt="Multi-tone guide" delay={0.08} />
-          </FadeIn>
-
           {/* Brand colour palette */}
-          <FadeUp delay={0.15} className="mt-10">
+          <FadeUp delay={0.3} className="mt-8">
             <div className="p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
               <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: 'rgba(255,255,255,0.3)' }}>
                 Brand fill colours — foreground palette <Spec>6 colours only</Spec>
