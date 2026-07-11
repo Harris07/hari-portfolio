@@ -499,7 +499,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: 9, fontWeight: 700 }}>✓</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{doText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{doText}</p>
                         </div>
                       </div>
                       {/* DON'T */}
@@ -511,7 +511,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 9, fontWeight: 700 }}>✕</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{dontText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{dontText}</p>
                         </div>
                       </div>
                     </div>
@@ -707,7 +707,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: 9, fontWeight: 700 }}>✓</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{doText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{doText}</p>
                         </div>
                       </div>
                       <div className="flex flex-col gap-3">
@@ -718,7 +718,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 9, fontWeight: 700 }}>✕</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{dontText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{dontText}</p>
                         </div>
                       </div>
                     </div>
