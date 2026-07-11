@@ -50,11 +50,13 @@ export default function HeroSection() {
         </FadeIn>
       </div>
 
-      {/* Portrait - absolutely centered */}
+      {/* Portrait — absolute on sm+, inline flow on mobile */}
       <FadeIn
         delay={0.6}
         y={30}
-        className="absolute left-1/2 -translate-x-1/2 z-10 w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0"
+        className="sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:z-10 sm:bottom-0 sm:translate-y-0
+                   mx-auto w-[60vw] max-w-[260px] sm:w-[360px] md:w-[440px] lg:w-[520px] sm:max-w-none
+                   flex-shrink-0"
       >
         <Magnet
           padding={150}
@@ -74,7 +76,7 @@ export default function HeroSection() {
       {/* Bottom bar */}
       <div className="flex justify-between items-end pb-7 sm:pb-8 md:pb-10 px-6 md:px-10 mt-auto relative z-20">
         <FadeIn delay={0.35} y={20}>
-          <div className="flex flex-col items-start gap-5 max-w-[180px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px]">
+          <div className="flex flex-col items-start gap-4 max-w-[220px] sm:max-w-[280px] md:max-w-[360px] lg:max-w-[440px]">
             <img
               src="/images/hero-badge.png"
               alt="Who Am I?"
@@ -84,7 +86,7 @@ export default function HeroSection() {
               className="w-full font-light tracking-wide leading-snug"
               style={{
                 color: '#D7E2EA',
-                fontSize: 'clamp(0.95rem, 1.6vw, 1.4rem)',
+                fontSize: 'clamp(0.85rem, 1.6vw, 1.4rem)',
               }}
             >
               A Product (UI/UX) Designer driven by designing meaningful products
