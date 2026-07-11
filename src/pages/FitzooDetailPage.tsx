@@ -260,16 +260,21 @@ export default function FitzooDetailPage() {
             </FadeUp>
           )
           return (
-            <div className="max-w-5xl mx-auto grid grid-cols-2" style={{ gap: 30 }}>
-              {/* Left column — offset down for staggered look */}
-              <div className="flex flex-col" style={{ gap: 30, paddingTop: 60 }}>
-                {personas.filter((_, i) => i % 2 === 0).map((p, i) => renderCard(p, i * 2))}
+            <>
+              {/* Mobile: single column */}
+              <div className="flex flex-col md:hidden max-w-5xl mx-auto px-6" style={{ gap: 30 }}>
+                {personas.map((p, i) => renderCard(p, i))}
               </div>
-              {/* Right column */}
-              <div className="flex flex-col" style={{ gap: 30 }}>
-                {personas.filter((_, i) => i % 2 === 1).map((p, i) => renderCard(p, i * 2 + 1))}
+              {/* Desktop: 2-column staggered */}
+              <div className="hidden md:grid max-w-5xl mx-auto grid-cols-2" style={{ gap: 30 }}>
+                <div className="flex flex-col" style={{ gap: 30, paddingTop: 60 }}>
+                  {personas.filter((_, i) => i % 2 === 0).map((p, i) => renderCard(p, i * 2))}
+                </div>
+                <div className="flex flex-col" style={{ gap: 30 }}>
+                  {personas.filter((_, i) => i % 2 === 1).map((p, i) => renderCard(p, i * 2 + 1))}
+                </div>
               </div>
-            </div>
+            </>
           )
         })()}
       </section>

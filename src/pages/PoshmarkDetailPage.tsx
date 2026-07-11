@@ -13,7 +13,7 @@ const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.42)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
-/* ─── helpers ─── */
+/* ─── animation helpers ─── */
 function FadeUp({ children, delay = 0, className = '' }: {
   children: React.ReactNode; delay?: number; className?: string
 }) {
@@ -44,6 +44,26 @@ function FadeIn({ children, delay = 0, className = '' }: {
   )
 }
 
+/* Floating image panel — no rotation, flat presentation for guidelines */
+function Screen({ src, alt = '', delay = 0 }: {
+  src: string; alt?: string; delay?: number
+}) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-30px' })
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
+      style={{ filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
+      <div style={{ borderRadius: 16, overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.09)', background: '#13141a' }}>
+        <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
+      </div>
+    </motion.div>
+  )
+}
+
+/* ─── UI primitives ─── */
 function Chip({ children }: { children: React.ReactNode }) {
   return (
     <span className="inline-block text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full"
@@ -66,6 +86,24 @@ function Body({ children, className = '' }: { children: React.ReactNode; classNa
   return <p className={`font-light leading-[1.75] ${className}`} style={{ color: MUTED, fontSize: 'clamp(0.92rem,1.3vw,1.05rem)' }}>{children}</p>
 }
 
+function Spec({ children }: { children: React.ReactNode }) {
+  return (
+    <code className="inline-block text-xs font-mono font-medium px-2 py-0.5 rounded-md"
+      style={{ color: B, background: 'rgba(0,179,255,0.08)', border: '1px solid rgba(0,179,255,0.18)', letterSpacing: '0.03em' }}>
+      {children}
+    </code>
+  )
+}
+
+function ChapterDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-4 max-w-5xl mx-auto px-6 md:px-10 py-10">
+      <div className="flex-1 h-px" style={{ background: BORDER }} />
+      <span className="text-xs font-semibold uppercase tracking-[0.3em]" style={{ color: 'rgba(255,255,255,0.18)' }}>{label}</span>
+      <div className="flex-1 h-px" style={{ background: BORDER }} />
+    </div>
+  )
+}
 
 /* ─── page ─── */
 export default function PoshmarkDetailPage() {
@@ -96,7 +134,6 @@ export default function PoshmarkDetailPage() {
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
 
-          {/* logo */}
           <motion.div className="flex justify-center mb-10"
             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
@@ -140,7 +177,6 @@ export default function PoshmarkDetailPage() {
           </motion.div>
         </motion.div>
 
-        {/* hero banner image */}
         <motion.div className="relative z-10 w-full px-6 md:px-16" style={{ maxWidth: 1100, marginBottom: '-60px' }}
           initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}>
@@ -171,7 +207,6 @@ export default function PoshmarkDetailPage() {
               </div>
             </FadeUp>
           </div>
-
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { v: '2', d: 'Unified illustration styles defined' },
@@ -199,7 +234,6 @@ export default function PoshmarkDetailPage() {
               <Body>Illustrations in a product serve two fundamentally different purposes — communicating a clear, distraction-free message (like an empty state), or creating emotional engagement (like onboarding). Poshmark was mixing these without distinction, resulting in overly complex empty states and underwhelming feature introductions.</Body>
             </FadeUp>
           </div>
-
           <FadeUp delay={0.15} className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               { v: '0', d: 'Shared illustration guidelines across teams' },
@@ -233,179 +267,363 @@ export default function PoshmarkDetailPage() {
         </div>
       </section>
 
-      {/* ── TWO STYLES ── */}
-      <section className="py-28 overflow-hidden" style={{ background: '#060709' }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-12 text-center">
-            <SectionLabel>The Two Styles</SectionLabel>
-            <Heading>Single-Tone vs Multi-Tone.</Heading>
-            <Body className="mt-4 mx-auto max-w-lg">Two clearly defined styles. Each with a specific purpose, usage rule, and artboard spec — so every team makes the same decision.</Body>
-          </FadeUp>
-          <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                label: 'Single-Tone',
-                color: B,
-                desc: 'Designed for non-engaging or informational screens: empty states, error messages, no-results, and completion states. Prioritises clarity and quick understanding.',
-                uses: ['Empty states', 'Error messages', 'No-results screens', 'Completion states'],
-              },
-              {
-                label: 'Multi-Tone',
-                color: '#7B61FF',
-                desc: 'Used for screens that require expressive, storytelling-driven visuals: onboarding, feature introductions, entry screens like Monetisation and Posh Show.',
-                uses: ['Onboarding screens', 'Feature introductions', 'Monetisation entry', 'Posh Show'],
-              },
-            ].map(({ label, color, desc, uses }) => (
-              <div key={label} className="p-7 rounded-2xl flex flex-col gap-5"
-                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: color }} />
-                  <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>{label}</span>
-                </div>
-                <Body>{desc}</Body>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {uses.map(u => (
-                    <span key={u} className="text-xs px-3 py-1 rounded-full font-medium"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${BORDER}`, color: 'rgba(255,255,255,0.5)' }}>{u}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </FadeUp>
-        </div>
-      </section>
+      {/* ═══════════════════════════════════════════
+          CHAPTER 1 — THE SYSTEM
+      ═══════════════════════════════════════════ */}
+      <ChapterDivider label="The System" />
 
-      {/* ── DESIGN GOALS ── */}
-      <section className="py-28 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #080c14 0%, #060c18 60%, #080c14 100%)' }}>
+      {/* ── TWO STYLES ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#060709' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-12">
-            <SectionLabel>Design Goals</SectionLabel>
-            <Heading>What the system needed to solve.</Heading>
+          <FadeUp className="mb-10">
+            <SectionLabel>The Two Styles</SectionLabel>
+            <Heading>One rule decides everything.</Heading>
+            <Body className="mt-4 max-w-xl">Every illustration decision begins here — pick the right style and every other rule follows automatically.</Body>
           </FadeUp>
-          <FadeUp delay={0.1}>
-            <div className="rounded-3xl p-8 sm:p-10"
-              style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-                {[
-                  'Define clear usage rules for each graphic style',
-                  'Standardise artboard sizes and padding specs',
-                  'Establish stroke, fill and colour guidelines',
-                  "Document Do's and Don'ts for each style",
-                  'Cover both icon-only and real-image compositions',
-                  'Make it adoptable by every product team',
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-col gap-4">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                      style={{ background: 'rgba(0,179,255,0.12)', color: B }}>
-                      {String(i + 1).padStart(2, '0')}
-                    </div>
-                    <p className="font-medium leading-snug text-sm" style={{ color: WHITE }}>{item}</p>
+          <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="rounded-2xl overflow-hidden flex flex-col"
+              style={{ border: `1px solid rgba(0,179,255,0.2)`, background: 'rgba(0,179,255,0.04)' }}>
+              <div className="px-7 pt-7 pb-5">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: B, boxShadow: `0 0 8px ${B}` }} />
+                  <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>Single-Tone</span>
+                </div>
+                <p className="text-2xl font-semibold leading-snug mb-4" style={{ color: WHITE }}>Clarity over<br />expression.</p>
+                <Body>For screens where the message needs to land fast — no distractions, no visual noise.</Body>
+              </div>
+              <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(0,179,255,0.12)` }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Use for</p>
+                {['Empty states', 'Error messages', 'No-results screens', 'Completion states'].map(u => (
+                  <div key={u} className="flex items-center gap-2.5">
+                    <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: B }} />
+                    <span className="text-sm font-light" style={{ color: MUTED }}>{u}</span>
                   </div>
                 ))}
+              </div>
+              <div className="px-7 py-4 flex flex-wrap gap-2" style={{ borderTop: `1px solid rgba(0,179,255,0.12)` }}>
+                <Spec>48×48px artboard</Spec>
+                <Spec>2px stroke</Spec>
+                <Spec>15% fill opacity</Spec>
+              </div>
+            </div>
+
+            <div className="rounded-2xl overflow-hidden flex flex-col"
+              style={{ border: `1px solid rgba(123,97,255,0.2)`, background: 'rgba(123,97,255,0.04)' }}>
+              <div className="px-7 pt-7 pb-5">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: '#7B61FF', boxShadow: '0 0 8px #7B61FF' }} />
+                  <span className="font-semibold text-sm uppercase tracking-widest" style={{ color: WHITE }}>Multi-Tone</span>
+                </div>
+                <p className="text-2xl font-semibold leading-snug mb-4" style={{ color: WHITE }}>Storytelling<br />over clarity.</p>
+                <Body>For screens that need to engage, delight, or introduce something new — emotion first.</Body>
+              </div>
+              <div className="px-7 py-5 flex flex-col gap-3" style={{ borderTop: `1px solid rgba(123,97,255,0.12)` }}>
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.3)' }}>Use for</p>
+                {['Onboarding screens', 'Feature introductions', 'Monetisation entry', 'Posh Show'].map(u => (
+                  <div key={u} className="flex items-center gap-2.5">
+                    <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: '#7B61FF' }} />
+                    <span className="text-sm font-light" style={{ color: MUTED }}>{u}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="px-7 py-4 flex flex-wrap gap-2" style={{ borderTop: `1px solid rgba(123,97,255,0.12)` }}>
+                <Spec>3 artboard sizes</Spec>
+                <Spec>6 brand fill colours</Spec>
+                <Spec>amorphic shapes</Spec>
               </div>
             </div>
           </FadeUp>
         </div>
       </section>
 
-      {/* ── SINGLE-TONE GUIDE ── */}
-      <section className="py-28 overflow-hidden" style={{ background: '#0d0e12' }}>
+      {/* ═══════════════════════════════════════════
+          CHAPTER 2 — SINGLE-TONE SPECIFICATION
+      ═══════════════════════════════════════════ */}
+      <ChapterDivider label="Single-Tone Specification" />
+
+      {/* ── SINGLE-TONE GUIDE — 3 screens fan ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#0d0e12' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-12">
+          <FadeUp className="text-center mb-14">
             <SectionLabel>Single-Tone Guide</SectionLabel>
             <Heading>Three parts, one consistent language.</Heading>
-            <Body className="mt-4 max-w-2xl">Single-Tone graphics are built from three defined parts: Icon Stroke, Fill State, and Disconnected Points. Artboard fixed at 48×48px with 2px minimum padding.</Body>
+            <Body className="mt-4 mx-auto max-w-2xl">Every Single-Tone graphic is built from exactly three components. Defined once, applied everywhere.</Body>
           </FadeUp>
-          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        </div>
+
+        {/* Artboard spec strip */}
+        <div className="max-w-5xl mx-auto px-6 md:px-10 mb-12">
+          <FadeUp delay={0.05}>
+            <div className="flex flex-wrap items-center gap-3 p-5 rounded-2xl"
+              style={{ background: 'rgba(0,179,255,0.05)', border: '1px solid rgba(0,179,255,0.15)' }}>
+              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Artboard spec</span>
+              <div className="flex flex-wrap gap-2">
+                <Spec>48×48px</Spec>
+                <Spec>2px min padding</Spec>
+                <Spec>stroke: #2A2A2A</Spec>
+                <Spec>fill opacity: 15%</Spec>
+                <Spec>max 2 disconnected points</Spec>
+              </div>
+            </div>
+          </FadeUp>
+        </div>
+
+        {/* 3 individual cards side by side */}
+        <FadeIn delay={0.1}>
+          <div className="flex items-start justify-center gap-4 sm:gap-6 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { img: '/images/p3-st-card1.png', title: 'Icon Stroke', bullets: ['Color: Black (#2A2A2A)', '2px stroke width', 'Rounded start & end points'] },
-              { img: '/images/p3-st-card2.png', title: 'Fill State', bullets: ['Fill color: Black (#2A2A2A)', 'Opacity: 15%', 'Creates depth without added colour'] },
-              { img: '/images/p3-st-card3.png', title: 'Disconnected Points', bullets: ['Maximum: 2 points per icon', 'Placed at object intersections only'] },
-            ].map(({ img, title, bullets }) => (
-              <div key={title} className="flex flex-col rounded-2xl overflow-hidden"
-                style={{ border: `1px solid ${BORDER}`, background: 'rgba(255,255,255,0.03)' }}>
-                <div className="flex items-center justify-center p-6" style={{ background: 'rgba(255,255,255,0.04)', aspectRatio: '4/3' }}>
-                  <img src={img} alt={title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              { src: '/images/p3-st-card1.png', label: '01 — Icon Stroke',          sub: '#2A2A2A · 2px · rounded caps',          d: 0.05 },
+              { src: '/images/p3-st-card2.png', label: '02 — Fill State',            sub: '#2A2A2A · 15% opacity · one element',   d: 0.12 },
+              { src: '/images/p3-st-card3.png', label: '03 — Disconnected Points',   sub: 'Max 2 points · intersections only',      d: 0.19 },
+            ].map(({ src, label, sub, d }) => (
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 260, gap: 24 }}>
+                <Screen src={src} alt={label} delay={d} />
+                <FadeUp delay={d + 0.1} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+
+        {/* Spec details grid */}
+        <div className="max-w-5xl mx-auto px-6 md:px-10 mt-16">
+          <FadeUp delay={0.2} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {[
+              { title: 'Icon Stroke', specs: ['#2A2A2A', '2px width', 'rounded caps'], bullets: ['All strokes must share the same 2px weight', 'No mixed thicknesses across elements', 'Round both start and end caps'] },
+              { title: 'Fill State',  specs: ['#2A2A2A', '15% opacity', 'one element only'], bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio — stroke dominant'] },
+              { title: 'Disconnected Points', specs: ['max 2 points', 'intersections only'], bullets: ['Maximum of 2 points per icon', 'Place only at object intersections', 'Reinforces depth hierarchy'] },
+            ].map(({ title, specs, bullets }) => (
+              <div key={title} className="p-5 rounded-2xl flex flex-col gap-3"
+                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+                <div>
+                  <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {specs.map(s => <Spec key={s}>{s}</Spec>)}
+                  </div>
                 </div>
-                <div className="p-5 flex flex-col gap-3" style={{ borderTop: `1px solid ${BORDER}` }}>
-                  <span className="font-semibold text-sm" style={{ color: WHITE }}>{title}</span>
-                  <ul className="flex flex-col gap-1.5">
-                    {bullets.map(b => (
-                      <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
-                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ background: B }} />{b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="flex flex-col gap-1.5">
+                  {bullets.map(b => (
+                    <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ background: B }} />{b}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </FadeUp>
+        </div>
+      </section>
 
-          {/* examples */}
-          <FadeIn delay={0.15} className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {['/images/p3-examples-text.png', '/images/p3-examples-cta.png'].map((src, i) => (
-              <img key={i} src={src} alt="" className="w-full object-cover rounded-2xl" style={{ maxHeight: 400 }} />
+      {/* ── SINGLE-TONE EXAMPLES — Only Text (3 individual screens) ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#080a0f' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="text-center mb-14">
+            <SectionLabel>Single-Tone Examples</SectionLabel>
+            <Heading>Only Text — three section layouts.</Heading>
+            <Body className="mt-4 mx-auto max-w-2xl">Three pre-defined layouts for text-only Single-Tone screens — one section, two sections, or three sections. Each has fixed spacing and icon placement.</Body>
+          </FadeUp>
+        </div>
+
+        <FadeIn delay={0.08}>
+          <div className="flex items-start justify-center gap-4 sm:gap-6 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            {[
+              { src: '/images/p3-col1img1.png', label: 'ONE SECTION',   sub: 'Title · Body · Icon',         d: 0.05 },
+              { src: '/images/p3-col2img.png',  label: 'TWO SECTIONS',  sub: 'Title · Body · 2-col · Icon', d: 0.12 },
+              { src: '/images/p3-col1img2.png', label: 'THREE SECTIONS',sub: 'Title · Body · 3-col · Icon', d: 0.19 },
+            ].map(({ src, label, sub, d }) => (
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 260, gap: 24 }}>
+                <Screen src={src} alt={label} delay={d} />
+                <FadeUp delay={d + 0.1} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                </FadeUp>
+              </div>
             ))}
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* ── SINGLE-TONE EXAMPLES — Text + CTA ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#0a0c10' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="mb-10">
+            <SectionLabel>Single-Tone Examples</SectionLabel>
+            <Heading>Text + CTA — with action buttons.</Heading>
+            <Body className="mt-4 max-w-2xl">When Single-Tone screens require a call-to-action, the CTA is placed below the body text with fixed padding. One or two CTAs are supported.</Body>
+          </FadeUp>
+          <FadeIn delay={0.08}>
+            <Screen src="/images/p3-examples-cta.png" alt="Single-Tone Text + CTA examples" delay={0.08} />
           </FadeIn>
         </div>
       </section>
 
+      {/* ── SINGLE-TONE DO'S & DON'TS ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#0d0e12' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="mb-12">
+            <SectionLabel>Single-Tone Do's &amp; Don'ts</SectionLabel>
+            <Heading>Four rules. No exceptions.</Heading>
+          </FadeUp>
+
+          <FadeIn delay={0.05} className="mb-12">
+            <Screen src="/images/p3-dos-donts.png" alt="Single-Tone Do's and Don'ts" delay={0.05} />
+          </FadeIn>
+
+          <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { do: true,  rule: 'Use the same stroke thickness across every element in the icon',               spec: 'uniform 2px' },
+              { do: false, rule: "Don't use different stroke thicknesses — even if elements are at different scales", spec: 'no variation' },
+              { do: true,  rule: 'Apply the 20:80 highlight ratio — one element at 15% fill, the rest stroke only', spec: '20:80 ratio' },
+              { do: false, rule: "Don't use a 30:20 or 40:45 ratio — it competes with stroke instead of supporting it", spec: 'single highlight' },
+              { do: true,  rule: 'Keep smaller elements in the composition minimal and stroke-only',              spec: 'minimal detail' },
+              { do: false, rule: "Don't add complex detail to small secondary elements — it creates visual noise",  spec: 'no complexity' },
+              { do: true,  rule: 'Highlight exactly one element per icon to direct attention clearly',             spec: 'max 1 fill' },
+              { do: false, rule: "Don't fill multiple elements — it eliminates visual hierarchy entirely",         spec: 'no multi-fill' },
+            ].map(({ do: isDo, rule, spec }, i) => (
+              <div key={i} className="flex gap-3 p-4 rounded-xl items-start"
+                style={{
+                  background: isDo ? 'rgba(34,197,94,0.05)' : 'rgba(239,68,68,0.05)',
+                  border: `1px solid ${isDo ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}`,
+                }}>
+                <span className="font-bold text-sm flex-shrink-0 mt-0.5" style={{ color: isDo ? '#22c55e' : '#ef4444' }}>{isDo ? '✓' : '✕'}</span>
+                <div className="flex flex-col gap-1.5 min-w-0">
+                  <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{rule}</span>
+                  <code className="text-xs font-mono" style={{ color: isDo ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.6)' }}>{spec}</code>
+                </div>
+              </div>
+            ))}
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          CHAPTER 3 — MULTI-TONE SPECIFICATION
+      ═══════════════════════════════════════════ */}
+      <ChapterDivider label="Multi-Tone Specification" />
+
       {/* ── MULTI-TONE GUIDE ── */}
-      <section className="py-28 overflow-hidden"
+      <section className="py-20 overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #080c14 0%, #0a0c18 60%, #080c14 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="mb-10">
             <SectionLabel>Multi-Tone Guide</SectionLabel>
             <Heading>Background shapes + foreground illustration.</Heading>
-            <Body className="mt-4 max-w-2xl">Multi-Tone uses amorphic background shapes at light opacities, layered with a fixed 6-colour foreground palette. Three artboard sizes: Small (100px), Medium (150px), Large (350px).</Body>
+            <Body className="mt-4 max-w-2xl">Multi-Tone is a layered system: amorphic background shapes at low opacity, topped with a foreground illustration using exactly 6 brand fill colours.</Body>
           </FadeUp>
-          <FadeIn delay={0.08}>
-            <img src="/images/p3-multitone-guide.png" alt="Multi-tone guide" className="w-full rounded-3xl" style={{ border: `1px solid ${BORDER}` }} />
-          </FadeIn>
-          <FadeIn delay={0.12} className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {['/images/p3-examples-screens.png', '/images/p3-real-images.png'].map((src, i) => (
-              <img key={i} src={src} alt="" className="w-full object-cover rounded-2xl" style={{ maxHeight: 400 }} />
+
+          {/* Artboard size spec tiles */}
+          <FadeUp delay={0.05} className="grid grid-cols-3 gap-4 mb-12">
+            {[
+              { size: 'Small',  px: '100px', use: 'Cards, list items' },
+              { size: 'Medium', px: '150px', use: 'Feature callouts' },
+              { size: 'Large',  px: '350px', use: 'Full-screen hero' },
+            ].map(({ size, px, use }) => (
+              <div key={size} className="p-5 rounded-2xl flex flex-col gap-2 text-center"
+                style={{ background: 'rgba(123,97,255,0.06)', border: '1px solid rgba(123,97,255,0.18)' }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#7B61FF' }}>{size}</span>
+                <code className="font-mono font-semibold" style={{ color: WHITE, fontSize: '1.3rem' }}>{px}</code>
+                <span className="text-xs font-light" style={{ color: MUTED }}>{use}</span>
+              </div>
             ))}
+          </FadeUp>
+
+          <FadeIn delay={0.08}>
+            <Screen src="/images/p3-multitone-guide.png" alt="Multi-tone guide" delay={0.08} />
           </FadeIn>
+
+          {/* Brand colour palette */}
+          <FadeUp delay={0.15} className="mt-10">
+            <div className="p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+              <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                Brand fill colours — foreground palette <Spec>6 colours only</Spec>
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { hex: '#E1253E', name: 'Posh Red' },
+                  { hex: '#B51D30', name: 'Deep Red' },
+                  { hex: '#F47B5E', name: 'Coral' },
+                  { hex: '#F9B997', name: 'Peach' },
+                  { hex: '#D4B8E0', name: 'Lilac' },
+                  { hex: '#B8D4E8', name: 'Sky Blue' },
+                ].map(({ hex, name }) => (
+                  <div key={hex} className="flex items-center gap-2.5 px-3 py-2 rounded-xl"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}` }}>
+                    <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ background: hex }} />
+                    <div>
+                      <code className="text-xs font-mono block leading-none" style={{ color: WHITE }}>{hex}</code>
+                      <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>{name}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-xs font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                Background shapes use brand colours at <Spec>Light: 20% opacity</Spec> or <Spec>Dark: 50% opacity</Spec>
+              </p>
+            </div>
+          </FadeUp>
         </div>
       </section>
 
-      {/* ── BACKGROUNDS ── */}
-      <section className="py-28 overflow-hidden" style={{ background: '#060709' }}>
+      {/* ── MULTI-TONE EXAMPLES — Small Artboard ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#060709' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <FadeUp className="mb-10">
-            <SectionLabel>Backgrounds</SectionLabel>
-            <Heading>Light and dark, fully specified.</Heading>
+            <SectionLabel>Multi-Tone Examples</SectionLabel>
+            <Heading>Small artboard — icon scale.</Heading>
+            <Body className="mt-4 max-w-2xl">At 100px, Multi-Tone compositions appear as compact cards and list items. The same background shape and foreground palette rules apply at every size.</Body>
           </FadeUp>
           <FadeIn delay={0.08}>
-            <img src="/images/p3-backgrounds.png" alt="Backgrounds" className="w-full rounded-3xl" style={{ border: `1px solid ${BORDER}` }} />
+            <Screen src="/images/p3-examples-screens.png" alt="Multi-Tone small artboard examples" delay={0.08} />
           </FadeIn>
         </div>
       </section>
 
-      {/* ── DO'S & DON'TS ── */}
-      <section className="py-28 overflow-hidden" style={{ background: '#0d0e12' }}>
+      {/* ── MULTI-TONE EXAMPLES — Real Images ── */}
+      <section className="py-20 overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #080c14 0%, #0a0c18 60%, #080c14 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-12 text-center">
-            <SectionLabel>Do's &amp; Don'ts</SectionLabel>
-            <Heading>Rules that protect the system.</Heading>
+          <FadeUp className="mb-10">
+            <SectionLabel>Multi-Tone Examples</SectionLabel>
+            <Heading>With real images — photographic.</Heading>
+            <Body className="mt-4 max-w-2xl">When foreground illustrations are replaced with real product or lifestyle photography, the same background shape rules apply — using transparent PNGs or Photoshop clippings from Poshmark's website.</Body>
           </FadeUp>
-          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FadeIn delay={0.08}>
+            <Screen src="/images/p3-real-images.png" alt="Multi-Tone with real images" delay={0.08} />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── ILLUSTRATION DO'S & DON'TS ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#0d0e12' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="mb-10">
+            <SectionLabel>Illustration Do's &amp; Don'ts</SectionLabel>
+            <Heading>Fill, stroke, and balance.</Heading>
+            <Body className="mt-4 max-w-2xl">How fill and stroke interact in Multi-Tone foreground illustrations — eight rules that keep every illustrated asset consistent across the product.</Body>
+          </FadeUp>
+          <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              "All elements in a Single-Tone icon must share the same 2px stroke — no mixed thicknesses",
-              "Use the 80:20 fill ratio — highlight only one element per icon at 15% opacity",
-              "For Multi-Tone, use only undefined/amorphic background shapes — avoid circles, squares, or geometric forms",
-              "For foreground illustration, fill one part of a single object and stroke the rest — never fill the whole object",
-              "Use only #FFFFFF for highlight strokes on filled objects in Multi-Tone",
-              "Always ensure empty state illustrations feel encouraging, not disappointing",
-            ].map((rule, i) => (
-              <div key={i} className="flex gap-4 p-5 rounded-2xl"
-                style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-                <span className="font-semibold text-xs mt-0.5 flex-shrink-0" style={{ color: B }}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{rule}</span>
+              { do: true,  rule: 'For a single-stroke fill, use one colour for the shape and filled highlights',   spec: 'monochrome fill' },
+              { do: false, rule: 'Avoid building flat objects with stroke alone — fill is required for depth',     spec: 'fill required' },
+              { do: true,  rule: 'Use only #FFFFFF for highlight strokes on filled objects',                       spec: '#FFFFFF only' },
+              { do: false, rule: 'Avoid using any other colour for highlight strokes on filled objects',           spec: 'no other colours' },
+              { do: true,  rule: 'For similar objects, make one filled with brand colour and the other stroked',   spec: 'fill + stroke pair' },
+              { do: false, rule: 'Avoid combining a filled line with another filled colour on the same object',    spec: 'no double-fill' },
+              { do: true,  rule: 'Balance filled shapes and text areas so neither feels visually heavy',           spec: 'balanced layout' },
+              { do: false, rule: "Don't create compositions where text and filled shapes compete for visual weight", spec: 'no imbalance' },
+            ].map(({ do: isDo, rule, spec }, i) => (
+              <div key={i} className="flex gap-3 p-4 rounded-xl items-start"
+                style={{
+                  background: isDo ? 'rgba(34,197,94,0.05)' : 'rgba(239,68,68,0.05)',
+                  border: `1px solid ${isDo ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}`,
+                }}>
+                <span className="font-bold text-sm flex-shrink-0 mt-0.5" style={{ color: isDo ? '#22c55e' : '#ef4444' }}>{isDo ? '✓' : '✕'}</span>
+                <div className="flex flex-col gap-1.5 min-w-0">
+                  <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{rule}</span>
+                  <code className="text-xs font-mono" style={{ color: isDo ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.6)' }}>{spec}</code>
+                </div>
               </div>
             ))}
           </FadeUp>
@@ -422,11 +640,11 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
           <FadeUp delay={0.1} className="mt-14 grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
-              { v: '2', l: 'Unified illustration styles' },
-              { v: '21', l: 'Specification slides' },
-              { v: '3', l: 'Artboard size variants' },
-              { v: '6', l: 'Brand fill colours' },
-              { v: '100%', l: 'Product team adoption' },
+              { v: '2',        l: 'Unified illustration styles' },
+              { v: '21',       l: 'Specification slides' },
+              { v: '3',        l: 'Artboard size variants' },
+              { v: '6',        l: 'Brand fill colours' },
+              { v: '100%',     l: 'Product team adoption' },
               { v: 'Dec 2024', l: 'Shipped and live' },
             ].map(({ v, l }) => (
               <div key={l} className="p-6 rounded-2xl"
