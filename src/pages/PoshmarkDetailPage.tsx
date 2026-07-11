@@ -193,10 +193,10 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>Overview</SectionLabel>
-              <Heading>No rules, no consistency.</Heading>
+              <Heading>A shared visual language for a product built by many teams.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Poshmark's product had grown to hundreds of screens — each team making independent illustration decisions. Empty states looked different across features. Onboarding graphics had no visual coherence. There was no shared language for when to use a simple icon versus a rich illustration. This project set out to fix that with a documented, scalable system.</Body>
+              <Body>As Poshmark scaled, its product surface expanded rapidly — but illustration usage grew without structure. Each feature team made their own calls on style, complexity, and tone. The result was a fragmented experience: users encountered wildly different visual treatments depending on where they were in the app. This project created the first cross-functional illustration system — a single, documented framework that all teams could reference, follow, and ship from.</Body>
               <div className="mt-8 flex flex-wrap gap-3">
                 {['Design System', 'Illustration', 'Empty States', 'Onboarding', 'Documentation'].map(t => (
                   <span key={t} className="text-xs font-medium px-3 py-1.5 rounded-full"
@@ -207,9 +207,9 @@ export default function PoshmarkDetailPage() {
           </div>
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '2', d: 'Unified illustration styles defined' },
-              { v: '21', d: 'Specification slides documented' },
-              { v: '100%', d: 'Product team adoption at launch' },
+              { v: '2', d: 'Distinct illustration styles, each with a clear purpose and ruleset' },
+              { v: '21', d: 'Specification slides covering every usage rule and edge case' },
+              { v: '100%', d: 'Adopted across all product teams from day one of launch' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
                 <span className="font-semibold block mb-2" style={{ color: B, fontSize: 'clamp(2.4rem,4vw,3.2rem)', lineHeight: 1 }}>{v}</span>
@@ -226,17 +226,17 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>The Problem</SectionLabel>
-              <Heading>Two different jobs, one broken system.</Heading>
+              <Heading>Illustrations were being used — just never intentionally.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Illustrations in a product serve two fundamentally different purposes — communicating a clear, distraction-free message (like an empty state), or creating emotional engagement (like onboarding). Poshmark was mixing these without distinction, resulting in overly complex empty states and underwhelming feature introductions.</Body>
+              <Body>Illustrations serve two fundamentally different jobs in a product. In utility contexts — empty states, errors, confirmations — the goal is to communicate clearly without distraction. In engagement contexts — onboarding, feature discovery, campaigns — the goal is to build emotional connection and motivate action. Poshmark had no framework to tell teams which job applied where. Empty states were visually noisy. Feature introductions were flat and forgettable. Without a shared decision-making model, every designer was solving the same problem from scratch — and arriving at different answers.</Body>
             </FadeUp>
           </div>
           <FadeUp delay={0.15} className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '0', d: 'Shared illustration guidelines across teams' },
-              { v: '100s', d: 'Screens with inconsistent illustration usage' },
-              { v: '∞', d: 'Independent decisions made per feature team' },
+              { v: '0', d: 'Shared guidelines — every team was operating on their own judgment' },
+              { v: '100s', d: 'Screens carrying inconsistent illustration styles and complexity' },
+              { v: '2×', d: 'Rework per screen when illustration decisions were revisited in review' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
                 <span className="font-semibold block mb-2" style={{ color: B, fontSize: 'clamp(2rem,3.5vw,2.8rem)', lineHeight: 1 }}>{v}</span>
