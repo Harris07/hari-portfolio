@@ -417,25 +417,26 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ── SINGLE-TONE EXAMPLES — Only Text (3 individual screens) ── */}
-      <section className="py-20 overflow-hidden" style={{ background: '#080a0f' }}>
+      <section className="py-28 overflow-hidden" style={{ background: '#080a0f' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="text-center mb-14">
+          <FadeUp className="text-center mb-16">
             <SectionLabel>Single-Tone Examples</SectionLabel>
             <Heading>Only Text — three section layouts.</Heading>
-            <Body className="mt-4 mx-auto max-w-2xl">Three pre-defined layouts for text-only Single-Tone screens — one section, two sections, or three sections. Each has fixed spacing and icon placement.</Body>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
+              Three pre-defined layouts for text-only states — one section, two sections, or three sections.
+            </p>
           </FadeUp>
         </div>
-
-        <FadeIn delay={0.08}>
-          <div className="flex items-start justify-center gap-4 sm:gap-6 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+        <FadeIn delay={0.1}>
+          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-col1img1.png', label: 'ONE SECTION',   sub: 'Title · Body · Icon',         d: 0.05 },
-              { src: '/images/p3-col2img.png',  label: 'TWO SECTIONS',  sub: 'Title · Body · 2-col · Icon', d: 0.12 },
-              { src: '/images/p3-col1img2.png', label: 'THREE SECTIONS',sub: 'Title · Body · 3-col · Icon', d: 0.19 },
+              { src: '/images/p3-col1img1.png', label: '01 — Single Section',  sub: 'Title · Body · Icon',         d: 0.05 },
+              { src: '/images/p3-col2img.png',  label: '02 — Two Sections',    sub: 'Title · Body · 2-col · Icon', d: 0.12 },
+              { src: '/images/p3-col1img2.png', label: '03 — Three Sections',  sub: 'Title · Body · 3-col · Icon', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 260, gap: 24 }}>
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
-                <FadeUp delay={d + 0.1} className="text-center">
+                <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
                   <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
                 </FadeUp>
@@ -446,17 +447,33 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ── SINGLE-TONE EXAMPLES — Text + CTA ── */}
-      <section className="py-20 overflow-hidden" style={{ background: '#0a0c10' }}>
+      <section className="py-28 overflow-hidden" style={{ background: 'linear-gradient(135deg, #080c10 0%, #0a0e14 60%, #080c10 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-10">
+          <FadeUp className="text-center mb-16">
             <SectionLabel>Single-Tone Examples</SectionLabel>
             <Heading>Text + CTA — with action buttons.</Heading>
-            <Body className="mt-4 max-w-2xl">When Single-Tone screens require a call-to-action, the CTA is placed below the body text with fixed padding. One or two CTAs are supported.</Body>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
+              CTA placed below body text with fixed padding — one or two actions supported.
+            </p>
           </FadeUp>
-          <FadeIn delay={0.08}>
-            <Screen src="/images/p3-examples-cta.png" alt="Single-Tone Text + CTA examples" delay={0.08} />
-          </FadeIn>
         </div>
+        <FadeIn delay={0.1}>
+          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            {[
+              { src: '/images/p3-cta-poshparty.png', label: '01 — Posh Party',  sub: 'Title · Sub text',                d: 0.05 },
+              { src: '/images/p3-cta-bundles.png',   label: '02 — Bundles',     sub: 'Title · Sub text with link',      d: 0.12 },
+              { src: '/images/p3-cta-news.png',      label: '03 — News',        sub: 'Title · Sub text with link text', d: 0.19 },
+            ].map(({ src, label, sub, d }) => (
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+                <Screen src={src} alt={label} delay={d} />
+                <FadeUp delay={d + 0.12} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* ── SINGLE-TONE DO'S & DON'TS ── */}
@@ -567,32 +584,64 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ── MULTI-TONE EXAMPLES — Small Artboard ── */}
-      <section className="py-20 overflow-hidden" style={{ background: '#060709' }}>
+      <section className="py-28 overflow-hidden" style={{ background: '#060709' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-10">
+          <FadeUp className="text-center mb-16">
             <SectionLabel>Multi-Tone Examples</SectionLabel>
             <Heading>Small artboard — icon scale.</Heading>
-            <Body className="mt-4 max-w-2xl">At 100px, Multi-Tone compositions appear as compact cards and list items. The same background shape and foreground palette rules apply at every size.</Body>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
+              At 100px, Multi-Tone compositions appear as compact cards and list items.
+            </p>
           </FadeUp>
-          <FadeIn delay={0.08}>
-            <Screen src="/images/p3-examples-screens.png" alt="Multi-Tone small artboard examples" delay={0.08} />
-          </FadeIn>
         </div>
+        <FadeIn delay={0.1}>
+          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            {[
+              { src: '/images/p3-sm-addmyinfo.png', label: '01 — Thumbnail',             sub: 'Single illustration · CTA',      d: 0.05 },
+              { src: '/images/p3-sm-landing.png',   label: '02 — Multiple Illustrations', sub: 'Inline icons · numbered steps',  d: 0.12 },
+              { src: '/images/p3-sm-week1.png',     label: '03 — Actionsheet',            sub: 'Hero at top · text below',       d: 0.19 },
+            ].map(({ src, label, sub, d }) => (
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+                <Screen src={src} alt={label} delay={d} />
+                <FadeUp delay={d + 0.12} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* ── MULTI-TONE EXAMPLES — Real Images ── */}
-      <section className="py-20 overflow-hidden"
+      <section className="py-28 overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #080c14 0%, #0a0c18 60%, #080c14 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-10">
+          <FadeUp className="text-center mb-16">
             <SectionLabel>Multi-Tone Examples</SectionLabel>
             <Heading>With real images — photographic.</Heading>
-            <Body className="mt-4 max-w-2xl">When foreground illustrations are replaced with real product or lifestyle photography, the same background shape rules apply — using transparent PNGs or Photoshop clippings from Poshmark's website.</Body>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: 'rgba(255,255,255,0.35)', fontSize: '1rem' }}>
+              Transparent PNGs replacing illustrations — same background shape rules apply.
+            </p>
           </FadeUp>
-          <FadeIn delay={0.08}>
-            <Screen src="/images/p3-real-images.png" alt="Multi-Tone with real images" delay={0.08} />
-          </FadeIn>
         </div>
+        <FadeIn delay={0.1}>
+          <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            {[
+              { src: '/images/p3-ri-consignment.png', label: '01 — My Consignment',  sub: 'Product photo · CTA',           d: 0.05 },
+              { src: '/images/p3-ri-shows.png',       label: '02 — Posh Shows',      sub: 'Photography + illustration',    d: 0.12 },
+              { src: '/images/p3-ri-welcome.png',     label: '03 — Welcome Screen',  sub: 'Multi-photo grid · onboarding', d: 0.19 },
+            ].map(({ src, label, sub, d }) => (
+              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+                <Screen src={src} alt={label} delay={d} />
+                <FadeUp delay={d + 0.12} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* ── ILLUSTRATION DO'S & DON'TS ── */}
