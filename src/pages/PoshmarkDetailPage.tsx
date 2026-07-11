@@ -381,8 +381,8 @@ export default function PoshmarkDetailPage() {
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: d }}
                 className="rounded-2xl overflow-hidden flex flex-col"
                 style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-                {/* image with white bg */}
-                <div style={{ background: '#ffffff' }}>
+                {/* image with faded bg */}
+                <div style={{ background: 'rgba(255,255,255,0.06)' }}>
                   <img src={src} alt={title} style={{ display: 'block', width: '100%', height: 'auto' }} />
                 </div>
                 {/* spec text */}
