@@ -428,9 +428,9 @@ export default function PoshmarkDetailPage() {
         <FadeIn delay={0.1}>
           <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
             {[
-              { src: '/images/p3-col1img1.png', label: '01 — Single Section',  sub: 'Title · Body · Icon',         d: 0.05 },
-              { src: '/images/p3-col2img.png',  label: '02 — Two Sections',    sub: 'Title · Body · 2-col · Icon', d: 0.12 },
-              { src: '/images/p3-col1img2.png', label: '03 — Three Sections',  sub: 'Title · Body · 3-col · Icon', d: 0.19 },
+              { src: '/images/p3-col1img1.png', label: '01 — News',              sub: 'Single section · Icon only',  d: 0.05 },
+              { src: '/images/p3-col2img.png',  label: '02 — Active Offers',   sub: 'Two sections · Icon + text',  d: 0.12 },
+              { src: '/images/p3-col1img2.png', label: '03 — Promoted Closet', sub: 'Three sections · Stacked',    d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
