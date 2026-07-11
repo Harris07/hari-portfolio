@@ -221,8 +221,8 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ── THE PROBLEM ── */}
-      <section className="py-28 overflow-hidden" style={{ background: '#080a0f' }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+      <section className="py-28 overflow-hidden px-6 md:px-10" style={{ background: '#080a0f' }}>
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>The Problem</SectionLabel>
