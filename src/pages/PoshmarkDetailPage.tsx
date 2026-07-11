@@ -482,74 +482,53 @@ export default function PoshmarkDetailPage() {
             <Heading>Four rules. No exceptions.</Heading>
           </FadeUp>
 
-          <div className="flex flex-col gap-0">
-            {[
-              {
-                rule: '01 — Stroke Weight',
-                doImg: '/images/p3-dd1-do.png',   doText: 'All elements share the same 2px stroke thickness',
-                dontImg: '/images/p3-dd1-dont.png', dontText: "Don't mix stroke weights — 1.5px and 1px in the same icon breaks unity",
-                d: 0.0,
-              },
-              {
-                rule: '02 — Fill Ratio',
-                doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element at 80:20 ratio — #2A2A2A fill at 15% opacity',
-                dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40 — equal weight removes hierarchy",
-                d: 0.05,
-              },
-              {
-                rule: '03 — Secondary Elements',
-                doImg: '/images/p3-dd3-do.png',   doText: 'Keep smaller elements minimal — stroke only, no detail',
-                dontImg: '/images/p3-dd3-dont.png', dontText: "Don't add complex detail to small elements — creates visual noise",
-                d: 0.1,
-              },
-              {
-                rule: '04 — Highlight Count',
-                doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon to direct attention',
-                dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements — it erases visual hierarchy entirely",
-                d: 0.15,
-              },
-            ].map(({ rule, doImg, doText, dontImg, dontText, d }, i) => (
-              <FadeUp key={rule} delay={d} className="flex flex-col gap-0">
-                {/* Rule label row */}
-                <div className="flex items-center gap-4 py-6" style={{ borderTop: i === 0 ? `1px solid ${BORDER}` : undefined }}>
-                  <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.2)' }}>{rule}</span>
-                  <div className="flex-1 h-px" style={{ background: BORDER }} />
-                </div>
-
-                {/* Side-by-side cards */}
-                <div className="grid grid-cols-2 gap-5 pb-5">
-                  {/* DO card */}
-                  <div className="flex flex-col gap-4">
-                    <div className="relative rounded-2xl overflow-hidden"
-                      style={{ background: 'rgba(34,197,94,0.04)', border: '1.5px solid rgba(34,197,94,0.18)' }}>
-                      <img src={doImg} alt={doText} style={{ display: 'block', width: '100%', height: 'auto' }} />
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
-                        style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e' }}>✓</span>
-                      <p className="text-sm font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{doText}</p>
+          {/* 2 groups per row, each group = DO + DON'T pair */}
+          {(() => {
+            const pairs = [
+              { rule: '01 — Stroke Weight',      doImg: '/images/p3-dd1-do.png',   doText: 'All elements share the same 2px stroke',           dontImg: '/images/p3-dd1-dont.png', dontText: "Don't mix stroke weights in the same icon" },
+              { rule: '02 — Fill Ratio',          doImg: '/images/p3-dd2-do.png',   doText: 'Highlight one element — 80:20 ratio, 15% opacity', dontImg: '/images/p3-dd2-dont.png', dontText: "Don't use 50:50 or 60:40 — removes hierarchy" },
+              { rule: '03 — Secondary Elements',  doImg: '/images/p3-dd3-do.png',   doText: 'Keep smaller elements minimal, stroke only',       dontImg: '/images/p3-dd3-dont.png', dontText: "Don't add complex detail to small elements" },
+              { rule: '04 — Highlight Count',     doImg: '/images/p3-dd4-do.png',   doText: 'Highlight exactly one element per icon',           dontImg: '/images/p3-dd4-dont.png', dontText: "Don't fill multiple elements — erases hierarchy" },
+            ];
+            const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
+            return rows.map((rowPairs, ri) => (
+              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-2 gap-10 mb-14">
+                {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
+                  <div key={rule} className="flex flex-col gap-4">
+                    {/* Rule label */}
+                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.25)' }}>{rule}</span>
+                    {/* DO + DON'T cards side by side */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* DO */}
+                      <div className="flex flex-col gap-3">
+                        <div className="rounded-xl overflow-hidden"
+                          style={{ background: 'rgba(34,197,94,0.04)', border: '1.5px solid rgba(34,197,94,0.18)' }}>
+                          <img src={doImg} alt={doText} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: 9, fontWeight: 700 }}>✓</span>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{doText}</p>
+                        </div>
+                      </div>
+                      {/* DON'T */}
+                      <div className="flex flex-col gap-3">
+                        <div className="rounded-xl overflow-hidden"
+                          style={{ background: 'rgba(239,68,68,0.04)', border: '1.5px solid rgba(239,68,68,0.18)' }}>
+                          <img src={dontImg} alt={dontText} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 9, fontWeight: 700 }}>✕</span>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{dontText}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  {/* DON'T card */}
-                  <div className="flex flex-col gap-4">
-                    <div className="relative rounded-2xl overflow-hidden"
-                      style={{ background: 'rgba(239,68,68,0.04)', border: '1.5px solid rgba(239,68,68,0.18)' }}>
-                      <img src={dontImg} alt={dontText} style={{ display: 'block', width: '100%', height: 'auto' }} />
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
-                        style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444' }}>✕</span>
-                      <p className="text-sm font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>{dontText}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom divider */}
-                <div className="h-px" style={{ background: BORDER }} />
+                ))}
               </FadeUp>
-            ))}
-          </div>
+            ));
+          })()}
         </div>
       </section>
 
