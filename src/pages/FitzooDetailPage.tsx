@@ -262,7 +262,7 @@ export default function FitzooDetailPage() {
           return (
             <>
               {/* Mobile: single column */}
-              <div className="flex flex-col md:hidden max-w-5xl mx-auto px-6" style={{ gap: 30 }}>
+              <div className="flex flex-col md:hidden max-w-5xl mx-auto" style={{ gap: 30 }}>
                 {personas.map((p, i) => renderCard(p, i))}
               </div>
               {/* Desktop: 2-column staggered */}
