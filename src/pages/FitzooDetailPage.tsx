@@ -472,18 +472,18 @@ export default function FitzooDetailPage() {
           <FadeUp className="w-full text-center mb-14">
             <SectionLabel>Daily Diet Check-in</SectionLabel>
             <Heading>20 seconds. Done.</Heading>
-            <div className="mt-4 mx-auto" style={{ width: 622 }}>
+            <div className="mt-4 mx-auto max-w-xl px-2">
               <Body>A quick 2-question emoji survey — did you have aerated drinks or junk food today? Based on the answers, Fitzoo automatically adjusts the next workout duration so the user burns off the extra intake.</Body>
             </div>
           </FadeUp>
           <FadeIn delay={0.1}>
-            <div className="flex items-end justify-center gap-4 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            <div className="flex flex-col sm:flex-row sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
               {[
                 { src: '/images/fitzoo/diet-screen1.png', alt: 'Diet step 1', rot: -4, d: 0.1,  title: '01 — Aerated Drinks', sub: 'Did you have any today?' },
                 { src: '/images/fitzoo/diet-screen2.png', alt: 'Diet step 2', rot: 0,  d: 0.18, title: '02 — Junk Food',     sub: 'Any junk food eaten today?' },
                 { src: '/images/fitzoo/diet-screen3.png', alt: 'Diet step 3', rot: 4,  d: 0.26, title: '03 — Adjusted Plan', sub: 'Workout time tweaked to match' },
               ].map(({ src, alt, rot, d, title, sub }) => (
-                <div key={alt} className="flex flex-col items-center flex-1" style={{ maxWidth: 250, gap: 40 }}>
+                <div key={alt} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[250px] mx-auto sm:mx-0" style={{ gap: 40 }}>
                   <Phone src={src} alt={alt} delay={d} rotate={rot} />
                   <FadeUp delay={d + 0.12} className="text-center">
                     <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: O }}>{title}</span>
