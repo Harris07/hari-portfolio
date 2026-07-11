@@ -485,7 +485,7 @@ export default function PoshmarkDetailPage() {
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
-              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-2 gap-10 mb-14">
+              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
                 {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
                   <div key={rule} className="flex flex-col gap-4">
                     {/* Rule label */}
@@ -687,7 +687,7 @@ export default function PoshmarkDetailPage() {
             ];
             const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
             return rows.map((rowPairs, ri) => (
-              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-2 gap-10 mb-14">
+              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-14">
                 {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
                   <div key={rule} className="flex flex-col gap-4">
                     <span className="font-semibold text-sm" style={{ color: WHITE }}>{rule}</span>
