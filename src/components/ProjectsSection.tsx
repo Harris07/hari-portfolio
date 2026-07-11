@@ -30,7 +30,7 @@ function ProjectCard({ project }: { project: (typeof PROJECTS)[0] }) {
     >
       <motion.div
         className="flex flex-col rounded-3xl overflow-hidden"
-        style={{ background: '#0d0e12', border: '1px solid ' + BORDER, height: 600 }}
+        style={{ background: '#0d0e12', border: '1px solid ' + BORDER, height: 'clamp(380px, 60vw, 600px)' }}
         whileHover={{ borderColor: 'rgba(215,226,234,0.25)' }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
       >
