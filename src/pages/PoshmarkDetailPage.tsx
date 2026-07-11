@@ -572,35 +572,44 @@ export default function PoshmarkDetailPage() {
             ))}
           </FadeUp>
 
-          {/* Brand colour palette */}
-          <FadeUp delay={0.3} className="mt-8">
-            <div className="p-6 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-5" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                Brand fill colours — foreground palette <Spec>6 colours only</Spec>
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {[
-                  { hex: '#E1253E', name: 'Posh Red' },
-                  { hex: '#B51D30', name: 'Deep Red' },
-                  { hex: '#F47B5E', name: 'Coral' },
-                  { hex: '#F9B997', name: 'Peach' },
-                  { hex: '#D4B8E0', name: 'Lilac' },
-                  { hex: '#B8D4E8', name: 'Sky Blue' },
-                ].map(({ hex, name }) => (
-                  <div key={hex} className="flex items-center gap-2.5 px-3 py-2 rounded-xl"
-                    style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}` }}>
-                    <div className="w-4 h-4 rounded-full flex-shrink-0" style={{ background: hex }} />
-                    <div>
-                      <code className="text-xs font-mono block leading-none" style={{ color: WHITE }}>{hex}</code>
-                      <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>{name}</span>
-                    </div>
-                  </div>
-                ))}
+        </div>
+      </section>
+
+      {/* ── BRAND COLOUR PALETTE ── */}
+      <section className="py-20 overflow-hidden" style={{ background: '#080a0f' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="mb-12">
+            <SectionLabel>Brand Palette</SectionLabel>
+            <Heading>Six colours. No more.</Heading>
+            <Body className="mt-4 max-w-xl">All Multi-Tone foreground illustrations are built exclusively from these 6 brand fill colours. Background shapes use the same palette at reduced opacity.</Body>
+          </FadeUp>
+
+          <FadeUp delay={0.1} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            {[
+              { hex: '#E1253E', name: 'Posh Red' },
+              { hex: '#B51D30', name: 'Deep Red' },
+              { hex: '#F47B5E', name: 'Coral' },
+              { hex: '#F9B997', name: 'Peach' },
+              { hex: '#D4B8E0', name: 'Lilac' },
+              { hex: '#B8D4E8', name: 'Sky Blue' },
+            ].map(({ hex, name }) => (
+              <div key={hex} className="flex flex-col rounded-2xl overflow-hidden"
+                style={{ border: `1px solid ${BORDER}` }}>
+                <div style={{ background: hex, height: 100 }} />
+                <div className="px-3 py-3 flex flex-col gap-0.5"
+                  style={{ background: 'rgba(255,255,255,0.03)' }}>
+                  <code className="text-xs font-mono font-medium block" style={{ color: WHITE }}>{hex}</code>
+                  <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.5)' }}>{name}</span>
+                </div>
               </div>
-              <p className="mt-4 text-xs font-light" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                Background shapes use brand colours at <Spec>Light: 20% opacity</Spec> or <Spec>Dark: 50% opacity</Spec>
-              </p>
-            </div>
+            ))}
+          </FadeUp>
+
+          <FadeUp delay={0.2} className="mt-8 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>Background shapes use brand colours at</span>
+            <Spec>Light: 20% opacity</Spec>
+            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>or</span>
+            <Spec>Dark: 50% opacity</Spec>
           </FadeUp>
         </div>
       </section>
