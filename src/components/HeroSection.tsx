@@ -55,8 +55,8 @@ export default function HeroSection() {
         delay={0.6}
         y={30}
         className="sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:z-10 sm:bottom-0 sm:translate-y-0
-                   mx-auto w-[60vw] max-w-[260px] sm:w-[360px] md:w-[440px] lg:w-[520px] sm:max-w-none
-                   flex-shrink-0"
+                   mx-auto w-[70vw] max-w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] sm:max-w-none
+                   flex-shrink-0 -mb-24 sm:mb-0"
       >
         <Magnet
           padding={150}
