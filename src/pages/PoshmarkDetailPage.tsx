@@ -193,10 +193,10 @@ export default function PoshmarkDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <FadeUp>
               <SectionLabel>Overview</SectionLabel>
-              <Heading>Defining how illustrations should work across the entire product.</Heading>
+              <Heading>Design a unified icon and graphic guideline for Poshmark's product.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>I designed and documented Poshmark's first illustration system — a complete framework covering two distinct styles, their construction rules, usage guidelines, and real-screen examples. The system gave the product a clear, repeatable visual language: one style for clarity-first contexts like empty states, another for emotional engagement in onboarding and feature moments. Delivered as a 21-slide specification, it defined every decision from stroke weight to colour palette to artboard size.</Body>
+              <Body>Poshmark's product had grown to cover hundreds of screens — empty states, onboarding flows, feature introductions, campaigns — each using illustrations in their own way. There was no documented standard for style, construction, or usage. My goal was to change that: design a complete illustration system from scratch, covering every context the product needed, and document it clearly enough that it could be applied consistently going forward.</Body>
               <div className="mt-8 flex flex-wrap gap-3">
                 {['Design System', 'Illustration', 'Empty States', 'Onboarding', 'Documentation'].map(t => (
                   <span key={t} className="text-xs font-medium px-3 py-1.5 rounded-full"
