@@ -366,57 +366,42 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
         </div>
 
-        {/* 3 individual cards side by side */}
-        <FadeIn delay={0.1}>
-          <div className="flex items-start justify-center gap-4 sm:gap-6 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+        {/* 3 unified cards — image + specs combined */}
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
-              { src: '/images/p3-st-card1.png', label: '01 — Icon Stroke',          sub: '#2A2A2A · 2px · rounded caps',          d: 0.05 },
-              { src: '/images/p3-st-card2.png', label: '02 — Fill State',            sub: '#2A2A2A · 15% opacity · one element',   d: 0.12 },
-              { src: '/images/p3-st-card3.png', label: '03 — Disconnected Points',   sub: 'Max 2 points · intersections only',      d: 0.19 },
-            ].map(({ src, label, sub, d }) => (
-              <div key={label} className="flex flex-col items-center flex-1" style={{ maxWidth: 260, gap: 24 }}>
-                <motion.div
-                  ref={null}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-30px' }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: d }}
-                  style={{ borderRadius: 16, overflow: 'hidden', background: '#ffffff', boxShadow: '0 24px 48px rgba(0,0,0,0.6)' }}>
-                  <img src={src} alt={label} style={{ display: 'block', width: '100%', height: 'auto' }} />
-                </motion.div>
-                <FadeUp delay={d + 0.1} className="text-center">
-                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
-                </FadeUp>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-
-        {/* Spec details grid */}
-        <div className="max-w-5xl mx-auto px-6 md:px-10 mt-16">
-          <FadeUp delay={0.2} className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {[
-              { title: 'Icon Stroke', specs: ['#2A2A2A', '2px width', 'rounded caps'], bullets: ['All strokes must share the same 2px weight', 'No mixed thicknesses across elements', 'Round both start and end caps'] },
-              { title: 'Fill State',  specs: ['#2A2A2A', '15% opacity', 'one element only'], bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio — stroke dominant'] },
-              { title: 'Disconnected Points', specs: ['max 2 points', 'intersections only'], bullets: ['Maximum of 2 points per icon', 'Place only at object intersections', 'Reinforces depth hierarchy'] },
-            ].map(({ title, specs, bullets }) => (
-              <div key={title} className="p-5 rounded-2xl flex flex-col gap-3"
+              { src: '/images/p3-st-card1.png', title: 'Icon Stroke',          specs: ['#2A2A2A', '2px width', 'rounded caps'],        bullets: ['All strokes must share the same 2px weight', 'No mixed thicknesses across elements', 'Round both start and end caps'],                                          d: 0.05 },
+              { src: '/images/p3-st-card2.png', title: 'Fill State',            specs: ['#2A2A2A', '15% opacity', 'one element only'],  bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio — stroke dominant'],                      d: 0.12 },
+              { src: '/images/p3-st-card3.png', title: 'Disconnected Points',   specs: ['max 2 points', 'intersections only'],          bullets: ['Maximum of 2 points per icon', 'Place only at object intersections', 'Reinforces depth hierarchy'],                                                        d: 0.19 },
+            ].map(({ src, title, specs, bullets, d }) => (
+              <motion.div key={title}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: d }}
+                className="rounded-2xl overflow-hidden flex flex-col"
                 style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-                <div>
-                  <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {specs.map(s => <Spec key={s}>{s}</Spec>)}
-                  </div>
+                {/* image with white bg */}
+                <div style={{ background: '#ffffff' }}>
+                  <img src={src} alt={title} style={{ display: 'block', width: '100%', height: 'auto' }} />
                 </div>
-                <ul className="flex flex-col gap-1.5">
-                  {bullets.map(b => (
-                    <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
-                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ background: B }} />{b}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                {/* spec text */}
+                <div className="p-5 flex flex-col gap-3">
+                  <div>
+                    <span className="font-semibold text-sm block mb-2" style={{ color: WHITE }}>{title}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {specs.map(s => <Spec key={s}>{s}</Spec>)}
+                    </div>
+                  </div>
+                  <ul className="flex flex-col gap-1.5">
+                    {bullets.map(b => (
+                      <li key={b} className="flex items-start gap-2 text-xs font-light" style={{ color: MUTED }}>
+                        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1" style={{ background: B }} />{b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
             ))}
           </FadeUp>
         </div>
