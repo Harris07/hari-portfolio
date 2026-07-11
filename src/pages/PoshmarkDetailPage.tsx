@@ -429,7 +429,7 @@ export default function PoshmarkDetailPage() {
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                 </FadeUp>
               </div>
             ))}
@@ -459,7 +459,7 @@ export default function PoshmarkDetailPage() {
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                 </FadeUp>
               </div>
             ))}
@@ -631,7 +631,7 @@ export default function PoshmarkDetailPage() {
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                 </FadeUp>
               </div>
             ))}
@@ -662,7 +662,7 @@ export default function PoshmarkDetailPage() {
                 <Screen src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                 </FadeUp>
               </div>
             ))}

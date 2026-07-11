@@ -302,7 +302,7 @@ export default function FitzooDetailPage() {
                 <Phone src={src} alt={label} delay={d} rotate={rot} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: O }}>{label}</span>
-                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                 </FadeUp>
               </div>
             ))}
@@ -487,7 +487,7 @@ export default function FitzooDetailPage() {
                   <Phone src={src} alt={alt} delay={d} rotate={rot} />
                   <FadeUp delay={d + 0.12} className="text-center">
                     <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: O }}>{title}</span>
-                    <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>{sub}</span>
+                    <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
                   </FadeUp>
                 </div>
               ))}
