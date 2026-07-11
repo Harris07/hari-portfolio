@@ -496,7 +496,7 @@ export default function PoshmarkDetailPage() {
                 {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
                   <div key={rule} className="flex flex-col gap-4">
                     {/* Rule label */}
-                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.25)' }}>{rule}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.5)' }}>{rule}</span>
                     {/* DO + DON'T cards side by side */}
                     <div className="grid grid-cols-2 gap-3">
                       {/* DO */}
@@ -508,7 +508,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: 9, fontWeight: 700 }}>✓</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{doText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{doText}</p>
                         </div>
                       </div>
                       {/* DON'T */}
@@ -520,7 +520,7 @@ export default function PoshmarkDetailPage() {
                         <div className="flex items-start gap-2">
                           <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                             style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 9, fontWeight: 700 }}>✕</span>
-                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{dontText}</p>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{dontText}</p>
                         </div>
                       </div>
                     </div>
