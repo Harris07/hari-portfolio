@@ -8,7 +8,7 @@ const PORTRAIT_URL = '/images/portrait.png'
 export default function HeroSection() {
   return (
     <section
-      className="h-screen flex flex-col relative"
+      className="h-auto sm:h-screen flex flex-col relative pb-8 sm:pb-0"
       style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(241,255,88,0.1) 0%, transparent 65%), #0d0e12', overflowX: 'clip' }}
     >
       {/* Navbar */}
