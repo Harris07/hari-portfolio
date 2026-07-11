@@ -155,17 +155,17 @@ export default function FitzooDetailPage() {
         </motion.div>
 
         {/* 3 phones fan */}
-        <motion.div className="relative z-10 flex items-end justify-center gap-4 sm:gap-8 px-6"
+        <motion.div className="relative z-10 flex flex-col sm:flex-row sm:items-end justify-center gap-6 sm:gap-8 px-6"
           style={{ marginBottom: '-80px' }}
           initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}>
-          <div style={{ width: 'clamp(155px, 25vw, 250px)' }}>
+          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)' }}>
             <Phone src="/images/fitzoo/splash.png" alt="Splash" delay={0.55} rotate={-6} />
           </div>
-          <div style={{ width: 'clamp(155px, 25vw, 250px)', marginBottom: '40px' }}>
+          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)', marginBottom: '0px' }}>
             <Phone src="/images/fitzoo/hero-center.png" alt="Home screen" delay={0.45} rotate={0} />
           </div>
-          <div style={{ width: 'clamp(155px, 25vw, 250px)' }}>
+          <div className="mx-auto sm:mx-0" style={{ width: 'clamp(180px, 55vw, 250px)' }}>
             <Phone src="/images/fitzoo/hero-right.png" alt="Game" delay={0.6} rotate={6} />
           </div>
         </motion.div>
