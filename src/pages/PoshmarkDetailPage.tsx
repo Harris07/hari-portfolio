@@ -56,9 +56,7 @@ function Screen({ src, alt = '', delay = 0 }: {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
       style={{ filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
-      <div style={{ borderRadius: 16, overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.09)', background: '#13141a' }}>
-        <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
-      </div>
+      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
     </motion.div>
   )
 }
