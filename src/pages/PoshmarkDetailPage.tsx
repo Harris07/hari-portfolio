@@ -662,37 +662,55 @@ export default function PoshmarkDetailPage() {
       </section>
 
       {/* ── ILLUSTRATION DO'S & DON'TS ── */}
-      <section className="py-20 overflow-hidden" style={{ background: '#0d0e12' }}>
+      <section className="py-24 overflow-hidden" style={{ background: '#0d0e12' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp className="mb-10">
+          <FadeUp className="mb-16">
             <SectionLabel>Illustration Do's &amp; Don'ts</SectionLabel>
             <Heading>Fill, stroke, and balance.</Heading>
-            <Body className="mt-4 max-w-2xl">How fill and stroke interact in Multi-Tone foreground illustrations — eight rules that keep every illustrated asset consistent across the product.</Body>
           </FadeUp>
-          <FadeUp delay={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { do: true,  rule: 'For a single-stroke fill, use one colour for the shape and filled highlights',   spec: 'monochrome fill' },
-              { do: false, rule: 'Avoid building flat objects with stroke alone — fill is required for depth',     spec: 'fill required' },
-              { do: true,  rule: 'Use only #FFFFFF for highlight strokes on filled objects',                       spec: '#FFFFFF only' },
-              { do: false, rule: 'Avoid using any other colour for highlight strokes on filled objects',           spec: 'no other colours' },
-              { do: true,  rule: 'For similar objects, make one filled with brand colour and the other stroked',   spec: 'fill + stroke pair' },
-              { do: false, rule: 'Avoid combining a filled line with another filled colour on the same object',    spec: 'no double-fill' },
-              { do: true,  rule: 'Balance filled shapes and text areas so neither feels visually heavy',           spec: 'balanced layout' },
-              { do: false, rule: "Don't create compositions where text and filled shapes compete for visual weight", spec: 'no imbalance' },
-            ].map(({ do: isDo, rule, spec }, i) => (
-              <div key={i} className="flex gap-3 p-4 rounded-xl items-start"
-                style={{
-                  background: isDo ? 'rgba(34,197,94,0.05)' : 'rgba(239,68,68,0.05)',
-                  border: `1px solid ${isDo ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'}`,
-                }}>
-                <span className="font-bold text-sm flex-shrink-0 mt-0.5" style={{ color: isDo ? '#22c55e' : '#ef4444' }}>{isDo ? '✓' : '✕'}</span>
-                <div className="flex flex-col gap-1.5 min-w-0">
-                  <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{rule}</span>
-                  <code className="text-xs font-mono" style={{ color: isDo ? 'rgba(34,197,94,0.7)' : 'rgba(239,68,68,0.6)' }}>{spec}</code>
-                </div>
-              </div>
-            ))}
-          </FadeUp>
+
+          {(() => {
+            const pairs = [
+              { rule: '01 — Single Object Fill',   doImg: '/images/p3-ill1-do.png',   doText: 'Fill one part, stroke the rest — avoid multiple fills for shadows or highlights', dontImg: '/images/p3-ill1-dont.png', dontText: 'Avoid building filled objects with stroke alone' },
+              { rule: '02 — Highlight Strokes',    doImg: '/images/p3-ill2-do.png',   doText: 'Use only #FFFFFF for highlight strokes on filled objects',                         dontImg: '/images/p3-ill2-dont.png', dontText: 'Avoid any other colour for highlight strokes on filled objects' },
+              { rule: '03 — Similar Objects',      doImg: '/images/p3-ill3-do.png',   doText: 'Make one object filled and the other an outline — avoid filling both',            dontImg: '/images/p3-ill3-dont.png', dontText: 'Avoid imbalanced illustrations — majorly fill with minor stroke or vice versa' },
+              { rule: '04 — Real Images',          doImg: '/images/p3-ill4-do.png',   doText: 'Use a balanced mix of real images and illustrations — avoid overusing one',       dontImg: '/images/p3-ill4-dont.png', dontText: 'Avoid stock or paid images — use Poshmark brand photoshoots or listings' },
+            ];
+            const rows = [[pairs[0], pairs[1]], [pairs[2], pairs[3]]];
+            return rows.map((rowPairs, ri) => (
+              <FadeUp key={ri} delay={ri * 0.08} className="grid grid-cols-2 gap-10 mb-14">
+                {rowPairs.map(({ rule, doImg, doText, dontImg, dontText }) => (
+                  <div key={rule} className="flex flex-col gap-4">
+                    <span className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: 'rgba(255,255,255,0.5)' }}>{rule}</span>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex flex-col gap-3">
+                        <div className="rounded-xl overflow-hidden"
+                          style={{ background: 'rgba(34,197,94,0.04)', border: '1.5px solid rgba(34,197,94,0.18)' }}>
+                          <img src={doImg} alt={doText} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: 'rgba(34,197,94,0.15)', color: '#22c55e', fontSize: 9, fontWeight: 700 }}>✓</span>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{doText}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        <div className="rounded-xl overflow-hidden"
+                          style={{ background: 'rgba(239,68,68,0.04)', border: '1.5px solid rgba(239,68,68,0.18)' }}>
+                          <img src={dontImg} alt={dontText} style={{ display: 'block', width: '100%', height: 'auto' }} />
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="flex-shrink-0 mt-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                            style={{ background: 'rgba(239,68,68,0.15)', color: '#ef4444', fontSize: 9, fontWeight: 700 }}>✕</span>
+                          <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>{dontText}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </FadeUp>
+            ));
+          })()}
         </div>
       </section>
 
