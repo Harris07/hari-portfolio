@@ -774,8 +774,8 @@ export default function PoshmarkDetailPage() {
         projectId={nextProject.id}
         projectName={nextProject.name}
         coverImage={nextProject.coverImage}
-        logo="/images/fitzoo-logo.png"
-        accentColor="#FF5C2B"
+        logo="/images/p1-logo.png"
+        accentColor="#C9177E"
       />
 
       <footer className="px-6 md:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-4"
