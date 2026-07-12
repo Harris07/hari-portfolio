@@ -307,17 +307,6 @@ export default function ListingStreaksDetailPage() {
         </motion.div>
       </section>
 
-      {/* ── BANNER IMAGE ── */}
-      <section className="px-6 md:px-10 pb-20" style={{ background: BG }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeIn>
-            <img src="/images/p1-thumbnail.png" alt="Listing Streaks"
-              className="w-full rounded-2xl"
-              style={{ boxShadow: '0 40px 80px rgba(0,0,0,0.6)', display: 'block' }} />
-          </FadeIn>
-        </div>
-      </section>
-
       {/* ── OVERVIEW ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: `linear-gradient(180deg, ${BG} 0%, #0f1016 100%)` }}>
         <div className="max-w-5xl mx-auto">
