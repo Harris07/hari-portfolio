@@ -30,102 +30,26 @@ export interface Project {
   liveUrl?: string
 }
 
-const CF = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2F'
-const q = '&w=1280&q=85'
 
 export const PROJECTS: Project[] = [
   {
-    id: 'nextlevel-studio',
+    id: 'listing-streaks',
     num: '01',
-    name: 'Nextlevel Studio',
-    category: 'Client',
-    tagline: 'Redesigning the digital presence of a creative production studio to attract premium clients and showcase work with impact.',
-    shortDesc: 'A website redesign that helped a creative studio attract premium clients.',
-    year: '2025',
+    name: 'Listing Streaks',
+    category: 'Poshmark',
+    tagline: 'A habit-building feature that motivates casual sellers to list weekly by turning consistency into a streak worth protecting.',
+    shortDesc: 'Turning listing consistency into a streak sellers want to protect.',
+    year: '2024',
     role: 'Product Designer',
-    timeline: '6 Weeks',
-    tools: ['Figma', 'Framer', 'Lottie', 'Notion'],
-    coverImage: `${CF}hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png${q}`,
-    bannerImage: `${CF}hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png${q}`,
-    col1img1: `${CF}hf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png${q}`,
-    col1img2: `${CF}hf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png${q}`,
-    col2img: `${CF}hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png${q}`,
-    sections: [
-      {
-        type: 'text',
-        label: 'Overview',
-        heading: 'A studio without a stage',
-        body: 'Nextlevel Studio is a high-end creative production house specialising in brand films, motion design, and content strategy. Despite producing world-class work, their website failed to communicate that quality — a cluttered layout, slow load times, and no clear conversion path were costing them leads.',
-      },
-      {
-        type: 'text',
-        label: 'The Problem',
-        heading: 'Starting with friction',
-        body: 'The existing site was built on a generic template with no visual hierarchy. Potential clients couldn\'t identify services at a glance, the showreel was buried three clicks deep, and the contact flow had a 78% drop-off rate. The brand was invisible at the most critical touchpoint.',
-      },
-      {
-        type: 'text',
-        label: 'Signals from data',
-        heading: 'The numbers told the story',
-        items: [
-          'Average session duration under 45 seconds',
-          '78% drop-off on the contact/enquiry page',
-          '0% mobile conversion despite 60% mobile traffic',
-          'Showreel had fewer than 200 monthly views',
-        ],
-      },
-      {
-        type: 'chips',
-        label: 'Design Goals',
-        heading: 'The goals were clear',
-        items: [
-          '01 — Instant brand impact above the fold',
-          '02 — Surface the showreel within one click',
-          '03 — Simplify the enquiry flow to 2 steps',
-          '04 — Mobile-first responsive layout',
-          '05 — Establish visual identity through motion',
-          '06 — Reduce page weight by 40%',
-        ],
-      },
-      {
-        type: 'image',
-        label: 'Design Work',
-        images: [`${CF}hf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png${q}`],
-      },
-      {
-        type: 'text',
-        label: 'Solution',
-        heading: 'Hero reimagined',
-        body: 'The new hero section opens with a full-bleed autoplay showreel loop — immediately communicating the studio\'s craft without requiring a click. A minimal two-word tagline overlays it with a single CTA: "See our work." The fold is intentionally sparse to let the motion breathe.',
-      },
-      {
-        type: 'image-grid',
-        label: 'Screens',
-        images: [
-          `${CF}hf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png${q}`,
-          `${CF}hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png${q}`,
-        ],
-      },
-      {
-        type: 'metrics',
-        label: 'Results',
-        heading: 'What we saw after launch',
-        metrics: [
-          { value: '+340%', label: 'Increase in showreel views' },
-          { value: '+210%', label: 'Enquiry form submissions' },
-          { value: '-62%', label: 'Bounce rate reduction' },
-          { value: '4.2s → 1.1s', label: 'Page load time improvement' },
-          { value: '+180%', label: 'Mobile session duration' },
-          { value: '3×', label: 'Client enquiry conversion rate' },
-        ],
-      },
-      {
-        type: 'text',
-        label: 'Reflection',
-        heading: 'A website that works as hard as the studio does',
-        body: 'This project reinforced a belief I hold strongly — that for creative businesses, the website IS the portfolio. Every micro-decision, from font weight to hover state latency, communicates craft. When we got those details right, the work sold itself.',
-      },
-    ],
+    timeline: 'End to End Design',
+    timelineLabel: 'Ownership',
+    tools: ['Figma', 'Jira', 'Notion'],
+    coverImage: '/images/p1-thumbnail.png',
+    bannerImage: '/images/p1-thumbnail.png',
+    col1img1: '/images/p1-thumbnail.png',
+    col1img2: '/images/p1-thumbnail.png',
+    col2img: '/images/p1-thumbnail.png',
+    sections: [],
   },
   {
     id: 'fitzoo',
