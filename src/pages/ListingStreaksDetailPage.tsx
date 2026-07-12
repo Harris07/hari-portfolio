@@ -180,6 +180,23 @@ function LineChart() {
   )
 }
 
+/* ─── phone mockup ─── */
+function Phone({ src, alt = '', delay = 0, rotate = 0 }: { src: string; alt?: string; delay?: number; rotate?: number }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-30px' })
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 60, rotate: rotate * 0.4 }}
+      animate={inView ? { opacity: 1, y: 0, rotate } : {}}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
+      style={{ flexShrink: 0, filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.7))' }}>
+      <div style={{ borderRadius: '14px', overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.1)', background: '#13141a' }}>
+        <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
+      </div>
+    </motion.div>
+  )
+}
+
 /* ─── animated bar ─── */
 function MetricBar({ label, before, after, suffix = '%', delay = 0 }: {
   label: string; before: number; after: number; suffix?: string; delay?: number
@@ -407,11 +424,9 @@ export default function ListingStreaksDetailPage() {
                 <Body>The week 4 reward icon — a gift box at position W4 in the progress timeline — was deliberately placed in the initial viewport from week 1. This exploits the principle of visible yet deferred reward: the goal is always known, the distance is always computable, and the commitment device is locked in from the first session.</Body>
               </div>
             </FadeUp>
-            <FadeIn delay={0.1}>
-              <img src="/images/p1-screens-1.png" alt="Streak page — Week 1 default view"
-                className="w-full rounded-2xl mx-auto"
-                style={{ maxWidth: 380, display: 'block', filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.7))' }} />
-            </FadeIn>
+            <div className="flex justify-center">
+              <Phone src="/images/p1-phone-w1a.png" alt="Streak page — Week 1 default view" delay={0.1} />
+            </div>
           </div>
         </div>
       </section>
@@ -427,11 +442,9 @@ export default function ListingStreaksDetailPage() {
               Each section of the streak page maps to a distinct cognitive need: where am I, how much time do I have, what have I built, and what do I stand to gain. The design hypothesis was that a user who can answer all four questions within 3 seconds of opening the page requires no persuasion — the architecture itself drives the behavior.
             </p>
           </FadeUp>
-          <FadeIn delay={0.1}>
-            <img src="/images/p1-screens-2.png" alt="Streak page design annotations"
-              className="w-full rounded-2xl"
-              style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
-          </FadeIn>
+          <div className="flex justify-center">
+            <Phone src="/images/p1-phone-w1b.png" alt="Streak page design annotations" delay={0.1} />
+          </div>
           <FadeUp delay={0.15} className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { n: '01', t: 'Current streak count', d: 'Week number rendered at maximum visual weight — the primary anchor for streak identity formation.' },
@@ -462,11 +475,17 @@ export default function ListingStreaksDetailPage() {
               <Body>Rather than a static UI with a changing number, each week produces a distinct visual state — a deliberate application of variable ratio reinforcement. By week 2, the filled bolt communicates that the behavior has been registered. By week 3, a social comparison nudge surfaces: "You are in the top 15% of consecutive listers." This framing activates identity-based motivation — the seller is no longer just listing, they are a habitual lister. The week 3 active state introduces a copy shift from "Next week unlocks in" to "Time left to list this week," reorienting urgency from anticipated gain to present-moment completion — a subtle but consequential distinction in behavioral priming.</Body>
             </div>
           </FadeUp>
-          <FadeIn delay={0.1}>
-            <img src="/images/p1-screens-3.png" alt="Streak pages for Weeks 2, 3, and 3 active"
-              className="w-full rounded-2xl"
-              style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
-          </FadeIn>
+          <div className="flex justify-center gap-4 md:gap-6 flex-wrap">
+            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
+              <Phone src="/images/p1-phone-w2a.png" alt="Week 2 streak" delay={0.1} />
+            </div>
+            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
+              <Phone src="/images/p1-phone-w2b.png" alt="Week 3 streak" delay={0.2} />
+            </div>
+            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
+              <Phone src="/images/p1-phone-w2c.png" alt="Week 3 active streak" delay={0.3} />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -474,11 +493,14 @@ export default function ListingStreaksDetailPage() {
       <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <FadeIn delay={0.05}>
-              <img src="/images/p1-screens-4.png" alt="Week 4 congratulations and reward unlock"
-                className="w-full rounded-2xl"
-                style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
-            </FadeIn>
+            <div className="flex justify-center gap-4 md:gap-6">
+              <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
+                <Phone src="/images/p1-phone-w4a.png" alt="Week 4 congratulations" delay={0.05} rotate={-2} />
+              </div>
+              <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
+                <Phone src="/images/p1-phone-w4b.png" alt="Week 4 reward unlock" delay={0.18} rotate={2} />
+              </div>
+            </div>
             <FadeUp delay={0.1}>
               <SectionLabel>The Reward Moment</SectionLabel>
               <Heading size="md">Milestone reward as a commitment amplifier.</Heading>
@@ -508,11 +530,14 @@ export default function ListingStreaksDetailPage() {
                 'Post-dismiss state is indistinguishable from week 1 — structural parity signals a clean start',
               ]} />
             </FadeUp>
-            <FadeIn delay={0.1}>
-              <img src="/images/p1-screens-5.png" alt="Broken streak actionsheet and streak reset"
-                className="w-full rounded-2xl"
-                style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
-            </FadeIn>
+            <div className="flex justify-center gap-4 md:gap-6">
+              <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
+                <Phone src="/images/p1-phone-brokena.png" alt="Broken streak actionsheet" delay={0.1} rotate={-2} />
+              </div>
+              <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
+                <Phone src="/images/p1-phone-brokenb.png" alt="Streak reset view" delay={0.22} rotate={2} />
+              </div>
+            </div>
           </div>
         </div>
       </section>
