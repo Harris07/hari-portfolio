@@ -175,7 +175,7 @@ export default function PoshmarkDetailPage() {
           </motion.div>
         </motion.div>
 
-        <motion.div className="relative z-10 w-full px-6 md:px-10" style={{ marginBottom: '-60px' }}
+        <motion.div className="relative z-10 w-full px-0 md:px-10" style={{ marginBottom: '-60px' }}
           initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}>
           <FadeIn>
