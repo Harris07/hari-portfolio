@@ -632,7 +632,7 @@ export default function PoshmarkDetailPage() {
             {[
               { src: '/images/p3-sm-addmyinfo.png', label: '01, Thumbnail',             sub: 'Single illustration · CTA',      d: 0.05 },
               { src: '/images/p3-sm-landing.png',   label: '02, Multiple Illustrations', sub: 'Inline icons · numbered steps',  d: 0.12 },
-              { src: '/images/p3-sm-week1.png',     label: '03, Actionsheet',            sub: 'Hero at top · text below',       d: 0.19 },
+              { src: '/images/p3-mt-example3.png',  label: '03, Listing Streaks',        sub: 'Feature introduction · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[320px]" style={{ gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
