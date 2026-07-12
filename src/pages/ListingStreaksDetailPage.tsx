@@ -190,9 +190,7 @@ function Phone({ src, alt = '', delay = 0, rotate = 0 }: { src: string; alt?: st
       animate={inView ? { opacity: 1, y: 0, rotate } : {}}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
       style={{ flexShrink: 0, filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.7))' }}>
-      <div style={{ borderRadius: '14px', overflow: 'hidden', border: '1.5px solid rgba(255,255,255,0.1)', background: '#13141a' }}>
-        <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
-      </div>
+      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: '14px' }} />
     </motion.div>
   )
 }
@@ -414,7 +412,9 @@ export default function ListingStreaksDetailPage() {
               </div>
             </FadeUp>
             <div className="flex justify-center">
-              <Phone src="/images/p1-phone-w1a.png" alt="Streak page — Week 1 default view" delay={0.1} />
+              <div style={{ width: 'clamp(200px, 36vw, 300px)' }}>
+                <Phone src="/images/p1-phone-w1a.png" alt="Streak page — Week 1 default view" delay={0.1} />
+              </div>
             </div>
           </div>
         </div>
@@ -431,26 +431,11 @@ export default function ListingStreaksDetailPage() {
               Each section of the streak page maps to a distinct cognitive need: where am I, how much time do I have, what have I built, and what do I stand to gain. The design hypothesis was that a user who can answer all four questions within 3 seconds of opening the page requires no persuasion — the architecture itself drives the behavior.
             </p>
           </FadeUp>
-          <div className="flex justify-center">
-            <Phone src="/images/p1-phone-w1b.png" alt="Streak page design annotations" delay={0.1} />
-          </div>
-          <FadeUp delay={0.15} className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { n: '01', t: 'Current streak count', d: 'Week number rendered at maximum visual weight — the primary anchor for streak identity formation.' },
-              { n: '02', t: 'Countdown timer', d: 'Time-to-next-unlock creates structured urgency without inducing anxiety; deadline clarity is the operative mechanism.' },
-              { n: '03', t: 'Reward timeline strip', d: 'A non-scrollable, spatially fixed progress rail — progress is visible, but never gamified to the point of distraction.' },
-              { n: '04', t: 'Contextual Posh tip', d: 'Variable selling tips serve a dual function: surface-level utility paired with implicit reinforcement of the listing behavior.' },
-            ].map(({ n, t, d }) => (
-              <div key={n} className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
-                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mb-3 flex-shrink-0"
-                  style={{ background: 'rgba(201,23,126,0.12)', color: A }}>
-                  {n}
-                </div>
-                <p className="font-semibold text-sm mb-1" style={{ color: WHITE }}>{t}</p>
-                <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{d}</p>
-              </div>
-            ))}
-          </FadeUp>
+          <FadeIn delay={0.1}>
+            <img src="/images/p1-annotation.png" alt="Streak page design annotations"
+              className="w-full rounded-2xl"
+              style={{ display: 'block', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))' }} />
+          </FadeIn>
         </div>
       </section>
 
