@@ -180,7 +180,7 @@ export default function PoshmarkDetailPage() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}>
           <FadeIn>
             <div style={{ borderRadius: 24, overflow: 'hidden', border: `1px solid rgba(0,179,255,0.15)`, boxShadow: '0 40px 100px rgba(0,0,0,0.6)' }}>
-              <img src={project.bannerImage} alt={project.name} style={{ width: '100%', height: 'auto', display: 'block' }} />
+              <img src={project.bannerImage} alt={project.name} className="w-full block h-[320px] sm:h-auto object-cover sm:object-contain" style={{ display: 'block' }} />
             </div>
           </FadeIn>
         </motion.div>
