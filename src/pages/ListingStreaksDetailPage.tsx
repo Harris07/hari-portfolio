@@ -423,7 +423,7 @@ export default function ListingStreaksDetailPage() {
       {/* ── DESIGN: ANNOTATION BREAKDOWN ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
         <div className="max-w-5xl mx-auto">
-          <FadeUp className="mb-10 text-center">
+          <FadeUp className="text-center" style={{ marginBottom: 40 }}>
             <SectionLabel>Design Decisions</SectionLabel>
             <Heading size="md">Information architecture as a behavioral scaffold.</Heading>
             <p className="mt-4 mx-auto max-w-xl font-light leading-relaxed"
