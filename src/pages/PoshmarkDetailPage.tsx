@@ -368,7 +368,7 @@ export default function PoshmarkDetailPage() {
 
         {/* 3 unified cards — image + specs combined */}
         <div className="max-w-5xl mx-auto px-6 md:px-10">
-          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 max-w-[200px] sm:max-w-none mx-auto">
+          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 max-w-[260px] sm:max-w-none mx-auto">
             {[
               { src: '/images/p3-st-card1.png', title: 'Icon Stroke',          specs: ['#2A2A2A', '2px width', 'rounded caps'],        bullets: ['All strokes must share the same 2px weight', 'No mixed thicknesses across elements', 'Round both start and end caps'],                                          d: 0.05 },
               { src: '/images/p3-st-card2.png', title: 'Fill State',            specs: ['#2A2A2A', '15% opacity', 'one element only'],  bullets: ['Highlight one element per icon at 15% opacity', 'Creates depth without adding new colour', '80:20 weight ratio, stroke dominant'],                      d: 0.12 },
@@ -539,7 +539,7 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
 
           {/* 3 unified cards — image + specs combined */}
-          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 max-w-[200px] sm:max-w-none mx-auto">
+          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 max-w-[260px] sm:max-w-none mx-auto">
             {[
               { src: '/images/p3-mt-card1.png', title: 'Background Shapes',     specs: ['amorphic forms', '20–50% opacity'],         bullets: ['Soft organic shapes behind the illustration', 'Use brand colours at low opacity', 'Light mode: 20% · Dark mode: 50%'],                              d: 0.05 },
               { src: '/images/p3-mt-card2.png', title: 'Foreground Illustration', specs: ['6 fill colours', '1px stroke #4A4A4A'],    bullets: ['Use exactly 6 brand fill colours', 'Stroke colour #4A4A4A or #FFFFFF', 'One filled element, rest stay as strokes'],                            d: 0.12 },
