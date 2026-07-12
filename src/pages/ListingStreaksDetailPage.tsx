@@ -190,7 +190,7 @@ function Phone({ src, alt = '', delay = 0, rotate = 0 }: { src: string; alt?: st
       animate={inView ? { opacity: 1, y: 0, rotate } : {}}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
       style={{ flexShrink: 0, filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.7))' }}>
-      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto', borderRadius: '14px' }} />
+      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: 'auto' }} />
     </motion.div>
   )
 }
