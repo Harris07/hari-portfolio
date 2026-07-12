@@ -70,8 +70,8 @@ function SmallArtboardImg({ src, alt = '', delay = 0 }: { src: string; alt?: str
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
-      style={{ width: '100%', filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
-      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', aspectRatio: '886 / 1760' }} />
+      style={{ width: '100%', position: 'relative', paddingBottom: '198.6%', filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
+      <img src={src} alt={alt} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
     </motion.div>
   )
 }
