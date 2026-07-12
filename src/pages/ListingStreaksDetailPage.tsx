@@ -431,7 +431,7 @@ export default function ListingStreaksDetailPage() {
               Each section of the streak page maps to a distinct cognitive need: where am I, how much time do I have, what have I built, and what do I stand to gain. The design hypothesis was that a user who can answer all four questions within 3 seconds of opening the page requires no persuasion — the architecture itself drives the behavior.
             </p>
           </FadeUp>
-          <div className="flex justify-center">
+          <div className="flex justify-center" style={{ marginTop: 30 }}>
             <FadeIn delay={0.1}>
               <img src="/images/p1-annotation.png" alt="Streak page design annotations"
                 className="rounded-2xl"
