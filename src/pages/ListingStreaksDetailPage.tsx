@@ -435,7 +435,7 @@ export default function ListingStreaksDetailPage() {
             <FadeIn delay={0.1}>
               <img src="/images/p1-annotation.png" alt="Streak page design annotations"
                 className="rounded-2xl"
-                style={{ display: 'block', width: '70%', margin: '0 auto', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))' }} />
+                style={{ display: 'block', width: '75%', margin: '0 auto', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.5))' }} />
             </FadeIn>
           </div>
         </div>
