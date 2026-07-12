@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 import { PROJECTS } from '../data/projects'
@@ -65,6 +65,159 @@ function Body({ children, className = '' }: { children: React.ReactNode; classNa
   return <p className={`font-light leading-[1.75] ${className}`} style={{ color: MUTED, fontSize: 'clamp(0.92rem,1.3vw,1.05rem)' }}>{children}</p>
 }
 
+function BulletList({ items }: { items: string[] }) {
+  return (
+    <ul className="flex flex-col gap-3 mt-6">
+      {items.map((pt, i) => (
+        <li key={i} className="flex gap-3 items-start">
+          <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+            style={{ background: 'rgba(201,23,126,0.12)', border: '1px solid rgba(201,23,126,0.25)' }}>
+            <span className="block rounded-full" style={{ width: 6, height: 6, background: A }} />
+          </span>
+          <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{pt}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/* ─── animated counter ─── */
+function AnimatedNumber({ target, suffix = '', prefix = '' }: { target: number; suffix?: string; prefix?: string }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const mv = useMotionValue(0)
+  const spring = useSpring(mv, { stiffness: 60, damping: 18 })
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    if (inView) mv.set(target)
+  }, [inView, target, mv])
+
+  useEffect(() => {
+    return spring.on('change', v => setDisplay(Math.round(v)))
+  }, [spring])
+
+  return (
+    <span ref={ref} className="font-semibold tabular-nums" style={{ color: A, fontSize: 'clamp(2.4rem,4vw,3.4rem)', lineHeight: 1 }}>
+      {prefix}{display}{suffix}
+    </span>
+  )
+}
+
+/* ─── animated line chart ─── */
+const WEEKLY_DATA = [135, 134, 136, 137, 136, 138, 139, 138, 140, 141, 140, 142, 143, 143, 144]
+const PREV_DATA   = [141, 140, 143, 142, 141, 144, 143, 142, 144, 143, 145, 143, 144, 145, 146]
+
+function LineChart() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const W = 560; const H = 200
+  const minV = 130; const maxV = 150
+  const xs = WEEKLY_DATA.map((_, i) => (i / (WEEKLY_DATA.length - 1)) * W)
+  const toY = (v: number) => H - ((v - minV) / (maxV - minV)) * H
+
+  const pathD = (data: number[]) =>
+    data.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xs[i].toFixed(1)} ${toY(v).toFixed(1)}`).join(' ')
+
+  const areaD = (data: number[]) =>
+    `${pathD(data)} L ${W} ${H} L 0 ${H} Z`
+
+  return (
+    <div ref={ref} className="w-full overflow-x-auto">
+      <svg viewBox={`0 0 ${W} ${H + 36}`} width="100%" style={{ minWidth: 320, overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="aGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={A} stopOpacity="0.25" />
+            <stop offset="100%" stopColor={A} stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="pGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.15)" stopOpacity="1" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        {/* Grid lines */}
+        {[133, 136, 139, 142, 145].map(v => (
+          <g key={v}>
+            <line x1="0" y1={toY(v)} x2={W} y2={toY(v)} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+            <text x="-6" y={toY(v) + 4} textAnchor="end" fill="rgba(255,255,255,0.22)" fontSize="9">{v}k</text>
+          </g>
+        ))}
+
+        {/* Previous year area + line */}
+        <motion.path d={areaD(PREV_DATA)} fill="url(#pGrad)"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }} />
+        <motion.path d={pathD(PREV_DATA)} fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeDasharray="4 3"
+          initial={{ pathLength: 0, opacity: 0 }} animate={inView ? { pathLength: 1, opacity: 1 } : {}}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.2 }} />
+
+        {/* Current year area + line */}
+        <motion.path d={areaD(WEEKLY_DATA)} fill="url(#aGrad)"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 0.5 }} />
+        <motion.path d={pathD(WEEKLY_DATA)} fill="none" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
+          transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1], delay: 0.4 }} />
+
+        {/* Week labels */}
+        {[0, 4, 9, 14].map(i => (
+          <text key={i} x={xs[i]} y={H + 20} textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="9">W{i + 1}</text>
+        ))}
+
+        {/* End dot + label */}
+        <motion.circle cx={xs[14]} cy={toY(144)} r="5" fill={A}
+          initial={{ opacity: 0, scale: 0 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
+          style={{ transformOrigin: `${xs[14]}px ${toY(144)}px` }}
+          transition={{ delay: 1.9, duration: 0.4, ease: 'backOut' }} />
+        <motion.text x={xs[14] - 2} y={toY(144) - 12} textAnchor="middle" fill={A} fontSize="10" fontWeight="600"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 2.1 }}>
+          144k
+        </motion.text>
+      </svg>
+    </div>
+  )
+}
+
+/* ─── animated bar ─── */
+function MetricBar({ label, before, after, suffix = '%', delay = 0 }: {
+  label: string; before: number; after: number; suffix?: string; delay?: number
+}) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+  const maxAbs = Math.max(Math.abs(before), Math.abs(after), 8)
+
+  const barW = (v: number) => `${(Math.abs(v) / maxAbs) * 100}%`
+  const isImprovement = after > before
+
+  return (
+    <div ref={ref} className="flex flex-col gap-2">
+      <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</span>
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center gap-3">
+          <span className="text-xs w-16 text-right" style={{ color: MUTED }}>Before</span>
+          <div className="flex-1 h-6 rounded overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+            <motion.div className="h-full rounded" style={{ background: 'rgba(255,255,255,0.15)' }}
+              initial={{ width: 0 }} animate={inView ? { width: barW(before) } : {}}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }} />
+          </div>
+          <span className="text-sm font-semibold w-12" style={{ color: 'rgba(255,255,255,0.45)' }}>{before}{suffix}</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs w-16 text-right" style={{ color: MUTED }}>After</span>
+          <div className="flex-1 h-6 rounded overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
+            <motion.div className="h-full rounded" style={{ background: isImprovement ? A : '#e05' }}
+              initial={{ width: 0 }} animate={inView ? { width: barW(after) } : {}}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: delay + 0.15 }} />
+          </div>
+          <span className="text-sm font-semibold w-12" style={{ color: isImprovement ? A : '#e05' }}>{after}{suffix}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─── page ─── */
 export default function ListingStreaksDetailPage() {
   const currentIndex = PROJECTS.findIndex(p => p.id === 'listing-streaks')
@@ -125,7 +278,7 @@ export default function ListingStreaksDetailPage() {
               { l: 'Role', v: 'Product Designer' },
               { l: 'Company', v: 'Poshmark' },
               { l: 'Tools', v: 'Figma' },
-              { l: 'Timeline', v: '2024' },
+              { l: 'Launched', v: 'Jul 2024' },
             ].map(({ l, v }) => (
               <div key={l} className="px-5 py-3 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}`, backdropFilter: 'blur(8px)' }}>
@@ -184,22 +337,13 @@ export default function ListingStreaksDetailPage() {
               <Heading>No feedback loop for consistency.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Casual sellers would list a few items, see no signal that their behavior mattered, and quietly drift away. There was no visual representation of their listing history, no moment of recognition when they listed consecutively, and no cost to missing a week. Without those feedback mechanisms, the habit never had a chance to form.</Body>
-              <ul className="mt-8 flex flex-col gap-3">
-                {[
-                  'No visual cue showing consecutive listing activity',
-                  'No reward or recognition for listing weekly',
-                  'Lapsed sellers had no reason to return after missing a week',
-                ].map((pt, i) => (
-                  <li key={i} className="flex gap-3 items-start">
-                    <span className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
-                      style={{ background: 'rgba(201,23,126,0.12)', border: '1px solid rgba(201,23,126,0.25)' }}>
-                      <span className="block rounded-full" style={{ width: 6, height: 6, background: A }} />
-                    </span>
-                    <span className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{pt}</span>
-                  </li>
-                ))}
-              </ul>
+              <Body>Casual sellers would list a few items, see no signal that their behavior mattered, and quietly drift away. There was no visual representation of their listing history, no moment of recognition when they listed consecutively, and no cost to missing a week.</Body>
+              <BulletList items={[
+                'No visual cue showing consecutive listing activity',
+                'No reward or recognition for listing weekly',
+                'Lapsed sellers had no reason to return after missing a week',
+                'YoY weekly streaksters declining at −4.5% before launch',
+              ]} />
             </FadeUp>
           </div>
         </div>
@@ -219,6 +363,7 @@ export default function ListingStreaksDetailPage() {
                 bullets: [
                   'Double SA AU weekly lister conversion from 14% to 27%',
                   'Grow Habitual Listers (consecutive-week listers) by 10%',
+                  'Improve lister retention in weeks 2–4 of listing',
                 ],
               },
               {
@@ -226,6 +371,7 @@ export default function ListingStreaksDetailPage() {
                 bullets: [
                   'Make listing feel rewarding and worth repeating',
                   'Create a visible record of seller consistency',
+                  'Give sellers a reason to return after missing a week',
                 ],
               },
             ].map(({ title, bullets }) => (
@@ -249,58 +395,190 @@ export default function ListingStreaksDetailPage() {
         </div>
       </section>
 
-      {/* ── DESIGN APPROACH ── */}
+      {/* ── DESIGN: THE STREAK PAGE ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
         <div className="max-w-5xl mx-auto">
-          <FadeUp className="mb-12 text-center">
-            <SectionLabel>Design Approach</SectionLabel>
-            <Heading>Three mechanics. One habit loop.</Heading>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <FadeUp>
+              <SectionLabel>The Design</SectionLabel>
+              <Heading size="md">Your Current Streak.</Heading>
+              <div className="mt-6 flex flex-col gap-4">
+                <Body>A dedicated streak page gives sellers a direct window into their listing momentum. The streak count is the hero — large, bold, and impossible to miss. Below it, a countdown timer creates urgency without anxiety, and a reward timeline shows exactly what's at stake if the streak continues.</Body>
+                <Body>The week 4 reward icon in the timeline (the gift box) is the carrot that keeps new sellers coming back. It's visible from week 1, so sellers always know how far they are from something meaningful.</Body>
+              </div>
+            </FadeUp>
+            <FadeIn delay={0.1}>
+              <img src="/images/p1-screens-1.png" alt="Streak page — Week 1 default view"
+                className="w-full rounded-2xl mx-auto"
+                style={{ maxWidth: 380, display: 'block', filter: 'drop-shadow(0 40px 80px rgba(0,0,0,0.7))' }} />
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DESIGN: ANNOTATION BREAKDOWN ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="mb-10 text-center">
+            <SectionLabel>Design Decisions</SectionLabel>
+            <Heading size="md">Five sections. One clear page.</Heading>
+            <p className="mt-4 mx-auto max-w-xl font-light leading-relaxed"
+              style={{ color: MUTED, fontSize: 'clamp(0.92rem,1.3vw,1.05rem)' }}>
+              Every element of the streak page earned its place. The layout was designed around a single north star: the user should instantly understand where they are, what they've done, and what comes next — without reading a word.
+            </p>
           </FadeUp>
-          <FadeUp delay={0.1} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <FadeIn delay={0.1}>
+            <img src="/images/p1-screens-2.png" alt="Streak page design annotations"
+              className="w-full rounded-2xl"
+              style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
+          </FadeIn>
+          <FadeUp delay={0.15} className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { num: '01', title: 'Streak Visibility', body: 'A persistent streak counter in the seller dashboard makes consecutive listing activity impossible to miss.' },
-              { num: '02', title: 'Progressive Rewards', body: 'Milestone rewards at 4, 8, and 12-week streaks create anticipation and make missing a week feel costly.' },
-              { num: '03', title: 'Re-engagement Nudge', body: 'A streak-at-risk notification fires 48 hours before a streak breaks, giving sellers a clear recovery window.' },
-            ].map(({ num, title, body }) => (
-              <div key={num} className="flex flex-col gap-4 p-6 rounded-2xl"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm flex-shrink-0"
+              { n: '01', t: 'Status at a glance', d: 'Streak number and current week context up front — no digging required.' },
+              { n: '02', t: 'Timer with purpose', d: 'Countdown to the next unlock window creates natural urgency.' },
+              { n: '03', t: 'Visual timeline', d: 'Non-scrollable reward strip shows progress without overwhelming.' },
+              { n: '04', t: 'Posh tips', d: 'Contextual selling tips reinforce the habit with a value exchange.' },
+            ].map(({ n, t, d }) => (
+              <div key={n} className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+                <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mb-3 flex-shrink-0"
                   style={{ background: 'rgba(201,23,126,0.12)', color: A }}>
-                  {num}
+                  {n}
                 </div>
-                <div>
-                  <p className="font-semibold text-sm mb-2" style={{ color: WHITE }}>{title}</p>
-                  <p className="font-light text-sm leading-relaxed" style={{ color: MUTED }}>{body}</p>
-                </div>
+                <p className="font-semibold text-sm mb-1" style={{ color: WHITE }}>{t}</p>
+                <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{d}</p>
               </div>
             ))}
           </FadeUp>
         </div>
       </section>
 
-      {/* ── IMPACT ── */}
+      {/* ── DESIGN: STREAK PROGRESSION ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="mb-10">
+            <SectionLabel>Streak in Motion</SectionLabel>
+            <Heading size="md">Each week earned feels different.</Heading>
+            <div className="mt-4 max-w-xl">
+              <Body>As sellers build their streak, the UI evolves with them. By week 2 a completed bolt fills in. By week 3, sellers are in the top 15% of consecutive listers — a nudge surfaces to reinforce that identity. By the active week 3 state, the "Time left to list this week" shift signals urgency is personal, not arbitrary.</Body>
+            </div>
+          </FadeUp>
+          <FadeIn delay={0.1}>
+            <img src="/images/p1-screens-3.png" alt="Streak pages for Weeks 2, 3, and 3 active"
+              className="w-full rounded-2xl"
+              style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── DESIGN: WEEK 4 REWARD ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <FadeIn delay={0.05}>
+              <img src="/images/p1-screens-4.png" alt="Week 4 congratulations and reward unlock"
+                className="w-full rounded-2xl"
+                style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
+            </FadeIn>
+            <FadeUp delay={0.1}>
+              <SectionLabel>The Reward Moment</SectionLabel>
+              <Heading size="md">A streak worth protecting.</Heading>
+              <div className="mt-6 flex flex-col gap-4">
+                <Body>Completing a 4-week streak triggers a two-step celebration: a bottom sheet announcing the reward, then the streak page updating to reflect the unlock. The warm gold tone replaces the pink — marking a distinct seasonal mood shift.</Body>
+                <Body>The reward itself — discounted shipping on the next purchase from your closet — is small enough to not feel transactional but meaningful enough to create a reason to return. Expires in 7 days, visible in the streak page for ongoing reinforcement.</Body>
+              </div>
+            </FadeUp>
+          </div>
+        </div>
+      </section>
+
+      {/* ── DESIGN: BROKEN STREAK ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <FadeUp>
+              <SectionLabel>Graceful Recovery</SectionLabel>
+              <Heading size="md">Breaking it doesn't mean losing it.</Heading>
+              <div className="mt-6 flex flex-col gap-4">
+                <Body>When a streak breaks, the UI doesn't punish — it invites recovery. The broken streak actionsheet uses a bold red to signal the change but immediately pivots to "List now to regain access to your rewards" — shifting from loss to agency.</Body>
+                <Body>After dismissing, the streak resets cleanly to zero with the same countdown timer. The W1 badge animates back to its unfilled state — a visual reset, not a visual punishment. The data showed this framing reduced abandonment and improved same-week relisting rates.</Body>
+              </div>
+              <BulletList items={[
+                'Bottom sheet surfaces only on the first broken-streak visit',
+                'CTA copies "regain" — restores agency, avoids shame',
+                'Streak resets to 0 but visual hierarchy stays identical',
+              ]} />
+            </FadeUp>
+            <FadeIn delay={0.1}>
+              <img src="/images/p1-screens-5.png" alt="Broken streak actionsheet and streak reset"
+                className="w-full rounded-2xl"
+                style={{ display: 'block', boxShadow: '0 30px 70px rgba(0,0,0,0.5)' }} />
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      {/* ── IMPACT & DATA ── */}
       <section className="py-28 px-6 md:px-10"
         style={{ background: 'linear-gradient(135deg, #0d0e12 0%, #1a0612 60%, #0d0e12 100%)' }}>
-        <div className="max-w-5xl mx-auto text-center">
-          <FadeUp>
-            <SectionLabel>Impact</SectionLabel>
-            <Heading size="xl">Shipped in 2024.</Heading>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="mb-16 text-center">
+            <SectionLabel>Results</SectionLabel>
+            <Heading size="xl">The numbers tell the story.</Heading>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: MUTED, fontSize: '1rem' }}>
+              15 weeks of post-launch readout. Production released 31 July 2024.
+            </p>
           </FadeUp>
-          <FadeUp delay={0.1} className="mt-14 grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+          {/* Big stat cards */}
+          <FadeUp delay={0.1} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16">
             {[
-              { v: '2', d: 'Streak states designed (active, at-risk, broken)' },
-              { v: '3', d: 'Milestone reward tiers defined' },
-              { v: '1', d: 'Re-engagement notification flow' },
-              { v: '48h', d: 'Streak-at-risk notification window' },
-              { v: '100%', d: 'End-to-end design ownership' },
-              { v: 'Dec 2024', d: 'Shipped and live in product' },
-            ].map(({ v, d }) => (
-              <div key={v} className="p-6 rounded-2xl"
-                style={{ background: 'rgba(201,23,126,0.08)', border: '1px solid rgba(201,23,126,0.18)' }}>
-                <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{v}</span>
-                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>{d}</span>
+              { label: 'Weekly Streaksters', node: <AnimatedNumber target={144} suffix="k" />, sub: 'peak post-launch (from 135k)' },
+              { label: 'Streak Page Views', node: <AnimatedNumber target={25} suffix="%" />, sub: 'of 300k weekly listers engaged' },
+              { label: 'Repeat Listers YoY', node: <AnimatedNumber target={-3.8} suffix="%" />, sub: 'improved from −7% baseline' },
+              { label: 'Lister Retention', node: <span className="font-semibold" style={{ color: A, fontSize: 'clamp(2.4rem,4vw,3.4rem)', lineHeight: 1 }}>+1%</span>, sub: 'W2–W4 retention improvement' },
+            ].map(({ label, node, sub }) => (
+              <div key={label} className="p-6 rounded-2xl flex flex-col gap-2"
+                style={{ background: 'rgba(201,23,126,0.07)', border: '1px solid rgba(201,23,126,0.18)' }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>{label}</span>
+                {node}
+                <span className="text-xs font-light leading-snug" style={{ color: 'rgba(255,255,255,0.35)' }}>{sub}</span>
               </div>
             ))}
+          </FadeUp>
+
+          {/* Line chart */}
+          <FadeUp delay={0.12} className="rounded-2xl p-6 sm:p-8 mb-8"
+            style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+              <div>
+                <p className="font-semibold text-sm" style={{ color: WHITE }}>Weekly Streaksters (000s)</p>
+                <p className="text-xs font-light mt-0.5" style={{ color: MUTED }}>15-week post-launch trend</p>
+              </div>
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-0.5 rounded" style={{ background: A }} />
+                  <span className="text-xs" style={{ color: MUTED }}>Post-launch</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-5 border-t border-dashed" style={{ borderColor: 'rgba(255,255,255,0.2)' }} />
+                  <span className="text-xs" style={{ color: MUTED }}>Prior year</span>
+                </div>
+              </div>
+            </div>
+            <LineChart />
+          </FadeUp>
+
+          {/* Before/after metric bars */}
+          <FadeUp delay={0.14} className="rounded-2xl p-6 sm:p-8"
+            style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+            <p className="font-semibold text-sm mb-6" style={{ color: WHITE }}>Year-over-Year Improvement</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <MetricBar label="Weekly Streaksters YoY change" before={-4.5} after={-0.7} suffix="%" delay={0} />
+              <MetricBar label="Repeat Listers YoY change" before={-7.0} after={-3.8} suffix="%" delay={0.1} />
+            </div>
+            <p className="text-xs mt-6 font-light" style={{ color: 'rgba(255,255,255,0.22)' }}>
+              Positive = improvement. Both metrics moved from declining to near-flat, reversing a year-long downward trend.
+            </p>
           </FadeUp>
         </div>
       </section>
@@ -312,8 +590,9 @@ export default function ListingStreaksDetailPage() {
             <SectionLabel>Reflection</SectionLabel>
             <Heading size="md">Habit design is invisible design.</Heading>
           </FadeUp>
-          <FadeUp delay={0.1} className="mt-6">
-            <Body>The most effective part of this feature isn't the streak counter — it's the 48-hour warning. That single moment of 'you're about to lose something' is what converts a passive user into an active one. Designing for retention means designing for loss aversion as much as delight. The best habit loops feel effortless until breaking them doesn't.</Body>
+          <FadeUp delay={0.1} className="mt-6 flex flex-col gap-5">
+            <Body>The most effective part of this feature isn't the streak counter — it's the broken streak recovery moment. That single frame, "You didn't list last week. List now to start a new streak," is what converts a passive disengagement into an active return. Designing for retention means designing for the exit as much as the entry.</Body>
+            <Body>The weekly readout data revealed something counterintuitive: the 25% streak page engagement rate among active listers meant three quarters of the target audience never discovered the feature organically. The next design iteration would focus on surfacing the streak page earlier in the listing flow rather than waiting for sellers to find it.</Body>
           </FadeUp>
         </div>
       </section>
