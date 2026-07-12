@@ -93,6 +93,15 @@ export default function ListingStreaksDetailPage() {
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
 
+          <motion.div className="flex justify-center mb-10"
+            initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}>
+            <div className="w-20 h-20 rounded-3xl overflow-hidden"
+              style={{ border: '2px solid rgba(255,255,255,0.1)', boxShadow: `0 0 40px rgba(201,23,126,0.35)` }}>
+              <img src="/images/p1-logo.png" alt="Listing Streaks" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+          </motion.div>
+
           <motion.p className="uppercase tracking-[0.3em] text-xs font-semibold mb-5" style={{ color: A }}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             Poshmark · UI/UX Case Study
