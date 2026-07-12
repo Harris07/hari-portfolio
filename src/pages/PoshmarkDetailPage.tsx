@@ -61,6 +61,21 @@ function Screen({ src, alt = '', delay = 0 }: {
   )
 }
 
+/* Fixed-height image for the Small artboard row — all three cells identical */
+function SmallArtboardImg({ src, alt = '', delay = 0 }: { src: string; alt?: string; delay?: number }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-30px' })
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }}
+      style={{ width: '100%', filter: 'drop-shadow(0 24px 48px rgba(0,0,0,0.6))' }}>
+      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain', aspectRatio: '886 / 1760' }} />
+    </motion.div>
+  )
+}
+
 /* ─── UI primitives ─── */
 function Chip({ children }: { children: React.ReactNode }) {
   return (
@@ -635,9 +650,7 @@ export default function PoshmarkDetailPage() {
               { src: '/images/p3-mt-example3.png',  label: '03, Listing Streaks',        sub: 'Feature introduction · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[320px]" style={{ gap: 40 }}>
-                <div style={{ width: '100%', aspectRatio: '886 / 1760', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Screen src={src} alt={label} delay={d} />
-                </div>
+                <SmallArtboardImg src={src} alt={label} delay={d} />
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
                   <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
