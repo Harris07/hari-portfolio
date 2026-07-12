@@ -635,7 +635,9 @@ export default function PoshmarkDetailPage() {
               { src: '/images/p3-mt-example3.png',  label: '03, Listing Streaks',        sub: 'Feature introduction · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[320px]" style={{ gap: 40 }}>
-                <Screen src={src} alt={label} delay={d} />
+                <div style={{ width: '100%', aspectRatio: '886 / 1760', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Screen src={src} alt={label} delay={d} />
+                </div>
                 <FadeUp delay={d + 0.12} className="text-center">
                   <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: B }}>{label}</span>
                   <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
