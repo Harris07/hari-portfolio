@@ -663,7 +663,7 @@ export default function PoshmarkDetailPage() {
             {[
               { src: '/images/p3-ri-consignment.png', label: '01, My Consignment',  sub: 'Product photo · CTA',           d: 0.05 },
               { src: '/images/p3-ri-shows.png',       label: '02, Posh Shows',      sub: 'Photography + illustration',    d: 0.12 },
-              { src: '/images/p3-mt-example3.png',    label: '03, Listing Streaks', sub: 'Feature introduction · onboarding', d: 0.19 },
+              { src: '/images/p3-ri-welcome.png',     label: '03, Welcome Screen',  sub: 'Multi-photo grid · onboarding', d: 0.19 },
             ].map(({ src, label, sub, d }) => (
               <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[320px]" style={{ gap: 40 }}>
                 <Screen src={src} alt={label} delay={d} />
