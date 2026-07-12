@@ -322,7 +322,8 @@ export default function ListingStreaksDetailPage() {
         projectId={nextProject.id}
         projectName={nextProject.name}
         coverImage={nextProject.coverImage}
-        accentColor="#C9177E"
+        logo="/images/fitzoo/logo.png"
+        accentColor="#FF5C2B"
       />
 
       <footer className="px-6 md:px-10 py-8 flex flex-col sm:flex-row items-center justify-between gap-4"
