@@ -117,8 +117,8 @@ function LineChart() {
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [hover, setHover] = React.useState<{ i: number; x: number; y: number } | null>(null)
 
-  const PL = 32; const PR = 48; const PT = 12; const PB = 28
-  const W = 560; const H = 200
+  const PL = 32; const PR = 32; const PT = 12; const PB = 28
+  const W = 580; const H = 200
   const CW = W - PL - PR; const CH = H - PT - PB
   const minV = 96; const maxV = 110
 
@@ -605,7 +605,7 @@ export default function ListingStreaksDetailPage() {
 
           {/* Main GIF — full-width spotlight presentation */}
           <FadeUp delay={0.1} className="flex justify-center mb-24">
-            <div className="relative w-full" style={{ maxWidth: 720 }}>
+            <div className="relative w-full" style={{ maxWidth: 576 }}>
               {/* Outer glow ring */}
               <div style={{ position: 'absolute', inset: -1, borderRadius: 48, background: 'linear-gradient(135deg, rgba(201,23,126,0.5), rgba(201,23,126,0.05) 50%, rgba(201,23,126,0.3))', zIndex: 1 }} />
               {/* GIF */}

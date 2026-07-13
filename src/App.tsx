@@ -16,6 +16,7 @@ import ProjectDetailPage from './pages/ProjectDetailPage'
 import FitzooDetailPage from './pages/FitzooDetailPage'
 import PoshmarkDetailPage from './pages/PoshmarkDetailPage'
 import ListingStreaksDetailPage from './pages/ListingStreaksDetailPage'
+import MotionDetailPage from './pages/MotionDetailPage'
 import ContactPage from './pages/ContactPage'
 
 function HomePage() {
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/project/listing-streaks" element={<ListingStreaksDetailPage />} />
         <Route path="/project/fitzoo" element={<FitzooDetailPage />} />
         <Route path="/project/poshmark-illustration-system" element={<PoshmarkDetailPage />} />
+        <Route path="/project/motion-design" element={<MotionDetailPage />} />
         <Route path="/project/:id" element={<ProjectDetailPage />} />
       </Routes>
     </BrowserRouter>
