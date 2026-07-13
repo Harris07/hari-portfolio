@@ -89,7 +89,7 @@ function SectionHeader({ label, heading, body }: { label: string; heading: strin
 }
 
 /* ─── ONBOARDING — 3-panel full-bleed layout ─── */
-const ONBOARDING_BG = ['#F4FBFF', '#FDEAF5', '#F6F6CD']
+const ONBOARDING_BG = ['#F4FBFF', '#FFFBFD', '#FFFFEC']
 const ONBOARDING_ITEMS = [
   { src: '/animations/onboarding-1.json', label: 'Screen 01 — List your closet' },
   { src: '/animations/onboarding-2.json', label: 'Screen 02 — Earn from sales' },
