@@ -1,12 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NextProjectSection from '../components/NextProjectSection'
-
-gsap.registerPlugin(ScrollTrigger)
 
 /* ─── tokens ─── */
 const A = '#A78BFA'
@@ -17,79 +13,10 @@ const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.42)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
-/* ─── Animation stops data ─── */
-const STOPS = [
-  {
-    id: 'onboarding',
-    label: 'Onboarding',
-    heading: 'First impressions that move.',
-    body: 'Three-screen onboarding sequence introducing new sellers to Poshmark\'s core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm.',
-    cols: 3,
-    items: [
-      { type: 'lottie' as const, src: '/animations/onboarding-1.json', label: 'Screen 01 — List your closet' },
-      { type: 'lottie' as const, src: '/animations/onboarding-2.json', label: 'Screen 02 — Earn from sales' },
-      { type: 'lottie' as const, src: '/animations/onboarding-3.json', label: 'Screen 03 — Join the community' },
-    ],
-  },
-  {
-    id: 'pull-to-refresh',
-    label: 'Pull to Refresh',
-    heading: 'The gesture that earns delight.',
-    body: 'Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature.',
-    cols: 2,
-    items: [
-      { type: 'gif' as const, src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
-      { type: 'lottie' as const, src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
-    ],
-  },
-  {
-    id: 'app-icon',
-    label: 'App Icon Reveal',
-    heading: 'Launching a new face to the world.',
-    body: 'Two directions for the app icon reveal — celebrating a redesign with motion that felt worthy of the occasion. Designed to be seen once, remembered always.',
-    cols: 2,
-    items: [
-      { type: 'gif' as const, src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Direction 01' },
-      { type: 'gif' as const, src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Direction 02' },
-    ],
-  },
-  {
-    id: 'reward',
-    label: 'Rewards & Loaders',
-    heading: 'Making waiting feel worth it.',
-    body: 'Loaders that don\'t feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint.',
-    cols: 2,
-    items: [
-      { type: 'lottie' as const, src: '/animations/gift-box.json', label: 'Gift box reveal' },
-      { type: 'lottie' as const, src: '/animations/partner-loader.json', label: 'Partner loader' },
-    ],
-  },
-  {
-    id: 'banner',
-    label: 'Brand Banner',
-    heading: 'Welcome to Poshmark.',
-    body: 'The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community.',
-    cols: 1,
-    items: [
-      { type: 'gif' as const, src: '/animations/welcome-banner-opt.gif', label: 'Welcome banner' },
-    ],
-  },
-]
-
-/* ─── Lottie player — play/pause controlled ─── */
-function LottiePlayer({ src, active, style = {} }: {
-  src: string; active: boolean; style?: React.CSSProperties
-}) {
+/* ─── Lottie player — auto-plays when mounted ─── */
+function LottiePlayer({ src, style = {} }: { src: string; style?: React.CSSProperties }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<any>(null)
-  const activeRef = useRef(active)
-
-  useEffect(() => {
-    activeRef.current = active
-    if (!animRef.current) return
-    if (active) animRef.current.play()
-    else animRef.current.stop()
-  }, [active])
 
   useEffect(() => {
     let destroyed = false
@@ -102,13 +29,11 @@ function LottiePlayer({ src, active, style = {} }: {
         container: containerRef.current,
         renderer: 'svg',
         loop: true,
-        autoplay: false,
+        autoplay: true,
         path: src,
       })
       animRef.current = anim
-      if (activeRef.current) anim.play()
     }
-
     if ((window as any).lottie) {
       init()
     } else {
@@ -136,164 +61,122 @@ function LottiePlayer({ src, active, style = {} }: {
   return <div ref={containerRef} style={{ width: '100%', ...style }} />
 }
 
-/* ─── Single stop card ─── */
-type StopType = typeof STOPS[0]
-function StopCard({ stop, active, onRef }: {
-  stop: StopType; active: boolean; onRef: (el: HTMLDivElement | null) => void
-}) {
-  const gridClass = stop.cols === 3 ? 'grid-cols-3' : stop.cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
-
+/* ─── Section wrapper with fade-up on scroll ─── */
+function FadeSection({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
   return (
-    <div ref={onRef} style={{ position: 'relative', padding: '100px 0', zIndex: 5 }}>
+    <motion.div ref={ref} className={className}
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
+      {children}
+    </motion.div>
+  )
+}
 
-      {/* Node dot on the line */}
-      <motion.div
-        style={{
-          position: 'absolute', left: '50%', top: 100,
-          transform: 'translate(-50%, -50%)',
-          borderRadius: '50%', zIndex: 6, pointerEvents: 'none',
-        }}
-        animate={{
-          width: active ? 14 : 8,
-          height: active ? 14 : 8,
-          background: active ? A : 'rgba(167,139,250,0.25)',
-          boxShadow: active ? `0 0 0 6px rgba(167,139,250,0.15), 0 0 24px ${A}` : '0 0 0 0px transparent',
-        }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-      />
-
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 md:px-12">
-
-        {/* Section header */}
-        <div className="text-center mb-10">
-          <p className="text-xs uppercase tracking-[0.28em] font-semibold mb-3" style={{ color: A }}>{stop.label}</p>
-          <h2 className="font-semibold leading-tight mb-4"
-            style={{ color: WHITE, fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
-            {stop.heading}
-          </h2>
-          <p className="text-sm font-light max-w-xl mx-auto leading-relaxed" style={{ color: MUTED }}>{stop.body}</p>
-        </div>
-
-        {/* Animation grid */}
-        <div className={`grid ${gridClass} gap-4`}
-          style={{ maxWidth: stop.cols === 1 ? 560 : '100%', margin: '0 auto' }}>
-          {stop.items.map((item, i) => (
-            <motion.div key={i}
-              className="rounded-2xl overflow-hidden"
-              animate={{
-                boxShadow: active
-                  ? `0 0 0 1.5px ${A}, 0 0 40px rgba(167,139,250,0.18), 0 24px 60px rgba(0,0,0,0.5)`
-                  : `0 0 0 1px ${BORDER}, 0 8px 32px rgba(0,0,0,0.3)`,
-              }}
-              style={{ background: 'rgba(255,255,255,0.02)' }}
-              transition={{ duration: 0.4 }}>
-              {item.type === 'lottie' ? (
-                <LottiePlayer src={item.src} active={active}
-                  style={{ aspectRatio: stop.cols === 3 ? '1.2/1' : '1.1/1' }} />
-              ) : (
-                <motion.img src={item.src} alt={item.label}
-                  animate={{ opacity: active ? 1 : 0.5 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ width: '100%', display: 'block', height: 'auto' }} />
-              )}
-              <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
-                <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+/* ─── Section header ─── */
+function SectionHeader({ label, heading, body }: { label: string; heading: string; body: string }) {
+  return (
+    <div className="text-center mb-10 max-w-2xl mx-auto">
+      <p className="text-xs uppercase tracking-[0.28em] font-semibold mb-3" style={{ color: A }}>{label}</p>
+      <h2 className="font-semibold leading-tight mb-4" style={{ color: WHITE, fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
+        {heading}
+      </h2>
+      <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>{body}</p>
     </div>
   )
 }
 
-/* ─── Ball — fixed at 45vh, appears/disappears with section ─── */
-function ScrollBall({ visible }: { visible: boolean }) {
+/* ─── ONBOARDING — 3-panel full-bleed layout ─── */
+const ONBOARDING_BG = ['#D4EEFA', '#FAD5E8', '#F0EDB5']
+const ONBOARDING_ITEMS = [
+  { src: '/animations/onboarding-1.json', label: 'Screen 01 — List your closet' },
+  { src: '/animations/onboarding-2.json', label: 'Screen 02 — Earn from sales' },
+  { src: '/animations/onboarding-3.json', label: 'Screen 03 — Join the community' },
+]
+
+function OnboardingSection() {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
   return (
-    <motion.div
-      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.4 }}
-      transition={{ duration: 0.3 }}
-      style={{
-        position: 'fixed',
-        left: '50%',
-        top: '45vh',
-        transform: 'translate(-50%, -50%)',
-        width: 18,
-        height: 18,
-        borderRadius: '50%',
-        background: `radial-gradient(circle at 40% 35%, #c4b5fd, ${A})`,
-        boxShadow: `0 0 0 3px rgba(167,139,250,0.2), 0 0 20px ${A}, 0 0 50px rgba(167,139,250,0.35)`,
-        zIndex: 50,
-        pointerEvents: 'none',
-      }}
-    />
+    <section style={{ background: '#080910', paddingTop: 100, paddingBottom: 100 }}>
+      <FadeSection>
+        <SectionHeader
+          label="Onboarding"
+          heading="First impressions that move."
+          body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm."
+        />
+      </FadeSection>
+
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 32 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        style={{
+          display: 'flex',
+          gap: 2,
+          overflow: 'hidden',
+          borderRadius: 24,
+          maxWidth: 1100,
+          margin: '0 auto',
+          padding: '0 24px',
+        }}>
+        {ONBOARDING_ITEMS.map((item, i) => (
+          <div key={i} style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0 }}>
+            <LottiePlayer src={item.src} style={{ width: '100%', display: 'block' }} />
+            <div style={{ padding: '14px 18px', background: ONBOARDING_BG[i] }}>
+              <p style={{
+                fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
+                textTransform: 'uppercase', color: 'rgba(0,0,0,0.45)',
+              }}>{item.label}</p>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    </section>
+  )
+}
+
+/* ─── Generic animation section (2-col or 1-col grid) ─── */
+type GridItem = { type: 'lottie' | 'gif'; src: string; label: string }
+function AnimSection({ label, heading, body, items, cols = 2 }: {
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number
+}) {
+  const gridClass = cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
+  return (
+    <section style={{ background: BG, paddingTop: 100, paddingBottom: 100 }}>
+      <div className="max-w-4xl mx-auto px-6 md:px-12">
+        <FadeSection>
+          <SectionHeader label={label} heading={heading} body={body} />
+        </FadeSection>
+        <FadeSection>
+          <div className={`grid ${gridClass} gap-4`}
+            style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
+            {items.map((item, i) => (
+              <div key={i} className="rounded-2xl overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+                {item.type === 'lottie' ? (
+                  <LottiePlayer src={item.src} style={{ aspectRatio: '1.1/1' }} />
+                ) : (
+                  <img src={item.src} alt={item.label}
+                    style={{ width: '100%', display: 'block', height: 'auto' }} />
+                )}
+                <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+                  <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeSection>
+      </div>
+    </section>
   )
 }
 
 /* ─── Main page ─── */
 export default function MotionDetailPage() {
-  const pathSectionRef = useRef<HTMLDivElement>(null)
-  const tracedLineRef = useRef<HTMLDivElement>(null)
-  const stopRefs = useRef<(HTMLDivElement | null)[]>(Array(STOPS.length).fill(null))
-
-  const [activeStop, setActiveStop] = useState(-1)
-  const [ballVisible, setBallVisible] = useState(false)
-
-  useEffect(() => {
-    const section = pathSectionRef.current
-    const tracedLine = tracedLineRef.current
-    if (!section || !tracedLine) return
-
-    // Wait for layout to settle before setting up ScrollTrigger
-    const setupTimer = setTimeout(() => {
-      const sectionH = section.offsetHeight
-
-      // Main scrub: drives the traced line height 0 → sectionH as section scrolls through center
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'top center',
-          end: 'bottom center',
-          scrub: 0.6,
-          onEnter: () => setBallVisible(true),
-          onLeave: () => setBallVisible(false),
-          onEnterBack: () => setBallVisible(true),
-          onLeaveBack: () => setBallVisible(false),
-          onUpdate: (self) => {
-            // Derive which stop is active from scroll progress
-            const ballAbsY =
-              section.getBoundingClientRect().top + window.scrollY +
-              self.progress * sectionH
-
-            let next = -1
-            stopRefs.current.forEach((ref, i) => {
-              if (!ref) return
-              const stopAbsY =
-                ref.getBoundingClientRect().top + window.scrollY +
-                ref.offsetHeight / 2
-              if (ballAbsY >= stopAbsY - 80) next = i
-            })
-            setActiveStop(prev => prev !== next ? next : prev)
-          },
-        },
-      })
-
-      tl.fromTo(
-        tracedLine,
-        { height: 0 },
-        { height: sectionH, ease: 'none' }
-      )
-
-      ScrollTrigger.refresh()
-    }, 300)
-
-    return () => {
-      clearTimeout(setupTimer)
-      ScrollTrigger.getAll().forEach(t => t.kill())
-    }
-  }, [])
-
   return (
     <div style={{ background: BG, minHeight: '100vh', color: WHITE }}>
 
@@ -319,7 +202,6 @@ export default function MotionDetailPage() {
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
 
-          {/* Logo */}
           <motion.div className="flex justify-center mb-10"
             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
@@ -366,7 +248,6 @@ export default function MotionDetailPage() {
             ))}
           </motion.div>
 
-          {/* Scroll hint */}
           <motion.div className="flex flex-col items-center gap-2"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.22)' }}>Scroll to explore</p>
@@ -378,36 +259,52 @@ export default function MotionDetailPage() {
         </motion.div>
       </section>
 
-      {/* ── PATH SECTION ── */}
-      <section ref={pathSectionRef} style={{ position: 'relative', background: '#080910' }}>
+      {/* ── ONBOARDING ── */}
+      <OnboardingSection />
 
-        {/* Full-height dim rail */}
-        <div style={{
-          position: 'absolute', left: '50%', top: 0, bottom: 0,
-          width: 1.5, background: 'rgba(167,139,250,0.07)',
-          transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'none',
-        }} />
+      {/* ── PULL TO REFRESH ── */}
+      <AnimSection
+        label="Pull to Refresh"
+        heading="The gesture that earns delight."
+        body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
+        items={[
+          { type: 'gif', src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
+          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
+        ]}
+      />
 
-        {/* Traced line — GSAP drives height */}
-        <div ref={tracedLineRef} style={{
-          position: 'absolute', left: '50%', top: 0,
-          width: 1.5, height: 0,
-          background: `linear-gradient(to bottom, rgba(167,139,250,0.3), ${A} 80%, rgba(167,139,250,0.6))`,
-          transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none',
-        }} />
+      {/* ── APP ICON REVEAL ── */}
+      <AnimSection
+        label="App Icon Reveal"
+        heading="Launching a new face to the world."
+        body="Two directions for the app icon reveal — celebrating a redesign with motion that felt worthy of the occasion. Designed to be seen once, remembered always."
+        items={[
+          { type: 'gif', src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Direction 01' },
+          { type: 'gif', src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Direction 02' },
+        ]}
+      />
 
-        {/* Stop cards */}
-        {STOPS.map((stop, i) => (
-          <StopCard
-            key={stop.id}
-            stop={stop}
-            active={activeStop === i}
-            onRef={el => { stopRefs.current[i] = el }}
-          />
-        ))}
+      {/* ── REWARDS & LOADERS ── */}
+      <AnimSection
+        label="Rewards & Loaders"
+        heading="Making waiting feel worth it."
+        body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
+        items={[
+          { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
+          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader' },
+        ]}
+      />
 
-        <div style={{ height: 80 }} />
-      </section>
+      {/* ── BRAND BANNER ── */}
+      <AnimSection
+        label="Brand Banner"
+        heading="Welcome to Poshmark."
+        body="The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community."
+        cols={1}
+        items={[
+          { type: 'gif', src: '/animations/welcome-banner-opt.gif', label: 'Welcome banner' },
+        ]}
+      />
 
       {/* ── METRICS ── */}
       <section style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
@@ -421,7 +318,7 @@ export default function MotionDetailPage() {
               { value: '3', label: 'Platforms — iOS, Android, Web' },
               { value: '4', label: 'Years of motion across Poshmark' },
               { value: '100%', label: 'Built in After Effects + Lottie' },
-              { value: 'Live', label: 'Across Poshmark\'s product today' },
+              { value: 'Live', label: "Across Poshmark's product today" },
             ].map(({ value, label }) => (
               <div key={label} className="py-8 px-6 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
@@ -441,9 +338,6 @@ export default function MotionDetailPage() {
         logo="/images/p1-logo.png"
         accentColor="#C9177E"
       />
-
-      {/* ── BALL ── */}
-      <ScrollBall visible={ballVisible} />
     </div>
   )
 }
