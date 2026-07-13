@@ -329,13 +329,9 @@ export default function MotionDetailPage() {
           <motion.div className="flex justify-center mb-10"
             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
-            <div className="w-20 h-20 rounded-3xl flex items-center justify-center"
-              style={{ background: AL, border: `2px solid ${AL}`, boxShadow: `0 0 40px rgba(167,139,250,0.35)` }}>
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="18" cy="18" r="12" stroke={A} strokeWidth="2.5" fill="none" />
-                <path d="M13 18 L18 13 L23 18" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M18 13 L18 24" stroke={A} strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
+            <div className="w-20 h-20 rounded-3xl overflow-hidden"
+              style={{ border: `2px solid rgba(167,139,250,0.2)`, boxShadow: `0 0 40px rgba(167,139,250,0.35)` }}>
+              <img src="/images/p4-logo.gif" alt="Motion & Animation" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           </motion.div>
 
