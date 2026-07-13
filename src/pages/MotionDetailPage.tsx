@@ -190,7 +190,7 @@ function AnimSection({ label, heading, body, items, cols = 2 }: {
 /* ─── Main page ─── */
 export default function MotionDetailPage() {
   return (
-    <div style={{ background: BG, minHeight: '100vh', color: WHITE }}>
+    <div style={{ background: BG, minHeight: '100vh', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
 
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5"
