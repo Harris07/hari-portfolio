@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NextProjectSection from '../components/NextProjectSection'
+
+gsap.registerPlugin(ScrollTrigger)
 
 /* ─── tokens ─── */
 const A = '#A78BFA'
@@ -204,8 +208,8 @@ function StopCard({ stop, active, onRef }: {
   )
 }
 
-/* ─── Ball ─── */
-function ScrollBall({ visible, viewportY }: { visible: boolean; viewportY: number }) {
+/* ─── Ball — fixed at 45vh, appears/disappears with section ─── */
+function ScrollBall({ visible }: { visible: boolean }) {
   return (
     <motion.div
       animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.4 }}
@@ -213,7 +217,7 @@ function ScrollBall({ visible, viewportY }: { visible: boolean; viewportY: numbe
       style={{
         position: 'fixed',
         left: '50%',
-        top: viewportY,
+        top: '45vh',
         transform: 'translate(-50%, -50%)',
         width: 18,
         height: 18,
@@ -230,65 +234,65 @@ function ScrollBall({ visible, viewportY }: { visible: boolean; viewportY: numbe
 /* ─── Main page ─── */
 export default function MotionDetailPage() {
   const pathSectionRef = useRef<HTMLDivElement>(null)
+  const tracedLineRef = useRef<HTMLDivElement>(null)
   const stopRefs = useRef<(HTMLDivElement | null)[]>(Array(STOPS.length).fill(null))
 
-  /* measurements — stored in refs to avoid stale closures */
-  const sectionBoundsRef = useRef({ top: 0, height: 0 })
-  const stopYsRef = useRef<number[]>(Array(STOPS.length).fill(0))
-
   const [activeStop, setActiveStop] = useState(-1)
-  const [ballViewportY, setBallViewportY] = useState(-100)
-  const [tracedHeight, setTracedHeight] = useState(0)
   const [ballVisible, setBallVisible] = useState(false)
 
-  const measure = () => {
-    if (!pathSectionRef.current) return
-    // getBoundingClientRect + scrollY gives true page-absolute position
-    const top = pathSectionRef.current.getBoundingClientRect().top + window.scrollY
-    const height = pathSectionRef.current.offsetHeight
-    sectionBoundsRef.current = { top, height }
-
-    // Store stop centers as page-absolute Y values
-    stopYsRef.current = stopRefs.current.map(ref => {
-      if (!ref) return 0
-      return ref.getBoundingClientRect().top + window.scrollY + ref.offsetHeight / 2
-    })
-  }
-
   useEffect(() => {
-    // Measure after fonts/images settle
-    const t = setTimeout(measure, 200)
-    window.addEventListener('resize', measure)
-    return () => { clearTimeout(t); window.removeEventListener('resize', measure) }
+    const section = pathSectionRef.current
+    const tracedLine = tracedLineRef.current
+    if (!section || !tracedLine) return
+
+    // Wait for layout to settle before setting up ScrollTrigger
+    const setupTimer = setTimeout(() => {
+      const sectionH = section.offsetHeight
+
+      // Main scrub: drives the traced line height 0 → sectionH as section scrolls through center
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top center',
+          end: 'bottom center',
+          scrub: 0.6,
+          onEnter: () => setBallVisible(true),
+          onLeave: () => setBallVisible(false),
+          onEnterBack: () => setBallVisible(true),
+          onLeaveBack: () => setBallVisible(false),
+          onUpdate: (self) => {
+            // Derive which stop is active from scroll progress
+            const ballAbsY =
+              section.getBoundingClientRect().top + window.scrollY +
+              self.progress * sectionH
+
+            let next = -1
+            stopRefs.current.forEach((ref, i) => {
+              if (!ref) return
+              const stopAbsY =
+                ref.getBoundingClientRect().top + window.scrollY +
+                ref.offsetHeight / 2
+              if (ballAbsY >= stopAbsY - 80) next = i
+            })
+            setActiveStop(prev => prev !== next ? next : prev)
+          },
+        },
+      })
+
+      tl.fromTo(
+        tracedLine,
+        { height: 0 },
+        { height: sectionH, ease: 'none' }
+      )
+
+      ScrollTrigger.refresh()
+    }, 300)
+
+    return () => {
+      clearTimeout(setupTimer)
+      ScrollTrigger.getAll().forEach(t => t.kill())
+    }
   }, [])
-
-  const { scrollY } = useScroll()
-
-  useMotionValueEvent(scrollY, 'change', (y) => {
-    const { top, height } = sectionBoundsRef.current
-    if (!height) return
-
-    const vh = window.innerHeight
-    // progress 0 → 1 as user scrolls through the section
-    const progress = Math.max(0, Math.min(1, (y - top) / Math.max(1, height - vh)))
-    const ballAbsY = top + progress * height
-    const rawVpY = ballAbsY - y
-    const clampedVpY = Math.max(80, Math.min(vh - 50, rawVpY))
-
-    setBallViewportY(clampedVpY)
-    setTracedHeight(ballAbsY - top)
-
-    // visible only while section is in view
-    const inSection = y >= top - vh * 0.1 && y <= top + height
-    setBallVisible(inSection)
-
-    // active stop: last stop the ball has passed
-    let newActive = -1
-    stopYsRef.current.forEach((stopY, i) => {
-      if (ballAbsY >= stopY - 120) newActive = i
-    })
-    if (newActive !== activeStop) setActiveStop(newActive)
-  })
 
   return (
     <div style={{ background: BG, minHeight: '100vh', color: WHITE }}>
@@ -315,7 +319,7 @@ export default function MotionDetailPage() {
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}>
 
-          {/* Logo placeholder */}
+          {/* Logo */}
           <motion.div className="flex justify-center mb-10"
             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
@@ -377,20 +381,19 @@ export default function MotionDetailPage() {
       {/* ── PATH SECTION ── */}
       <section ref={pathSectionRef} style={{ position: 'relative', background: '#080910' }}>
 
-        {/* Untraced line (full height, dim) */}
+        {/* Full-height dim rail */}
         <div style={{
           position: 'absolute', left: '50%', top: 0, bottom: 0,
           width: 1.5, background: 'rgba(167,139,250,0.07)',
           transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'none',
         }} />
 
-        {/* Traced line (grows as ball descends) */}
-        <div style={{
+        {/* Traced line — GSAP drives height */}
+        <div ref={tracedLineRef} style={{
           position: 'absolute', left: '50%', top: 0,
-          width: 1.5, height: tracedHeight,
+          width: 1.5, height: 0,
           background: `linear-gradient(to bottom, rgba(167,139,250,0.3), ${A} 80%, rgba(167,139,250,0.6))`,
           transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none',
-          transition: 'height 0.06s linear',
         }} />
 
         {/* Stop cards */}
@@ -403,7 +406,6 @@ export default function MotionDetailPage() {
           />
         ))}
 
-        {/* Bottom spacer so last card gets enough scroll room */}
         <div style={{ height: 80 }} />
       </section>
 
@@ -440,8 +442,8 @@ export default function MotionDetailPage() {
         accentColor="#C9177E"
       />
 
-      {/* ── BALL (rendered last so it's above everything) ── */}
-      <ScrollBall visible={ballVisible} viewportY={ballViewportY} />
+      {/* ── BALL ── */}
+      <ScrollBall visible={ballVisible} />
     </div>
   )
 }
