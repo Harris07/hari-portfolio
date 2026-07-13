@@ -137,12 +137,12 @@ function OnboardingSection() {
         {ONBOARDING_ITEMS.map((item, i) => (
           <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
             <span style={{
-              display: 'block', fontWeight: 700, fontSize: 11,
-              letterSpacing: '0.2em', textTransform: 'uppercase', color: A,
+              display: 'block', fontWeight: 700, fontSize: 12,
+              letterSpacing: '0.1em', textTransform: 'uppercase', color: A,
             }}>{item.label}</span>
             <span style={{
-              display: 'block', fontSize: 13, fontWeight: 300,
-              color: MUTED, marginTop: 6, lineHeight: 1.5,
+              display: 'block', fontSize: 12, fontWeight: 300,
+              color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5,
             }}>{item.sub}</span>
           </div>
         ))}
