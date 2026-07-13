@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
@@ -13,10 +13,30 @@ const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.42)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
-/* ─── Lottie player — auto-plays when mounted ─── */
-function LottiePlayer({ src, style = {} }: { src: string; style?: React.CSSProperties }) {
+/* ─── Lottie player — sequential mode: plays once when active, stops when inactive ─── */
+function LottiePlayer({ src, active, loop = false, onComplete, style = {} }: {
+  src: string
+  active: boolean
+  loop?: boolean
+  onComplete?: () => void
+  style?: React.CSSProperties
+}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<any>(null)
+  const activeRef = useRef(active)
+  const onCompleteRef = useRef(onComplete)
+
+  useEffect(() => { activeRef.current = active; onCompleteRef.current = onComplete })
+
+  /* React to active toggling after init */
+  useEffect(() => {
+    if (!animRef.current) return
+    if (active) {
+      animRef.current.goToAndPlay(0, true)
+    } else {
+      animRef.current.stop()
+    }
+  }, [active])
 
   useEffect(() => {
     let destroyed = false
@@ -28,11 +48,15 @@ function LottiePlayer({ src, style = {} }: { src: string; style?: React.CSSPrope
       const anim = lottie.loadAnimation({
         container: containerRef.current,
         renderer: 'svg',
-        loop: true,
-        autoplay: true,
+        loop,
+        autoplay: false,
         path: src,
       })
       animRef.current = anim
+      anim.addEventListener('complete', () => {
+        if (!destroyed && onCompleteRef.current) onCompleteRef.current()
+      })
+      if (activeRef.current) anim.play()
     }
     if ((window as any).lottie) {
       init()
@@ -56,7 +80,7 @@ function LottiePlayer({ src, style = {} }: { src: string; style?: React.CSSPrope
       destroyed = true
       if (animRef.current) { animRef.current.destroy(); animRef.current = null }
     }
-  }, [src])
+  }, [src, loop])
 
   return <div ref={containerRef} style={{ width: '100%', ...style }} />
 }
@@ -99,6 +123,9 @@ const ONBOARDING_ITEMS = [
 function OnboardingSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const [activeCard, setActiveCard] = useState(0)
+  const advance = useCallback(() => setActiveCard(c => (c + 1) % 3), [])
+
   return (
     <section style={{ background: '#080910', paddingTop: 100, paddingBottom: 100 }}>
       <FadeSection>
@@ -124,9 +151,23 @@ function OnboardingSection() {
           padding: '0 24px',
         }}>
         {ONBOARDING_ITEMS.map((item, i) => (
-          <div key={i} style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0 }}>
+          <div
+            key={i}
+            style={{
+              flex: 1,
+              overflow: 'hidden',
+              background: ONBOARDING_BG[i],
+              minWidth: 0,
+              opacity: activeCard === i ? 1 : 0.6,
+              transition: 'opacity 0.4s ease',
+            }}>
             <div style={{ paddingTop: 80, paddingBottom: 80 }}>
-              <LottiePlayer src={item.src} style={{ width: '100%', display: 'block' }} />
+              <LottiePlayer
+                src={item.src}
+                active={inView && activeCard === i}
+                onComplete={advance}
+                style={{ width: '100%', display: 'block' }}
+              />
             </div>
           </div>
         ))}
