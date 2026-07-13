@@ -141,8 +141,8 @@ function OnboardingSection() {
         initial={{ opacity: 0, y: 32 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+        className="flex flex-col md:flex-row"
         style={{
-          display: 'flex',
           gap: 2,
           overflow: 'hidden',
           borderRadius: 24,
@@ -158,7 +158,7 @@ function OnboardingSection() {
               overflow: 'hidden',
               background: ONBOARDING_BG[i],
               minWidth: 0,
-              opacity: activeCard === i ? 1 : 0.6,
+              opacity: inView && activeCard === i ? 1 : 0.6,
               transition: 'opacity 0.4s ease',
             }}>
             <div style={{ paddingTop: 80, paddingBottom: 80 }}>
@@ -174,7 +174,7 @@ function OnboardingSection() {
       </motion.div>
 
       {/* Labels below panels */}
-      <div style={{ display: 'flex', gap: 2, maxWidth: 1100, margin: '20px auto 0', padding: '0 24px' }}>
+      <div className="flex flex-col md:flex-row" style={{ gap: 2, maxWidth: 1100, margin: '20px auto 0', padding: '0 24px' }}>
         {ONBOARDING_ITEMS.map((item, i) => (
           <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
             <span style={{
