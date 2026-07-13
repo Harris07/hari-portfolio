@@ -1,66 +1,96 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 
 /* ─── tokens ─── */
-const A = '#7C3AED'          // violet — distinct from pink, orange, blue
-const AL = 'rgba(124,58,237,0.18)'
-const AB = 'rgba(124,58,237,0.08)'
+const A = '#A78BFA'
+const AL = 'rgba(167,139,250,0.18)'
+const AB = 'rgba(167,139,250,0.08)'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.42)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
-/* ─── helpers ─── */
-function FadeUp({ children, delay = 0, className = '', style }: {
-  children: React.ReactNode; delay?: number; className?: string; style?: React.CSSProperties
-}) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  return (
-    <motion.div ref={ref} className={className} style={style}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay }}>
-      {children}
-    </motion.div>
-  )
-}
+/* ─── Animation stops data ─── */
+const STOPS = [
+  {
+    id: 'onboarding',
+    label: 'Onboarding',
+    heading: 'First impressions that move.',
+    body: 'Three-screen onboarding sequence introducing new sellers to Poshmark\'s core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm.',
+    cols: 3,
+    items: [
+      { type: 'lottie' as const, src: '/animations/onboarding-1.json', label: 'Screen 01 — List your closet' },
+      { type: 'lottie' as const, src: '/animations/onboarding-2.json', label: 'Screen 02 — Earn from sales' },
+      { type: 'lottie' as const, src: '/animations/onboarding-3.json', label: 'Screen 03 — Join the community' },
+    ],
+  },
+  {
+    id: 'pull-to-refresh',
+    label: 'Pull to Refresh',
+    heading: 'The gesture that earns delight.',
+    body: 'Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature.',
+    cols: 2,
+    items: [
+      { type: 'gif' as const, src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
+      { type: 'lottie' as const, src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
+    ],
+  },
+  {
+    id: 'app-icon',
+    label: 'App Icon Reveal',
+    heading: 'Launching a new face to the world.',
+    body: 'Two directions for the app icon reveal — celebrating a redesign with motion that felt worthy of the occasion. Designed to be seen once, remembered always.',
+    cols: 2,
+    items: [
+      { type: 'gif' as const, src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Direction 01' },
+      { type: 'gif' as const, src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Direction 02' },
+    ],
+  },
+  {
+    id: 'reward',
+    label: 'Rewards & Loaders',
+    heading: 'Making waiting feel worth it.',
+    body: 'Loaders that don\'t feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint.',
+    cols: 2,
+    items: [
+      { type: 'lottie' as const, src: '/animations/gift-box.json', label: 'Gift box reveal' },
+      { type: 'lottie' as const, src: '/animations/partner-loader.json', label: 'Partner loader' },
+    ],
+  },
+  {
+    id: 'banner',
+    label: 'Brand Banner',
+    heading: 'Welcome to Poshmark.',
+    body: 'The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community.',
+    cols: 1,
+    items: [
+      { type: 'gif' as const, src: '/animations/welcome-banner-opt.gif', label: 'Welcome banner' },
+    ],
+  },
+]
 
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
-      style={{ color: A, background: AB, border: `1px solid ${AL}` }}>
-      {children}
-    </span>
-  )
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="uppercase tracking-[0.22em] text-xs font-semibold mb-3" style={{ color: A }}>{children}</p>
-}
-
-function Heading({ children, size = 'lg' }: { children: React.ReactNode; size?: 'sm' | 'md' | 'lg' }) {
-  const s = { sm: '1.5rem', md: '2rem', lg: 'clamp(2.2rem,4vw,3.2rem)' }
-  return <h2 className="font-semibold leading-tight" style={{ color: WHITE, fontSize: s[size] }}>{children}</h2>
-}
-
-
-/* ─── Lottie player (CDN-loaded) ─── */
-function LottiePlayer({ src, className = '', style = {} }: {
-  src: string; className?: string; style?: React.CSSProperties
+/* ─── Lottie player — play/pause controlled ─── */
+function LottiePlayer({ src, active, style = {} }: {
+  src: string; active: boolean; style?: React.CSSProperties
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<any>(null)
+  const activeRef = useRef(active)
+
+  useEffect(() => {
+    activeRef.current = active
+    if (!animRef.current) return
+    if (active) animRef.current.play()
+    else animRef.current.stop()
+  }, [active])
 
   useEffect(() => {
     let destroyed = false
-
     const init = () => {
       if (destroyed || !containerRef.current) return
-      // clear any existing SVG left by a previous StrictMode run
       containerRef.current.innerHTML = ''
       const lottie = (window as any).lottie
       if (!lottie) return
@@ -68,10 +98,11 @@ function LottiePlayer({ src, className = '', style = {} }: {
         container: containerRef.current,
         renderer: 'svg',
         loop: true,
-        autoplay: true,
+        autoplay: false,
         path: src,
       })
       animRef.current = anim
+      if (activeRef.current) anim.play()
     }
 
     if ((window as any).lottie) {
@@ -84,75 +115,209 @@ function LottiePlayer({ src, className = '', style = {} }: {
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js'
         document.head.appendChild(script)
       }
-      // Poll so we don't pile up 'load' listeners across StrictMode remounts
       const poll = setInterval(() => {
         if ((window as any).lottie) { clearInterval(poll); init() }
       }, 50)
       return () => {
-        clearInterval(poll)
-        destroyed = true
+        clearInterval(poll); destroyed = true
         if (animRef.current) { animRef.current.destroy(); animRef.current = null }
       }
     }
-
     return () => {
       destroyed = true
       if (animRef.current) { animRef.current.destroy(); animRef.current = null }
     }
   }, [src])
 
-  return <div ref={containerRef} className={className} style={style} />
+  return <div ref={containerRef} style={{ width: '100%', ...style }} />
 }
 
-/* ─── GIF display with fade-in ─── */
-function AnimGif({ src, alt, style = {} }: { src: string; alt: string; style?: React.CSSProperties }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-40px' })
-  return (
-    <motion.img ref={ref} src={src} alt={alt}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      style={{ display: 'block', width: '100%', height: 'auto', ...style }}
-    />
-  )
-}
-
-/* ─── Animation card wrapper ─── */
-function AnimCard({ children, className = '', glow = true }: {
-  children: React.ReactNode; className?: string; glow?: boolean
+/* ─── Single stop card ─── */
+type StopType = typeof STOPS[0]
+function StopCard({ stop, active, onRef }: {
+  stop: StopType; active: boolean; onRef: (el: HTMLDivElement | null) => void
 }) {
+  const gridClass = stop.cols === 3 ? 'grid-cols-3' : stop.cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
+
   return (
-    <div className={`relative rounded-2xl overflow-hidden ${className}`} style={{
-      background: 'rgba(255,255,255,0.02)',
-      border: `1px solid ${glow ? 'rgba(124,58,237,0.2)' : BORDER}`,
-      boxShadow: glow ? '0 0 0 1px rgba(124,58,237,0.08), 0 8px 40px rgba(0,0,0,0.4)' : undefined,
-    }}>
-      {glow && (
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.12) 0%, transparent 60%)', pointerEvents: 'none', zIndex: 0 }} />
-      )}
-      <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
+    <div ref={onRef} style={{ position: 'relative', padding: '100px 0', zIndex: 5 }}>
+
+      {/* Node dot on the line */}
+      <motion.div
+        style={{
+          position: 'absolute', left: '50%', top: 100,
+          transform: 'translate(-50%, -50%)',
+          borderRadius: '50%', zIndex: 6, pointerEvents: 'none',
+        }}
+        animate={{
+          width: active ? 14 : 8,
+          height: active ? 14 : 8,
+          background: active ? A : 'rgba(167,139,250,0.25)',
+          boxShadow: active ? `0 0 0 6px rgba(167,139,250,0.15), 0 0 24px ${A}` : '0 0 0 0px transparent',
+        }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      />
+
+      {/* Content */}
+      <motion.div
+        className="max-w-4xl mx-auto px-6 md:px-12"
+        animate={{ opacity: active ? 1 : 0.28 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}>
+
+        {/* Section header */}
+        <div className="text-center mb-10">
+          <p className="text-xs uppercase tracking-[0.28em] font-semibold mb-3" style={{ color: A }}>{stop.label}</p>
+          <h2 className="font-semibold leading-tight mb-4"
+            style={{ color: WHITE, fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
+            {stop.heading}
+          </h2>
+          <p className="text-sm font-light max-w-xl mx-auto leading-relaxed" style={{ color: MUTED }}>{stop.body}</p>
+        </div>
+
+        {/* Animation grid */}
+        <motion.div
+          className={`grid ${gridClass} gap-4`}
+          style={{ maxWidth: stop.cols === 1 ? 560 : '100%', margin: '0 auto' }}
+          animate={{
+            y: active ? 0 : 12,
+            filter: active ? 'blur(0px)' : 'blur(2px)',
+          }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+          {stop.items.map((item, i) => (
+            <motion.div key={i}
+              className="rounded-2xl overflow-hidden"
+              animate={{
+                borderColor: active ? 'rgba(167,139,250,0.28)' : BORDER,
+                boxShadow: active ? `0 0 0 1px rgba(167,139,250,0.12), 0 24px 80px rgba(0,0,0,0.5), 0 0 60px rgba(167,139,250,0.06)` : '0 8px 32px rgba(0,0,0,0.3)',
+              }}
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid transparent',
+              }}
+              transition={{ duration: 0.5 }}>
+              {item.type === 'lottie' ? (
+                <LottiePlayer src={item.src} active={active}
+                  style={{ aspectRatio: stop.cols === 3 ? '1.2/1' : '1.1/1' }} />
+              ) : (
+                <motion.img src={item.src} alt={item.label}
+                  animate={{ opacity: active ? 1 : 0.5 }}
+                  transition={{ duration: 0.5 }}
+                  style={{ width: '100%', display: 'block', height: 'auto' }} />
+              )}
+              <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
+                <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
     </div>
   )
 }
 
+/* ─── Ball ─── */
+function ScrollBall({ visible, viewportY }: { visible: boolean; viewportY: number }) {
+  return (
+    <motion.div
+      animate={{ opacity: visible ? 1 : 0, scale: visible ? 1 : 0.4 }}
+      transition={{ duration: 0.3 }}
+      style={{
+        position: 'fixed',
+        left: '50%',
+        top: viewportY,
+        transform: 'translate(-50%, -50%)',
+        width: 18,
+        height: 18,
+        borderRadius: '50%',
+        background: `radial-gradient(circle at 40% 35%, #c4b5fd, ${A})`,
+        boxShadow: `0 0 0 3px rgba(167,139,250,0.2), 0 0 20px ${A}, 0 0 50px rgba(167,139,250,0.35)`,
+        zIndex: 50,
+        pointerEvents: 'none',
+      }}
+    />
+  )
+}
+
+/* ─── Main page ─── */
 export default function MotionDetailPage() {
+  const pathSectionRef = useRef<HTMLDivElement>(null)
+  const stopRefs = useRef<(HTMLDivElement | null)[]>(Array(STOPS.length).fill(null))
+
+  /* measurements — stored in refs to avoid stale closures */
+  const sectionBoundsRef = useRef({ top: 0, height: 0 })
+  const stopYsRef = useRef<number[]>(Array(STOPS.length).fill(0))
+
+  const [activeStop, setActiveStop] = useState(-1)
+  const [ballViewportY, setBallViewportY] = useState(-100)
+  const [tracedHeight, setTracedHeight] = useState(0)
+  const [ballVisible, setBallVisible] = useState(false)
+
+  const measure = () => {
+    if (!pathSectionRef.current) return
+    const top = pathSectionRef.current.offsetTop
+    const height = pathSectionRef.current.offsetHeight
+    sectionBoundsRef.current = { top, height }
+
+    stopYsRef.current = stopRefs.current.map(ref => {
+      if (!ref) return 0
+      // center of each stop card, absolute page Y
+      return ref.offsetTop + ref.offsetHeight / 2
+    })
+  }
+
+  useEffect(() => {
+    // Measure after fonts/images settle
+    const t = setTimeout(measure, 200)
+    window.addEventListener('resize', measure)
+    return () => { clearTimeout(t); window.removeEventListener('resize', measure) }
+  }, [])
+
+  const { scrollY } = useScroll()
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const { top, height } = sectionBoundsRef.current
+    if (!height) return
+
+    const vh = window.innerHeight
+    // progress 0 → 1 as user scrolls through the section
+    const progress = Math.max(0, Math.min(1, (y - top) / Math.max(1, height - vh)))
+    const ballAbsY = top + progress * height
+    const rawVpY = ballAbsY - y
+    const clampedVpY = Math.max(80, Math.min(vh - 50, rawVpY))
+
+    setBallViewportY(clampedVpY)
+    setTracedHeight(ballAbsY - top)
+
+    // visible only while section is in view
+    const inSection = y >= top - vh * 0.1 && y <= top + height
+    setBallVisible(inSection)
+
+    // active stop: last stop the ball has passed
+    let newActive = -1
+    stopYsRef.current.forEach((stopY, i) => {
+      if (ballAbsY >= stopY - 120) newActive = i
+    })
+    if (newActive !== activeStop) setActiveStop(newActive)
+  })
+
   return (
     <div style={{ background: BG, minHeight: '100vh', color: WHITE }}>
 
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5"
-        style={{ background: 'rgba(13,14,18,0.85)', backdropFilter: 'blur(20px)', borderBottom: `1px solid ${BORDER}` }}>
-        <Link to="/" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest hover:opacity-50 transition-opacity"
-          style={{ color: MUTED }}>
+        style={{ background: 'rgba(13,14,18,0.88)', backdropFilter: 'blur(20px)', borderBottom: `1px solid ${BORDER}` }}>
+        <Link to="/"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest hover:opacity-50 transition-opacity"
+          style={{ color: MUTED, textDecoration: 'none' }}>
           <ArrowLeft size={14} /> Back
         </Link>
-        <Chip>POSHMARK</Chip>
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+          style={{ color: A, background: AB, border: `1px solid ${AL}` }}>POSHMARK</span>
       </nav>
 
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden pt-20"
-        style={{ background: `radial-gradient(ellipse 80% 60% at 50% 30%, rgba(124,58,237,0.18) 0%, transparent 65%), ${BG}` }}>
+        style={{ background: `radial-gradient(ellipse 80% 60% at 50% 30%, rgba(167,139,250,0.18) 0%, transparent 65%), ${BG}` }}>
         <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: '200px' }} />
 
@@ -165,12 +330,11 @@ export default function MotionDetailPage() {
             initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
             <div className="w-20 h-20 rounded-3xl flex items-center justify-center"
-              style={{ background: AL, border: `2px solid ${AL}`, boxShadow: `0 0 40px rgba(124,58,237,0.35)` }}>
-              {/* Placeholder motion icon — replace with real logo later */}
+              style={{ background: AL, border: `2px solid ${AL}`, boxShadow: `0 0 40px rgba(167,139,250,0.35)` }}>
               <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="18" cy="18" r="12" stroke={A} strokeWidth="2.5" fill="none"/>
-                <path d="M13 18 L18 13 L23 18" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18 13 L18 24" stroke={A} strokeWidth="2.5" strokeLinecap="round"/>
+                <circle cx="18" cy="18" r="12" stroke={A} strokeWidth="2.5" fill="none" />
+                <path d="M13 18 L18 13 L23 18" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M18 13 L18 24" stroke={A} strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
           </motion.div>
@@ -181,20 +345,23 @@ export default function MotionDetailPage() {
           </motion.p>
 
           <motion.h1 className="font-semibold leading-none mb-6"
-            style={{ color: WHITE, fontSize: 'clamp(3.5rem, 10vw, 8rem)', fontWeight: 700, letterSpacing: '0.005em' }}
+            style={{ color: WHITE, fontSize: 'clamp(3.5rem, 10vw, 8rem)', letterSpacing: '0.005em' }}
             initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}>
             Motion &{' '}
             <span style={{ color: A }}>Animation</span>
           </motion.h1>
 
-          <motion.p className="font-light mb-12 mx-auto max-w-lg" style={{ color: MUTED, fontSize: 'clamp(1rem,1.8vw,1.2rem)' }}
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.7 }}>
+          <motion.p className="font-light mb-12 mx-auto max-w-lg"
+            style={{ color: MUTED, fontSize: 'clamp(1rem,1.8vw,1.2rem)' }}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.7 }}>
             A curated collection of motion work across onboarding, micro-interactions, rewards, and brand moments — each designed to feel native to Poshmark's energy.
           </motion.p>
 
           <motion.div className="flex flex-wrap justify-center gap-3 mb-16"
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42, duration: 0.6 }}>
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.42, duration: 0.6 }}>
             {[
               { l: 'Role', v: 'Product Designer' },
               { l: 'Platform', v: 'iOS · Android · Web' },
@@ -208,227 +375,87 @@ export default function MotionDetailPage() {
               </div>
             ))}
           </motion.div>
+
+          {/* Scroll hint */}
+          <motion.div className="flex flex-col items-center gap-2"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
+            <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.22)' }}>Scroll to explore</p>
+            <motion.div
+              style={{ width: 1.5, height: 44, background: `linear-gradient(to bottom, ${A}, transparent)`, borderRadius: 2 }}
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ repeat: Infinity, duration: 1.8 }} />
+          </motion.div>
         </motion.div>
       </section>
 
-      {/* ── ONBOARDING ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp>
-            <SectionLabel>Onboarding</SectionLabel>
-            <Heading size="md">First impressions that move.</Heading>
-            <p className="mt-4 text-sm font-light max-w-2xl" style={{ color: MUTED }}>
-              Three-screen onboarding sequence designed to introduce new sellers to Poshmark's core value proposition. Each screen uses a distinct Lottie animation to communicate a key benefit — listing, earning, and community — with fluid transitions that match the excitement of getting started. The animations were engineered to be lightweight, loopable, and culturally warm.
-            </p>
-          </FadeUp>
+      {/* ── PATH SECTION ── */}
+      <section ref={pathSectionRef} style={{ position: 'relative', background: '#080910' }}>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-12">
-            {[
-              { src: '/animations/onboarding-1.json', label: 'Screen 01', sub: 'List your closet' },
-              { src: '/animations/onboarding-2.json', label: 'Screen 02', sub: 'Earn from sales' },
-              { src: '/animations/onboarding-3.json', label: 'Screen 03', sub: 'Join the community' },
-            ].map(({ src, label, sub }, i) => (
-              <FadeUp key={label} delay={0.07 * i}>
-                <AnimCard>
-                  <LottiePlayer src={src} style={{ width: '100%', aspectRatio: '1.28/1' }} />
-                  <div className="px-5 py-4" style={{ borderTop: `1px solid ${BORDER}` }}>
-                    <p className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>{label}</p>
-                    <p className="text-sm font-light mt-0.5" style={{ color: MUTED }}>{sub}</p>
-                  </div>
-                </AnimCard>
-              </FadeUp>
-            ))}
-          </div>
+        {/* Untraced line (full height, dim) */}
+        <div style={{
+          position: 'absolute', left: '50%', top: 0, bottom: 0,
+          width: 1.5, background: 'rgba(167,139,250,0.07)',
+          transform: 'translateX(-50%)', zIndex: 1, pointerEvents: 'none',
+        }} />
 
-          {/* Process note */}
-          <FadeUp delay={0.1} className="mt-10 p-5 rounded-xl" style={{ background: AB, border: `1px solid ${AL}` }}>
-            <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              <span className="font-semibold" style={{ color: A }}>Process —</span> Each animation was authored in After Effects, exported via Bodymovin as JSON, then tuned in LottieFiles for optimal file size. Target render budget: under 250KB per animation, 60fps on mid-range devices.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
+        {/* Traced line (grows as ball descends) */}
+        <div style={{
+          position: 'absolute', left: '50%', top: 0,
+          width: 1.5, height: tracedHeight,
+          background: `linear-gradient(to bottom, rgba(167,139,250,0.3), ${A} 80%, rgba(167,139,250,0.6))`,
+          transform: 'translateX(-50%)', zIndex: 2, pointerEvents: 'none',
+          transition: 'height 0.06s linear',
+        }} />
 
-      {/* ── PULL TO REFRESH ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: BG }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp>
-            <SectionLabel>Pull to Refresh</SectionLabel>
-            <Heading size="md">The gesture that earns delight.</Heading>
-            <p className="mt-4 text-sm font-light max-w-2xl" style={{ color: MUTED }}>
-              Pull-to-refresh is one of the most-triggered gestures in any marketplace app — sellers check their feed dozens of times daily. Two versions were designed: a hackathon prototype exploring expressive motion language, and a production version aligned with Poshmark's refreshed brand colour system. Both prioritise instant responsiveness and a satisfying "loaded" moment.
-            </p>
-          </FadeUp>
+        {/* Stop cards */}
+        {STOPS.map((stop, i) => (
+          <StopCard
+            key={stop.id}
+            stop={stop}
+            active={activeStop === i}
+            onRef={el => { stopRefs.current[i] = el }}
+          />
+        ))}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-            <FadeUp delay={0.05}>
-              <AnimCard>
-                <div className="px-6 pt-6 pb-3">
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>Hackathon Version</span>
-                  <p className="text-xs font-light mt-1" style={{ color: MUTED }}>Expressive, high-energy prototype</p>
-                </div>
-                <div className="px-6 pb-6">
-                  <div className="rounded-xl overflow-hidden" style={{ background: '#111' }}>
-                    <AnimGif src="/animations/pull-to-refresh-hackathon-opt.gif" alt="Pull to refresh hackathon" />
-                  </div>
-                </div>
-              </AnimCard>
-            </FadeUp>
-
-            <FadeUp delay={0.12}>
-              <AnimCard>
-                <div className="px-6 pt-6 pb-3">
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>New Brand Colour</span>
-                  <p className="text-xs font-light mt-1" style={{ color: MUTED }}>Production-ready Lottie animation</p>
-                </div>
-                <LottiePlayer src="/animations/pull-to-refresh-brand.json" style={{ width: '100%', aspectRatio: '1/1', padding: '0 24px 24px' }} />
-              </AnimCard>
-            </FadeUp>
-          </div>
-
-          <FadeUp delay={0.1} className="mt-10 p-5 rounded-xl" style={{ background: AB, border: `1px solid ${AL}` }}>
-            <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              <span className="font-semibold" style={{ color: A }}>Process —</span> The hackathon prototype was built in 48 hours to demonstrate what expressive pull-to-refresh could feel like. The brand colour version was then created as the production implementation, replacing the spinner with a branded Lottie that communicates Poshmark's refreshed visual identity.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── APP ICON REVEAL ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp>
-            <SectionLabel>App Icon Reveal</SectionLabel>
-            <Heading size="md">Launching a new face to the world.</Heading>
-            <p className="mt-4 text-sm font-light max-w-2xl" style={{ color: MUTED }}>
-              When Poshmark refreshed its brand, the app icon needed a reveal moment worthy of the milestone. Two animation variants were designed to announce the new icon — each taking a different directorial approach to the unveil. V1 uses a reveal-from-light treatment; V2 explores a more kinetic, brand-forward entrance. Both were designed for social-first distribution: square format, punchy timing, no audio dependency.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-12">
-            {[
-              { src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Version 01', sub: 'Reveal from light' },
-              { src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Version 02', sub: 'Kinetic brand entrance' },
-            ].map(({ src, label, sub }, i) => (
-              <FadeUp key={label} delay={0.08 * i}>
-                <AnimCard>
-                  <div className="px-5 py-4" style={{ borderBottom: `1px solid ${BORDER}` }}>
-                    <p className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>{label}</p>
-                    <p className="text-sm font-light mt-0.5" style={{ color: MUTED }}>{sub}</p>
-                  </div>
-                  <div style={{ background: '#000', padding: 24 }}>
-                    <AnimGif src={src} alt={label} style={{ borderRadius: 12 }} />
-                  </div>
-                </AnimCard>
-              </FadeUp>
-            ))}
-          </div>
-
-          <FadeUp delay={0.1} className="mt-10 p-5 rounded-xl" style={{ background: AB, border: `1px solid ${AL}` }}>
-            <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              <span className="font-semibold" style={{ color: A }}>Process —</span> Designed in After Effects and exported as GIFs for distribution across social and press channels. Both variants were presented to brand leadership for A/B review. The brief: feel premium, mobile-native, and emotionally resonant with Poshmark's seller community.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── REWARD & LOADERS ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: BG }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp>
-            <SectionLabel>Reward Moments & Loaders</SectionLabel>
-            <Heading size="md">Making waiting feel worth it.</Heading>
-            <p className="mt-4 text-sm font-light max-w-2xl" style={{ color: MUTED }}>
-              Two micro-animations that occupy opposite ends of the emotional spectrum: a celebratory gift-box reveal for reward moments, and a refined loader for partner integrations. The gift box was designed for the listing streak reward flow — the unwrapping motion amplifies the dopamine hit of earning a discount. The partner loader communicates trust and motion polish during API wait states.
-            </p>
-          </FadeUp>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-            <FadeUp delay={0.05}>
-              <AnimCard>
-                <div className="px-6 pt-6 pb-3">
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>Gift Box Animation</span>
-                  <p className="text-xs font-light mt-1" style={{ color: MUTED }}>Streak reward unlock moment</p>
-                </div>
-                <LottiePlayer src="/animations/gift-box.json" style={{ width: '100%', aspectRatio: '16/9', padding: '0 32px 24px' }} />
-              </AnimCard>
-            </FadeUp>
-
-            <FadeUp delay={0.12}>
-              <AnimCard>
-                <div className="px-6 pt-6 pb-3">
-                  <span className="text-xs font-bold uppercase tracking-widest" style={{ color: A }}>Partner Loader</span>
-                  <p className="text-xs font-light mt-1" style={{ color: MUTED }}>Partner integration wait state</p>
-                </div>
-                <div className="flex items-center justify-center" style={{ padding: '16px 32px 24px' }}>
-                  <LottiePlayer src="/animations/partner-loader.json" style={{ width: 180, height: 180 }} />
-                </div>
-              </AnimCard>
-            </FadeUp>
-          </div>
-
-          <FadeUp delay={0.1} className="mt-10 p-5 rounded-xl" style={{ background: AB, border: `1px solid ${AL}` }}>
-            <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              <span className="font-semibold" style={{ color: A }}>Process —</span> Both animations were authored in Lottie to ensure crisp SVG rendering at any screen density. The gift box timing was carefully tuned — the lid opens on a slight spring overshoot, pauses at peak anticipation, then settles. The loader uses an eased loop with no jarring restarts.
-            </p>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* ── BRAND BANNER ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp>
-            <SectionLabel>Brand Banner</SectionLabel>
-            <Heading size="md">Welcome to Poshmark.</Heading>
-            <p className="mt-4 text-sm font-light max-w-2xl" style={{ color: MUTED }}>
-              An animated welcome banner designed for the Poshmark homepage and email campaigns — the first motion touchpoint for millions of new users. The animation was built to communicate warmth, energy, and the social nature of the platform in under six seconds. Typography enters on a spring ease; product visuals reveal in a staggered sequence that mimics a feed coming to life.
-            </p>
-          </FadeUp>
-
-          <FadeUp delay={0.1} className="mt-12">
-            <div className="relative rounded-2xl overflow-hidden" style={{ border: `1px solid rgba(124,58,237,0.25)`, boxShadow: '0 0 80px rgba(124,58,237,0.12), 0 24px 80px rgba(0,0,0,0.5)' }}>
-              {/* Glow */}
-              <div style={{ position: 'absolute', bottom: -40, left: '10%', right: '10%', height: 80, background: 'rgba(124,58,237,0.2)', filter: 'blur(40px)', borderRadius: '50%', pointerEvents: 'none' }} />
-              <AnimGif src="/animations/welcome-banner-opt.gif" alt="Welcome to Poshmark banner" style={{ borderRadius: 0 }} />
-            </div>
-          </FadeUp>
-
-          <FadeUp delay={0.1} className="mt-8 p-5 rounded-xl" style={{ background: AB, border: `1px solid ${AL}` }}>
-            <p className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              <span className="font-semibold" style={{ color: A }}>Process —</span> Designed in After Effects with asset handoff to engineering as an optimised GIF. Banner dimensions follow IAB standard leaderboard specs. Motion language deliberately echoes Poshmark's brand personality: playful, aspirational, community-first.
-            </p>
-          </FadeUp>
-        </div>
+        {/* Bottom spacer so last card gets enough scroll room */}
+        <div style={{ height: 80 }} />
       </section>
 
       {/* ── METRICS ── */}
-      <section className="py-24 px-6 md:px-10" style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp className="text-center mb-14">
-            <SectionLabel>By the Numbers</SectionLabel>
-            <Heading>Motion at scale.</Heading>
-          </FadeUp>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <section style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10 py-20">
+          <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
+          <h2 className="font-semibold mb-12" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3.5vw,2.6rem)' }}>Motion at scale.</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             {[
-              { value: '10', label: 'Animations shipped' },
-              { value: '5', label: 'Motion categories' },
-              { value: '60fps', label: 'Target frame rate' },
-              { value: '<250KB', label: 'Lottie budget per file' },
-            ].map(({ value, label }, i) => (
-              <FadeUp key={label} delay={0.07 * i}>
-                <div className="rounded-2xl p-6 text-center" style={{ background: 'rgba(124,58,237,0.06)', border: `1px solid rgba(124,58,237,0.15)` }}>
-                  <p className="text-3xl font-black" style={{ color: A }}>{value}</p>
-                  <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{label}</p>
-                </div>
-              </FadeUp>
+              { value: '5', label: 'Animation categories shipped' },
+              { value: '10+', label: 'Individual Lottie & GIF assets' },
+              { value: '3', label: 'Platforms — iOS, Android, Web' },
+              { value: '4', label: 'Years of motion across Poshmark' },
+              { value: '100%', label: 'Built in After Effects + Lottie' },
+              { value: 'Live', label: 'Across Poshmark\'s product today' },
+            ].map(({ value, label }) => (
+              <div key={label} className="py-8 px-6 rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+                <p className="font-bold mb-2" style={{ color: A, fontSize: 'clamp(2rem,4vw,3rem)' }}>{value}</p>
+                <p className="text-sm font-light" style={{ color: MUTED }}>{label}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── NEXT PROJECT ── */}
-      <NextProjectSection projectId="listing-streaks" projectName="Listing Streaks" coverImage="/images/p1-thumbnail.png" accentColor={A} />
+      <NextProjectSection
+        projectId="listing-streaks"
+        projectName="Listing Streaks"
+        coverImage="/images/p1-thumbnail.png"
+        logo="/images/p1-logo.png"
+        accentColor="#C9177E"
+      />
+
+      {/* ── BALL (rendered last so it's above everything) ── */}
+      <ScrollBall visible={ballVisible} viewportY={ballViewportY} />
     </div>
   )
 }
