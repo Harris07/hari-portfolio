@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
@@ -105,76 +105,153 @@ function AnimatedNumber({ target, suffix = '', prefix = '' }: { target: number; 
 }
 
 /* ─── animated line chart ─── */
-const WEEKLY_DATA = [135, 134, 136, 137, 136, 138, 139, 138, 140, 141, 140, 142, 143, 143, 144]
-const PREV_DATA   = [141, 140, 143, 142, 141, 144, 143, 142, 144, 143, 145, 143, 144, 145, 146]
+// Raw data — index to 100 at W1 so post-launch steeper growth is visible
+const RAW_WEEKLY = [135, 134, 136, 137, 136, 138, 139, 138, 140, 141, 140, 142, 143, 143, 144]
+const RAW_PREV   = [141, 140, 143, 142, 141, 144, 143, 142, 144, 143, 145, 143, 144, 145, 146]
+const WEEKLY_DATA = RAW_WEEKLY.map(v => parseFloat((v / RAW_WEEKLY[0] * 100).toFixed(1)))
+const PREV_DATA   = RAW_PREV.map(v => parseFloat((v / RAW_PREV[0] * 100).toFixed(1)))
+// post-launch ends at ~106.7, prior year ends at ~103.5 → pink line finishes higher
 
 function LineChart() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
+  const [hover, setHover] = React.useState<{ i: number; x: number; y: number } | null>(null)
+
+  const PL = 32; const PR = 48; const PT = 12; const PB = 28
   const W = 560; const H = 200
-  const minV = 130; const maxV = 150
-  const xs = WEEKLY_DATA.map((_, i) => (i / (WEEKLY_DATA.length - 1)) * W)
-  const toY = (v: number) => H - ((v - minV) / (maxV - minV)) * H
+  const CW = W - PL - PR; const CH = H - PT - PB
+  const minV = 96; const maxV = 110
 
-  const pathD = (data: number[]) =>
-    data.map((v, i) => `${i === 0 ? 'M' : 'L'} ${xs[i].toFixed(1)} ${toY(v).toFixed(1)}`).join(' ')
+  const xs = WEEKLY_DATA.map((_, i) => PL + (i / (WEEKLY_DATA.length - 1)) * CW)
+  const toY = (v: number) => PT + CH - ((v - minV) / (maxV - minV)) * CH
 
-  const areaD = (data: number[]) =>
-    `${pathD(data)} L ${W} ${H} L 0 ${H} Z`
+  // Catmull-Rom → cubic bezier smooth curve
+  const smoothPath = (data: number[]) => {
+    const pts = data.map((v, i) => [xs[i], toY(v)])
+    let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(i - 1, 0)]
+      const p1 = pts[i]
+      const p2 = pts[i + 1]
+      const p3 = pts[Math.min(i + 2, pts.length - 1)]
+      const cp1x = p1[0] + (p2[0] - p0[0]) / 6
+      const cp1y = p1[1] + (p2[1] - p0[1]) / 6
+      const cp2x = p2[0] - (p3[0] - p1[0]) / 6
+      const cp2y = p2[1] - (p3[1] - p1[1]) / 6
+      d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`
+    }
+    return d
+  }
+
+  const smoothArea = (data: number[]) =>
+    `${smoothPath(data)} L ${xs[data.length - 1].toFixed(1)} ${(PT + CH).toFixed(1)} L ${xs[0].toFixed(1)} ${(PT + CH).toFixed(1)} Z`
+
+  const endWeekly = WEEKLY_DATA[14]
+  const endPrev   = PREV_DATA[14]
+
+  const TOTAL_W = W + 8
+  const TOTAL_H = H + 4
 
   return (
-    <div ref={ref} className="w-full overflow-x-auto">
-      <svg viewBox={`0 0 ${W} ${H + 36}`} width="100%" style={{ minWidth: 320, overflow: 'visible' }}>
+    <div ref={ref} className="w-full" style={{ position: 'relative' }}>
+      <svg viewBox={`0 0 ${TOTAL_W} ${TOTAL_H}`} width="100%" style={{ display: 'block', overflow: 'visible' }}>
         <defs>
           <linearGradient id="aGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={A} stopOpacity="0.25" />
+            <stop offset="0%" stopColor={A} stopOpacity="0.32" />
             <stop offset="100%" stopColor={A} stopOpacity="0" />
           </linearGradient>
           <linearGradient id="pGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.15)" stopOpacity="1" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0)" stopOpacity="0" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.07)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </linearGradient>
+          <clipPath id="chartClip">
+            <rect x={PL} y={PT} width={CW} height={CH} />
+          </clipPath>
         </defs>
 
         {/* Grid lines */}
-        {[133, 136, 139, 142, 145].map(v => (
+        {[98, 100, 102, 104, 106, 108].map(v => (
           <g key={v}>
-            <line x1="0" y1={toY(v)} x2={W} y2={toY(v)} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-            <text x="-6" y={toY(v) + 4} textAnchor="end" fill="rgba(255,255,255,0.22)" fontSize="9">{v}k</text>
+            <line x1={PL} y1={toY(v)} x2={PL + CW} y2={toY(v)}
+              stroke={v === 100 ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)'} strokeWidth="1" />
+            <text x={PL - 6} y={toY(v) + 4} textAnchor="end" fill="rgba(255,255,255,0.2)" fontSize="9">{v}</text>
           </g>
         ))}
+        <text x={PL + 10} y={toY(100) - 5} fill="rgba(255,255,255,0.2)" fontSize="8">baseline</text>
 
-        {/* Previous year area + line */}
-        <motion.path d={areaD(PREV_DATA)} fill="url(#pGrad)"
+        {/* Prior year */}
+        <motion.path d={smoothArea(PREV_DATA)} fill="url(#pGrad)" clipPath="url(#chartClip)"
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.3 }} />
-        <motion.path d={pathD(PREV_DATA)} fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeDasharray="4 3"
+          transition={{ duration: 0.8, delay: 0.2 }} />
+        <motion.path d={smoothPath(PREV_DATA)} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" strokeDasharray="4 3" clipPath="url(#chartClip)"
           initial={{ pathLength: 0, opacity: 0 }} animate={inView ? { pathLength: 1, opacity: 1 } : {}}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.2 }} />
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.15 }} />
+        <motion.text x={xs[14] + 8} y={toY(endPrev) + 4} textAnchor="start" fill="rgba(255,255,255,0.35)" fontSize="9"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 1.6 }}>
+          +{(endPrev - 100).toFixed(1)}%
+        </motion.text>
 
-        {/* Current year area + line */}
-        <motion.path d={areaD(WEEKLY_DATA)} fill="url(#aGrad)"
+        {/* Post-launch */}
+        <motion.path d={smoothArea(WEEKLY_DATA)} fill="url(#aGrad)" clipPath="url(#chartClip)"
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.5 }} />
-        <motion.path d={pathD(WEEKLY_DATA)} fill="none" stroke={A} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+        <motion.path d={smoothPath(WEEKLY_DATA)} fill="none" stroke={A} strokeWidth="3" strokeLinecap="round" clipPath="url(#chartClip)"
           initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : {}}
           transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1], delay: 0.4 }} />
 
         {/* Week labels */}
         {[0, 4, 9, 14].map(i => (
-          <text key={i} x={xs[i]} y={H + 20} textAnchor="middle" fill="rgba(255,255,255,0.25)" fontSize="9">W{i + 1}</text>
+          <text key={i} x={xs[i]} y={H + 4} textAnchor={i === 0 ? 'start' : i === 14 ? 'end' : 'middle'}
+            fill="rgba(255,255,255,0.25)" fontSize="9">W{i + 1}</text>
         ))}
 
         {/* End dot + label */}
-        <motion.circle cx={xs[14]} cy={toY(144)} r="5" fill={A}
+        <motion.circle cx={xs[14]} cy={toY(endWeekly)} r="5" fill={A}
           initial={{ opacity: 0, scale: 0 }} animate={inView ? { opacity: 1, scale: 1 } : {}}
-          style={{ transformOrigin: `${xs[14]}px ${toY(144)}px` }}
+          style={{ transformOrigin: `${xs[14]}px ${toY(endWeekly)}px` }}
           transition={{ delay: 1.9, duration: 0.4, ease: 'backOut' }} />
-        <motion.text x={xs[14] - 2} y={toY(144) - 12} textAnchor="middle" fill={A} fontSize="10" fontWeight="600"
-          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 2.1 }}>
-          144k
+        <motion.text x={xs[14] - 8} y={toY(endWeekly) - 10} textAnchor="end" fill={A} fontSize="10" fontWeight="700"
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 2.1 }}>
+          +{(endWeekly - 100).toFixed(1)}%
         </motion.text>
+
+        {/* Hover hit areas */}
+        {WEEKLY_DATA.map((_, i) => (
+          <rect key={i}
+            x={i === 0 ? xs[i] : (xs[i] + xs[i - 1]) / 2}
+            y={PT} width={i === 0 || i === 14
+              ? (xs[1] - xs[0]) / 2
+              : (xs[Math.min(i + 1, 14)] - xs[Math.max(i - 1, 0)]) / 2}
+            height={CH}
+            fill="transparent"
+            onMouseEnter={() => setHover({ i, x: xs[i], y: toY(WEEKLY_DATA[i]) })}
+            onMouseLeave={() => setHover(null)}
+            style={{ cursor: 'crosshair' }}
+          />
+        ))}
+
+        {/* Hover indicator */}
+        {hover && (
+          <g>
+            <line x1={hover.x} y1={PT} x2={hover.x} y2={PT + CH}
+              stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 2" />
+            <circle cx={hover.x} cy={toY(WEEKLY_DATA[hover.i])} r="4" fill={A} stroke={BG} strokeWidth="2" />
+            <circle cx={hover.x} cy={toY(PREV_DATA[hover.i])} r="3" fill="rgba(255,255,255,0.5)" stroke={BG} strokeWidth="2" />
+            {/* Tooltip */}
+            {(() => {
+              const tx = hover.x > W * 0.7 ? hover.x - 74 : hover.x + 10
+              const ty = Math.max(toY(WEEKLY_DATA[hover.i]) - 52, PT + 4)
+              return (
+                <g>
+                  <rect x={tx} y={ty} width="68" height="48" rx="5" fill="rgba(20,10,20,0.92)" stroke="rgba(201,23,126,0.3)" strokeWidth="1" />
+                  <text x={tx + 8} y={ty + 13} fill="rgba(255,255,255,0.4)" fontSize="8">W{hover.i + 1}</text>
+                  <text x={tx + 8} y={ty + 27} fill={A} fontSize="10" fontWeight="700">+{(WEEKLY_DATA[hover.i] - 100).toFixed(1)}%</text>
+                  <text x={tx + 8} y={ty + 27} fill="rgba(255,255,255,0.18)" fontSize="8" dy="12">+{(PREV_DATA[hover.i] - 100).toFixed(1)}% prior yr</text>
+                </g>
+              )
+            })()}
+          </g>
+        )}
       </svg>
     </div>
   )
@@ -201,32 +278,33 @@ function MetricBar({ label, before, after, suffix = '%', delay = 0 }: {
 }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-40px' })
-  const maxAbs = Math.max(Math.abs(before), Math.abs(after), 8)
-
-  const barW = (v: number) => `${(Math.abs(v) / maxAbs) * 100}%`
-  const isImprovement = after > before
+  // Show recovery as positive improvement (pp gained back)
+  const recovered = parseFloat((after - before).toFixed(1))  // e.g. -0.7 - (-4.5) = +3.8
+  const maxBar = 8  // max pp for 100% bar width
 
   return (
-    <div ref={ref} className="flex flex-col gap-2">
+    <div ref={ref} className="flex flex-col gap-3">
       <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</span>
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center gap-3">
-          <span className="text-xs w-16 text-right" style={{ color: MUTED }}>Before</span>
-          <div className="flex-1 h-6 rounded overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-            <motion.div className="h-full rounded" style={{ background: 'rgba(255,255,255,0.15)' }}
-              initial={{ width: 0 }} animate={inView ? { width: barW(before) } : {}}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay }} />
-          </div>
-          <span className="text-sm font-semibold w-12" style={{ color: 'rgba(255,255,255,0.45)' }}>{before}{suffix}</span>
+
+      {/* Context: before → after */}
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Pre-launch</span>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.4)' }}>{before}{suffix}</span>
+        <span className="text-xs mx-1" style={{ color: 'rgba(255,255,255,0.2)' }}>→</span>
+        <span className="text-sm font-semibold" style={{ color: MUTED }}>Post-launch</span>
+        <span className="text-sm font-semibold" style={{ color: MUTED }}>{after}{suffix}</span>
+      </div>
+
+      {/* Recovery bar — always pink, width = recovered pp */}
+      <div>
+        <div className="h-5 rounded overflow-hidden mb-1" style={{ background: 'rgba(255,255,255,0.05)' }}>
+          <motion.div className="h-full rounded" style={{ background: A }}
+            initial={{ width: 0 }} animate={inView ? { width: `${Math.min(recovered / maxBar * 100, 100)}%` } : {}}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: delay + 0.2 }} />
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs w-16 text-right" style={{ color: MUTED }}>After</span>
-          <div className="flex-1 h-6 rounded overflow-hidden" style={{ background: 'rgba(255,255,255,0.05)' }}>
-            <motion.div className="h-full rounded" style={{ background: isImprovement ? A : '#e05' }}
-              initial={{ width: 0 }} animate={inView ? { width: barW(after) } : {}}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: delay + 0.15 }} />
-          </div>
-          <span className="text-sm font-semibold w-12" style={{ color: isImprovement ? A : '#e05' }}>{after}{suffix}</span>
+          <span className="text-xs" style={{ color: MUTED }}>Recovered</span>
+          <span className="text-base font-bold" style={{ color: A }}>+{recovered}pp</span>
         </div>
       </div>
     </div>
@@ -248,7 +326,7 @@ export default function ListingStreaksDetailPage() {
           style={{ color: WHITE, textDecoration: 'none' }}>
           <ArrowLeft size={13} /> Back to work
         </Link>
-        <Chip>01</Chip>
+        <Chip>POSHMARK</Chip>
       </nav>
 
       {/* ── HERO ── */}
@@ -442,27 +520,33 @@ export default function ListingStreaksDetailPage() {
       </section>
 
       {/* ── DESIGN: STREAK PROGRESSION ── */}
-      <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
-        <div className="max-w-5xl mx-auto">
-          <FadeUp className="mb-10">
+      <section className="py-28 overflow-hidden" style={{ background: '#0a0b0f' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10">
+          <FadeUp className="text-center mb-16">
             <SectionLabel>Streak in Motion</SectionLabel>
             <Heading size="md">Progressive state design as a behavioral reinforcement system.</Heading>
-            <div className="mt-4 max-w-xl">
-              <Body>Rather than a static UI with a changing number, each week produces a distinct visual state — a deliberate application of variable ratio reinforcement. By week 2, the filled bolt communicates that the behavior has been registered. By week 3, a social comparison nudge surfaces: "You are in the top 15% of consecutive listers." This framing activates identity-based motivation — the seller is no longer just listing, they are a habitual lister. The week 3 active state introduces a copy shift from "Next week unlocks in" to "Time left to list this week," reorienting urgency from anticipated gain to present-moment completion — a subtle but consequential distinction in behavioral priming.</Body>
-            </div>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: MUTED, fontSize: '1rem' }}>
+              Each week produces a distinct visual state — variable ratio reinforcement made tangible.
+            </p>
           </FadeUp>
-          <div className="flex justify-center gap-4 md:gap-6 flex-wrap">
-            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
-              <Phone src="/images/p1-phone-w2a.png" alt="Week 2 streak" delay={0.1} />
-            </div>
-            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
-              <Phone src="/images/p1-phone-w2b.png" alt="Week 3 streak" delay={0.2} />
-            </div>
-            <div style={{ width: 'clamp(160px, 28vw, 240px)' }}>
-              <Phone src="/images/p1-phone-w2c.png" alt="Week 3 active streak" delay={0.3} />
-            </div>
-          </div>
         </div>
+        <FadeIn delay={0.1}>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-center gap-10 sm:gap-8 px-4" style={{ maxWidth: 880, margin: '0 auto', paddingBottom: 20 }}>
+            {[
+              { src: '/images/p1-phone-w2a.png', label: '01 — Week 2', sub: 'Streak Registered', delay: 0.05 },
+              { src: '/images/p1-phone-w2b.png', label: '02 — Week 3', sub: 'Social Proof Nudge', delay: 0.12 },
+              { src: '/images/p1-phone-w2c.png', label: '03 — Current Week 4', sub: 'Urgency Reframe', delay: 0.19 },
+            ].map(({ src, label, sub, delay }) => (
+              <div key={label} className="flex flex-col items-center w-full sm:flex-1 max-w-[200px] sm:max-w-[250px] mx-auto sm:mx-0" style={{ gap: 40 }}>
+                <Phone src={src} alt={label} delay={delay} />
+                <FadeUp delay={delay + 0.12} className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-widest" style={{ color: A }}>{label}</span>
+                  <span className="block text-xs font-light mt-1" style={{ color: 'rgba(255,255,255,0.5)' }}>{sub}</span>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </section>
 
       {/* ── DESIGN: WEEK 4 REWARD ── */}
@@ -471,10 +555,10 @@ export default function ListingStreaksDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="flex justify-center gap-4 md:gap-6">
               <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
-                <Phone src="/images/p1-phone-w4a.png" alt="Week 4 congratulations" delay={0.05} rotate={-2} />
+                <Phone src="/images/p1-phone-w4a.png" alt="Week 4 congratulations" delay={0.05} />
               </div>
               <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
-                <Phone src="/images/p1-phone-w4b.png" alt="Week 4 reward unlock" delay={0.18} rotate={2} />
+                <Phone src="/images/p1-phone-w4b.png" alt="Week 4 reward unlock" delay={0.18} />
               </div>
             </div>
             <FadeUp delay={0.1}>
@@ -486,6 +570,85 @@ export default function ListingStreaksDetailPage() {
               </div>
             </FadeUp>
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-12">
+            {[
+              { tag: 'Ceremony', note: 'Two-stage delivery signals the achievement was worth interrupting the page state' },
+              { tag: '7-day expiry', note: 'Creates a secondary return trigger independent of the streak itself' },
+              { tag: 'Low friction', note: 'Shipping discount aligns with existing seller behaviour — no new action required' },
+            ].map(({ tag, note }, i) => (
+              <FadeUp key={tag} delay={0.06 * i}>
+                <div className="h-full flex flex-col gap-2 p-4 rounded-xl" style={{ background: 'rgba(201,23,126,0.06)', border: '1px solid rgba(201,23,126,0.15)' }}>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-md self-start" style={{ background: 'rgba(201,23,126,0.15)', color: A }}>{tag}</span>
+                  <span className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{note}</span>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── REWARD ICONS ── */}
+      <section className="relative overflow-hidden py-28 px-6 md:px-10" style={{ background: 'linear-gradient(180deg, #0d0e12 0%, #120a16 50%, #0d0e12 100%)' }}>
+        {/* Deep radial bloom */}
+        <div style={{ position: 'absolute', top: '35%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(201,23,126,0.13) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        {/* Top shimmer line */}
+        <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(201,23,126,0.4), transparent)' }} />
+
+        <div className="relative max-w-5xl mx-auto">
+
+          {/* Header */}
+          <FadeUp className="text-center mb-16">
+            <SectionLabel>Streak Rewards</SectionLabel>
+            <Heading size="md">Earn your badge. Keep your streak.</Heading>
+            <p className="mt-4 text-sm font-light" style={{ color: MUTED }}>Five exclusive titles unlocked as sellers hit weekly listing milestones.</p>
+          </FadeUp>
+
+          {/* Main GIF — full-width spotlight presentation */}
+          <FadeUp delay={0.1} className="flex justify-center mb-24">
+            <div className="relative w-full" style={{ maxWidth: 720 }}>
+              {/* Outer glow ring */}
+              <div style={{ position: 'absolute', inset: -1, borderRadius: 48, background: 'linear-gradient(135deg, rgba(201,23,126,0.5), rgba(201,23,126,0.05) 50%, rgba(201,23,126,0.3))', zIndex: 1 }} />
+              {/* GIF */}
+              <div style={{ position: 'relative', zIndex: 2, borderRadius: 46, overflow: 'hidden', boxShadow: '0 0 0 1px rgba(201,23,126,0.2), 0 40px 120px rgba(0,0,0,0.7), 0 0 120px rgba(201,23,126,0.36), 0 0 60px rgba(201,23,126,0.24)' }}>
+                <img
+                  src="/images/reward-card-animation.gif"
+                  alt="Reward card animation"
+                  style={{ width: '100%', display: 'block' }}
+                />
+              </div>
+              {/* Reflection bloom below — outside overflow so it's visible */}
+              <div style={{ position: 'absolute', bottom: -60, left: '5%', right: '5%', height: 100, background: 'rgba(201,23,126,0.28)', filter: 'blur(50px)', borderRadius: '50%', pointerEvents: 'none', zIndex: 0 }} />
+            </div>
+          </FadeUp>
+
+          {/* Other Rewards heading */}
+          <FadeUp delay={0.12} className="text-center mb-10">
+            <SectionLabel>Other Rewards</SectionLabel>
+            <Heading size="sm">App Icons</Heading>
+          </FadeUp>
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+            {[
+              { src: '/images/icon-reward-1.png', label: 'Posh Classic', week: 'W1' },
+              { src: '/images/icon-reward-2.png', label: "Poshin' for the Planet", week: 'W2' },
+              { src: '/images/icon-reward-3.png', label: "Sky's the Limit", week: 'W3' },
+              { src: '/images/icon-reward-4.png', label: 'Secondhand Superstar', week: 'W4' },
+              { src: '/images/icon-reward-5.png', label: 'Denim Luxe', week: 'W5+' },
+            ].map(({ src, label, week }, i) => (
+              <FadeUp key={label} delay={0.07 * i}>
+                <div className="flex flex-col items-center gap-4" style={{ width: 130 }}>
+                  <div className="relative flex items-center justify-center" style={{ width: 110, height: 110 }}>
+                    <div style={{ position: 'absolute', inset: -8, background: 'radial-gradient(ellipse at center, rgba(201,23,126,0.3) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(10px)' }} />
+                    <div style={{ position: 'relative', width: 110, height: 110, borderRadius: 26, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(201,23,126,0.18)', boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                      <img src={src} alt={label} style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: '22%' }} />
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(201,23,126,0.15)', color: A, letterSpacing: '0.05em' }}>{week}</span>
+                  <span className="text-xs font-medium text-center leading-tight" style={{ color: 'rgba(255,255,255,0.5)' }}>{label}</span>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+
         </div>
       </section>
 
@@ -500,20 +663,29 @@ export default function ListingStreaksDetailPage() {
                 <Body>Loss aversion research consistently shows that the threat of losing a held asset is a stronger motivator than the prospect of gaining an equivalent one. A broken streak, if handled poorly, converts that psychological principle against the product — the seller feels punished and disengages permanently. The design intervention was to reframe the broken state not as an ending but as an access interruption: "List now to regain access to your rewards." The CTA language was chosen precisely for the word "regain" — it asserts that the reward relationship is intact, merely paused.</Body>
                 <Body>The bottom sheet surfaces only on the first post-lapse visit, preventing repeated negative exposure. Once dismissed, the streak page resets to the familiar W1 state — identical visual hierarchy to the initial onboarding view. There is no permanent penalty badge, no "streak ended" tombstone. The reset communicates: the system is ready when you are.</Body>
               </div>
-              <BulletList items={[
-                'Actionsheet shown exactly once per lapse — prevents shame accumulation across sessions',
-                '"Regain" framing restores perceived agency; avoids the learned helplessness of punitive copy',
-                'Post-dismiss state is indistinguishable from week 1 — structural parity signals a clean start',
-              ]} />
             </FadeUp>
             <div className="flex justify-center gap-4 md:gap-6">
               <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
-                <Phone src="/images/p1-phone-brokena.png" alt="Broken streak actionsheet" delay={0.1} rotate={-2} />
+                <Phone src="/images/p1-phone-brokena.png" alt="Broken streak actionsheet" delay={0.1} />
               </div>
               <div style={{ width: 'clamp(140px, 28vw, 220px)' }}>
-                <Phone src="/images/p1-phone-brokenb.png" alt="Streak reset view" delay={0.22} rotate={2} />
+                <Phone src="/images/p1-phone-brokenb.png" alt="Streak reset view" delay={0.22} />
               </div>
             </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-12">
+            {[
+              { tag: 'Shown once', note: 'Actionsheet surfaces exactly once per lapse — prevents shame accumulation across sessions' },
+              { tag: '"Regain" framing', note: 'Restores perceived agency and avoids the learned helplessness of punitive copy' },
+              { tag: 'Clean slate', note: 'Post-dismiss state is identical to week 1 — structural parity signals a fresh start, not a failure' },
+            ].map(({ tag, note }, i) => (
+              <FadeUp key={tag} delay={0.06 * i}>
+                <div className="h-full flex flex-col gap-2 p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-md self-start" style={{ background: 'rgba(201,23,126,0.15)', color: A }}>{tag}</span>
+                  <span className="text-xs font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>{note}</span>
+                </div>
+              </FadeUp>
+            ))}
           </div>
         </div>
       </section>
@@ -535,14 +707,14 @@ export default function ListingStreaksDetailPage() {
             {[
               { label: 'Weekly Streaksters', node: <AnimatedNumber target={144} suffix="k" />, sub: 'peak post-launch cohort — up from 135k at launch' },
               { label: 'Feature Discovery Rate', node: <AnimatedNumber target={25} suffix="%" />, sub: 'of 300k weekly active listers reached the streak page' },
-              { label: 'Repeat Listers YoY Δ', node: <AnimatedNumber target={-3.8} suffix="%" />, sub: 'recovered from −7% pre-launch baseline' },
+              { label: 'Repeat Listers Recovery', node: <AnimatedNumber target={3.2} suffix="pp" />, sub: '+3.2pp improvement vs. −7% pre-launch baseline' },
               { label: 'W2–W4 Retention Δ', node: <span className="font-semibold" style={{ color: A, fontSize: 'clamp(2.4rem,4vw,3.4rem)', lineHeight: 1 }}>+1%</span>, sub: 'lister retention improvement in critical drop-off window' },
             ].map(({ label, node, sub }) => (
-              <div key={label} className="p-6 rounded-2xl flex flex-col gap-2"
+              <div key={label} className="p-6 rounded-2xl flex flex-col"
                 style={{ background: 'rgba(201,23,126,0.07)', border: '1px solid rgba(201,23,126,0.18)' }}>
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>{label}</span>
+                <span className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: 'rgba(255,255,255,0.85)', minHeight: '2.5em', display: 'flex', alignItems: 'flex-start' }}>{label}</span>
                 {node}
-                <span className="text-xs font-light leading-snug" style={{ color: 'rgba(255,255,255,0.35)' }}>{sub}</span>
+                <span className="text-xs font-light leading-snug mt-2" style={{ color: 'rgba(255,255,255,0.35)' }}>{sub}</span>
               </div>
             ))}
           </FadeUp>
@@ -552,8 +724,8 @@ export default function ListingStreaksDetailPage() {
             style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
             <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
               <div>
-                <p className="font-semibold text-sm" style={{ color: WHITE }}>Weekly Streaksters (000s)</p>
-                <p className="text-xs font-light mt-0.5" style={{ color: MUTED }}>15-week post-launch cohort vs. prior year baseline</p>
+                <p className="font-semibold text-sm" style={{ color: WHITE }}>Lister Growth Index (Base 100)</p>
+                <p className="text-xs font-light mt-0.5" style={{ color: MUTED }}>15-week trajectory — post-launch vs. prior year, indexed to Week 1</p>
               </div>
               <div className="flex items-center gap-5">
                 <div className="flex items-center gap-2">
@@ -569,18 +741,109 @@ export default function ListingStreaksDetailPage() {
             <LineChart />
           </FadeUp>
 
-          {/* Before/after metric bars */}
+          {/* Recovery metric bars */}
           <FadeUp delay={0.14} className="rounded-2xl p-6 sm:p-8"
             style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
-            <p className="font-semibold text-sm mb-6" style={{ color: WHITE }}>YoY Δ — Pre-launch vs. 15-week post-launch</p>
+            <p className="font-semibold text-sm mb-1" style={{ color: WHITE }}>YoY decline recovered — 15 weeks post-launch</p>
+            <p className="text-xs font-light mb-6" style={{ color: MUTED }}>Percentage-point improvement vs. pre-launch baseline</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              <MetricBar label="Weekly Streaksters YoY change" before={-4.5} after={-0.7} suffix="%" delay={0} />
-              <MetricBar label="Repeat Listers YoY change" before={-7.0} after={-3.8} suffix="%" delay={0.1} />
+              <MetricBar label="Weekly Streaksters" before={-4.5} after={-0.7} suffix="%" delay={0} />
+              <MetricBar label="Repeat Listers" before={-7.0} after={-3.8} suffix="%" delay={0.1} />
             </div>
             <p className="text-xs mt-6 font-light" style={{ color: 'rgba(255,255,255,0.22)' }}>
               Both signals moved from sustained decline into near-recovery within 15 weeks — reversing a trajectory that had held negative for the prior four quarters. Effect size is directionally significant; full attribution requires longer observation.
             </p>
           </FadeUp>
+        </div>
+      </section>
+
+      {/* ── ENGAGEMENT SIGNALS ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: '#080a0f' }}>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="text-center mb-16">
+            <SectionLabel>Community Signal</SectionLabel>
+            <Heading size="md">Engagement the data didn't anticipate.</Heading>
+            <p className="mt-4 mx-auto max-w-lg font-light" style={{ color: MUTED, fontSize: '1rem' }}>
+              Behavioral signals from seller support tickets and community feedback — 15 weeks post-launch.
+            </p>
+          </FadeUp>
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4" style={{ gridAutoRows: 'auto' }}>
+
+            {/* Card 1 — Hero: 81% — spans 3 cols, tall */}
+            <FadeUp delay={0.05} className="col-span-2 md:col-span-3">
+              <div className="h-full rounded-3xl p-8 flex flex-col gap-3 overflow-hidden relative"
+                style={{ background: `linear-gradient(135deg, rgba(201,23,126,0.18) 0%, rgba(201,23,126,0.05) 100%)`, border: '1px solid rgba(201,23,126,0.25)', minHeight: 220 }}>
+                <div style={{ position: 'absolute', top: -30, right: -30, width: 160, height: 160, borderRadius: '50%', background: 'rgba(201,23,126,0.08)', filter: 'blur(40px)' }} />
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(201,23,126,0.7)' }}>Positive reception</span>
+                <div className="font-black leading-none" style={{ fontSize: 'clamp(3.2rem, 8vw, 4.8rem)', color: A }}>81%</div>
+                <p className="text-sm font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)', maxWidth: 280 }}>
+                  168 upvotes vs 38 downvotes on the feature help article — sellers approved of the concept before UX friction was resolved.
+                </p>
+              </div>
+            </FadeUp>
+
+            {/* Card 2 — W5→W8 — spans 3 cols */}
+            <FadeUp delay={0.1} className="col-span-2 md:col-span-3">
+              <div className="h-full rounded-3xl p-8 flex flex-col gap-3 overflow-hidden relative"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, minHeight: 220 }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>Habit formation</span>
+                <div className="font-black leading-none" style={{ fontSize: 'clamp(3.2rem, 8vw, 4.8rem)', color: WHITE }}>W5 <span style={{ color: A }}>→</span> W8</div>
+                <p className="text-sm font-light leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', maxWidth: 300 }}>
+                  Sellers maintained streaks well beyond the 4-week milestone — the habit loop was stickier than the reward itself.
+                </p>
+              </div>
+            </FadeUp>
+
+            {/* Card 3 — Organic demand — spans 2 cols */}
+            <FadeUp delay={0.13} className="col-span-2">
+              <div className="h-full rounded-3xl p-6 flex flex-col gap-3"
+                style={{ background: 'rgba(255,255,255,0.025)', border: `1px solid ${BORDER}`, minHeight: 160 }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>Seller pull</span>
+                <p className="text-sm font-light leading-relaxed flex-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Sellers who hadn't received access wrote in asking to join — the feature generated its own word-of-mouth before any push marketing.
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-black" style={{ color: WHITE }}>Word of mouth</span>
+                  <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                    <path d="M5.60431 21.8312L11.7197 15.7155L16.0879 20.0838L25.6978 10.4735M21.5449 9.59961H26.5727V14.6278" stroke="white" strokeWidth="2.7912" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </FadeUp>
+
+            {/* Card 4 — Loss aversion — spans 2 cols */}
+            <FadeUp delay={0.16} className="col-span-2">
+              <div className="h-full rounded-3xl p-6 flex flex-col gap-3"
+                style={{ background: 'rgba(201,23,126,0.06)', border: '1px solid rgba(201,23,126,0.15)', minHeight: 160 }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(201,23,126,0.6)' }}>Identity shift</span>
+                <p className="text-sm font-light leading-relaxed flex-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Sellers reached out to preserve their streak after accidental cancellations — it had become part of how they saw themselves as sellers.
+                </p>
+                <span className="text-2xl font-black" style={{ color: A }}>I'm a lister.</span>
+              </div>
+            </FadeUp>
+
+            {/* Card 5 — Live promotion — spans 2 cols */}
+            <FadeUp delay={0.19} className="col-span-2">
+              <div className="h-full rounded-3xl p-6 flex flex-col gap-3"
+                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, minHeight: 160 }}>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>Changed selling behaviour</span>
+                <p className="text-sm font-light leading-relaxed flex-1" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Sellers announced streak discounts during live shows to drive instant purchases — the feature became a sales tool.
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-black" style={{ color: WHITE }}>Live</span>
+                  <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                    <path d="M5.60431 21.8312L11.7197 15.7155L16.0879 20.0838L25.6978 10.4735M21.5449 9.59961H26.5727V14.6278" stroke="white" strokeWidth="2.7912" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </FadeUp>
+
+
+          </div>
         </div>
       </section>
 
