@@ -543,6 +543,109 @@ export default function ListingStreaksDetailPage() {
         </div>
       </section>
 
+      {/* ── RESEARCH FINDINGS ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="mb-4">
+            <SectionLabel>Research Findings</SectionLabel>
+            <Heading>Gaps in the market, ripe for Poshmark.</Heading>
+          </FadeUp>
+          <FadeUp delay={0.08} className="mb-14">
+            <Body className="max-w-2xl mt-4">
+              Across every competitor studied, the same friction points surfaced. The opportunity wasn't to copy a streak mechanic — it was to solve the problems they all left unsolved.
+            </Body>
+          </FadeUp>
+
+          <FadeUp delay={0.12}>
+            {/* Lags in the market */}
+            <p className="text-xs uppercase tracking-widest font-semibold mb-6" style={{ color: A }}>Lags in the market</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
+              {[
+                {
+                  number: '01',
+                  title: 'Streaks are disconnected from real value',
+                  body: 'Duolingo, Snapchat, and LinkedIn all reward the act of opening the app — not the outcome the user cares about. Sellers don\'t want to "be active," they want to earn. No competitor ties streak maintenance directly to income growth.',
+                },
+                {
+                  number: '02',
+                  title: 'All-or-nothing reset kills momentum',
+                  body: 'Most platforms (BeReal, Habitica) offer zero forgiveness — a single missed day destroys weeks of progress. This creates anxiety rather than motivation, and drives abandonment at the exact moment re-engagement matters most.',
+                },
+                {
+                  number: '03',
+                  title: 'Social pressure is generic or absent',
+                  body: "Snapchat's bilateral system works because both parties feel the cost. But no commerce platform has translated that mutual accountability into a seller-to-buyer or seller-to-seller context — leaving a massive social retention lever untapped.",
+                },
+                {
+                  number: '04',
+                  title: 'No progressive difficulty or mastery arc',
+                  body: 'Every streak studied is flat — day 1 and day 100 feel identical. There is no system that makes a seller feel they are becoming better at the craft, only one that makes them feel they are surviving a countdown.',
+                },
+                {
+                  number: '05',
+                  title: 'Freeze mechanics feel punitive, not supportive',
+                  body: 'Streak freezes exist as a paid escape hatch (Duolingo) or a one-time lifeline (Snapchat). None frame the break as a natural part of seller life — vacations, illness, busy weeks — making the product feel adversarial.',
+                },
+                {
+                  number: '06',
+                  title: 'Discovery of the streak is passive',
+                  body: 'Users learn about the streak only after they\'ve already started one. No competitor designs the first-time streak moment as a deliberate onboarding hook — the mechanic is discovered, not introduced.',
+                },
+              ].map(({ number, title, body }) => (
+                <div key={number} className="p-6 rounded-2xl flex flex-col gap-3"
+                  style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+                  <p className="text-xs font-semibold" style={{ color: 'rgba(255,255,255,0.2)' }}>{number}</p>
+                  <p className="font-semibold text-sm leading-snug" style={{ color: WHITE }}>{title}</p>
+                  <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{body}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Opportunities */}
+            <p className="text-xs uppercase tracking-widest font-semibold mb-6" style={{ color: A }}>Opportunities</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {[
+                {
+                  icon: '💰',
+                  title: 'Tie streaks to earnings, not activity',
+                  body: 'Design the streak around listings that sell — not just any listing. When sellers see a direct line between streak consistency and income, the mechanic becomes self-reinforcing. The motivation is intrinsic.',
+                  tag: 'Core differentiator',
+                },
+                {
+                  icon: '🛡️',
+                  title: 'Introduce a grace period as a feature, not a workaround',
+                  body: "Frame a 24-hour grace window as a built-in seller courtesy — a recognition that life happens. This removes anxiety without removing stakes, and models Poshmark as a product that's on the seller's side.",
+                  tag: 'Retention lever',
+                },
+                {
+                  icon: '📈',
+                  title: 'Build a mastery arc into the streak progression',
+                  body: 'Design milestones at 7, 30, 90, and 365 days with unlockable benefits — early access, promoted listings, seller badges. Sellers should feel they are leveling up, not just surviving.',
+                  tag: 'Engagement depth',
+                },
+                {
+                  icon: '🤝',
+                  title: 'Add a social layer unique to commerce',
+                  body: "Buyer visibility into a seller's streak creates a trust signal that has no equivalent in any competitor. A seller's streak length becomes a proxy for reliability — bridging the social accountability gap that only Snapchat comes close to solving.",
+                  tag: 'Unique to Poshmark',
+                },
+              ].map(({ icon, title, body, tag }) => (
+                <div key={title} className="p-7 rounded-2xl flex flex-col gap-4"
+                  style={{ background: 'rgba(201,23,126,0.04)', border: '1px solid rgba(201,23,126,0.15)' }}>
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-2xl">{icon}</span>
+                    <span className="text-xs uppercase tracking-widest px-3 py-1 rounded-full"
+                      style={{ background: 'rgba(201,23,126,0.12)', color: A }}>{tag}</span>
+                  </div>
+                  <p className="font-semibold leading-snug" style={{ color: WHITE, fontSize: 'clamp(0.9rem,1.2vw,1rem)' }}>{title}</p>
+                  <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>{body}</p>
+                </div>
+              ))}
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
       {/* ── GOALS ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: '#0a0b0f' }}>
         <div className="max-w-5xl mx-auto">
