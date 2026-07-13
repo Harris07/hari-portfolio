@@ -443,11 +443,12 @@ export default function ListingStreaksDetailPage() {
           </FadeUp>
 
           <FadeUp delay={0.12}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
               {[
                 {
                   app: 'Duolingo',
                   tag: 'Language Learning',
+                  image: '/images/competitor-duolingo.jpg',
                   tracks: 'Daily XP-earning lesson',
                   hook: 'Flame in the nav header — visible before the user even starts a lesson. Loss aversion is the engine: protecting the number becomes the motivation.',
                   mechanic: 'Streak Freeze (purchasable), hidden grace window, post-hoc Streak Repair',
@@ -456,6 +457,7 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'Snapchat',
                   tag: 'Social',
+                  image: '/images/competitor-snapchat.jpg',
                   tracks: 'Mutual daily Snap exchange between two friends',
                   hook: 'Bilateral streak — both users must act within 24 hrs. A ⏳ hourglass appears ~4 hrs before expiry, creating a micro-deadline that drives immediate action.',
                   mechanic: '1 lifetime free restore (Snapchat+ gets 5/month), no grace period',
@@ -464,6 +466,7 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'Habitica',
                   tag: 'Productivity RPG',
+                  image: '/images/competitor-habitica.jpg',
                   tracks: 'User-defined daily tasks on a self-set schedule',
                   hook: 'Compounding reward — each streak day adds +1% gold value to that task. Missing a day damages your avatar HP and harms your party members.',
                   mechanic: 'No freeze. RPG damage is the penalty — social accountability at group scale.',
@@ -472,6 +475,7 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'BeReal',
                   tag: 'Social',
+                  image: '/images/competitor-bereal.jpg',
                   tracks: 'Daily dual-camera post within a random 2-minute window',
                   hook: '5-day minimum before the flame icon appears — front-loads commitment so only proven users see the mechanic. Late posts within the same day still count.',
                   mechanic: 'No restore or freeze. Zero-tolerance reset, but late posts add a flexibility buffer.',
@@ -480,44 +484,55 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'LinkedIn Games',
                   tag: 'Professional Network',
+                  image: '/images/competitor-linkedin.png',
                   tracks: 'Daily play of in-app word/logic games (Queens, Pinpoint)',
                   hook: "The streak is a Trojan horse — 2-minute games are a low-friction daily touchpoint that drives broader app opens on a platform users don't naturally visit daily.",
                   mechanic: "No freeze. Low session length is itself the forgiveness — barrier to maintaining is very low.",
                   icon: '💼',
                 },
-              ].map(({ app, tag, tracks, hook, mechanic, icon }) => (
-                <div key={app} className="p-6 rounded-2xl flex flex-col gap-4"
+              ].map(({ app, tag, image, tracks, hook, mechanic, icon }) => (
+                <div key={app} className="rounded-2xl overflow-hidden flex flex-col"
                   style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{icon}</span>
-                    <div>
-                      <p className="font-semibold text-sm" style={{ color: WHITE }}>{app}</p>
-                      <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.28)' }}>{tag}</p>
-                    </div>
+                  {/* Reference image */}
+                  <div className="overflow-hidden" style={{ height: 200, background: '#111318' }}>
+                    <img src={image} alt={`${app} streak UI`}
+                      className="w-full h-full object-cover object-top" />
                   </div>
-                  <div className="flex flex-col gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Tracks</p>
-                      <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{tracks}</p>
+                  {/* Card content */}
+                  <div className="p-6 flex flex-col gap-4 flex-1">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{icon}</span>
+                      <div>
+                        <p className="font-semibold text-sm" style={{ color: WHITE }}>{app}</p>
+                        <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.28)' }}>{tag}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Key insight</p>
-                      <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{hook}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Break mechanic</p>
-                      <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{mechanic}</p>
+                    <div className="flex flex-col gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Tracks</p>
+                        <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{tracks}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Key insight</p>
+                        <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{hook}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Break mechanic</p>
+                        <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{mechanic}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
 
-              {/* Synthesis card spanning the 3rd column on large, full row on smaller */}
-              <div className="p-6 rounded-2xl flex flex-col justify-center gap-3 md:col-span-2 lg:col-span-1"
+              {/* Synthesis card — full width */}
+              <div className="md:col-span-2 p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start"
                 style={{ background: 'rgba(201,23,126,0.06)', border: '1px solid rgba(201,23,126,0.2)' }}>
-                <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: A }}>Synthesis</p>
-                <p className="font-semibold text-sm leading-snug" style={{ color: WHITE }}>The streak counter must be visible before the user acts — not after.</p>
-                <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>
+                <div className="flex-shrink-0">
+                  <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: A }}>Synthesis</p>
+                  <p className="font-semibold leading-snug" style={{ color: WHITE, fontSize: 'clamp(1rem,1.5vw,1.2rem)', maxWidth: 320 }}>The streak counter must be visible before the user acts — not after.</p>
+                </div>
+                <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>
                   Every effective streak places the number where users see it before deciding whether to engage.
                   For Poshmark sellers, this meant surfacing the streak on the listing entry point — not buried in a profile or a dashboard tab.
                   The bilateral accountability from Snapchat and the escalating reward model from Habitica both informed how we designed the streak's social layer and reward tiers.
