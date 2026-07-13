@@ -159,10 +159,7 @@ function StopCard({ stop, active, onRef }: {
       />
 
       {/* Content */}
-      <motion.div
-        className="max-w-4xl mx-auto px-6 md:px-12"
-        animate={{ opacity: active ? 1 : 0.28 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}>
+      <div className="max-w-4xl mx-auto px-6 md:px-12">
 
         {/* Section header */}
         <div className="text-center mb-10">
@@ -175,26 +172,18 @@ function StopCard({ stop, active, onRef }: {
         </div>
 
         {/* Animation grid */}
-        <motion.div
-          className={`grid ${gridClass} gap-4`}
-          style={{ maxWidth: stop.cols === 1 ? 560 : '100%', margin: '0 auto' }}
-          animate={{
-            y: active ? 0 : 12,
-            filter: active ? 'blur(0px)' : 'blur(2px)',
-          }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
+        <div className={`grid ${gridClass} gap-4`}
+          style={{ maxWidth: stop.cols === 1 ? 560 : '100%', margin: '0 auto' }}>
           {stop.items.map((item, i) => (
             <motion.div key={i}
               className="rounded-2xl overflow-hidden"
               animate={{
-                borderColor: active ? 'rgba(167,139,250,0.28)' : BORDER,
-                boxShadow: active ? `0 0 0 1px rgba(167,139,250,0.12), 0 24px 80px rgba(0,0,0,0.5), 0 0 60px rgba(167,139,250,0.06)` : '0 8px 32px rgba(0,0,0,0.3)',
+                boxShadow: active
+                  ? `0 0 0 1.5px ${A}, 0 0 40px rgba(167,139,250,0.18), 0 24px 60px rgba(0,0,0,0.5)`
+                  : `0 0 0 1px ${BORDER}, 0 8px 32px rgba(0,0,0,0.3)`,
               }}
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid transparent',
-              }}
-              transition={{ duration: 0.5 }}>
+              style={{ background: 'rgba(255,255,255,0.02)' }}
+              transition={{ duration: 0.4 }}>
               {item.type === 'lottie' ? (
                 <LottiePlayer src={item.src} active={active}
                   style={{ aspectRatio: stop.cols === 3 ? '1.2/1' : '1.1/1' }} />
@@ -209,8 +198,8 @@ function StopCard({ stop, active, onRef }: {
               </div>
             </motion.div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -254,14 +243,15 @@ export default function MotionDetailPage() {
 
   const measure = () => {
     if (!pathSectionRef.current) return
-    const top = pathSectionRef.current.offsetTop
+    // getBoundingClientRect + scrollY gives true page-absolute position
+    const top = pathSectionRef.current.getBoundingClientRect().top + window.scrollY
     const height = pathSectionRef.current.offsetHeight
     sectionBoundsRef.current = { top, height }
 
+    // Store stop centers as page-absolute Y values
     stopYsRef.current = stopRefs.current.map(ref => {
       if (!ref) return 0
-      // center of each stop card, absolute page Y
-      return ref.offsetTop + ref.offsetHeight / 2
+      return ref.getBoundingClientRect().top + window.scrollY + ref.offsetHeight / 2
     })
   }
 
