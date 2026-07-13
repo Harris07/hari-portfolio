@@ -158,7 +158,7 @@ function OnboardingSection() {
               overflow: 'hidden',
               background: ONBOARDING_BG[i],
               minWidth: 0,
-              opacity: inView && activeCard === i ? 1 : 0.6,
+              opacity: inView && activeCard === i ? 1 : 0.3,
               transition: 'opacity 0.4s ease',
             }}>
             <div style={{ paddingTop: 80, paddingBottom: 80 }}>
