@@ -125,7 +125,7 @@ function OnboardingSection() {
         }}>
         {ONBOARDING_ITEMS.map((item, i) => (
           <div key={i} style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0 }}>
-            <div style={{ paddingTop: 40, paddingBottom: 40 }}>
+            <div style={{ paddingTop: 80, paddingBottom: 80 }}>
               <LottiePlayer src={item.src} style={{ width: '100%', display: 'block' }} />
             </div>
           </div>
