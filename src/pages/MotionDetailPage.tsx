@@ -91,9 +91,9 @@ function SectionHeader({ label, heading, body }: { label: string; heading: strin
 /* ─── ONBOARDING — 3-panel full-bleed layout ─── */
 const ONBOARDING_BG = ['#F4FBFF', '#FCF6F9', '#FBFBE0']
 const ONBOARDING_ITEMS = [
-  { src: '/animations/onboarding-1.json', label: 'Screen 01 — List your closet' },
-  { src: '/animations/onboarding-2.json', label: 'Screen 02 — Earn from sales' },
-  { src: '/animations/onboarding-3.json', label: 'Screen 03 — Join the community' },
+  { src: '/animations/onboarding-1.json', label: '01 — List', sub: 'Start listing your closet in minutes' },
+  { src: '/animations/onboarding-2.json', label: '02 — Earn', sub: 'Turn your listings into real income' },
+  { src: '/animations/onboarding-3.json', label: '03 — Connect', sub: 'Join a community of buyers & sellers' },
 ]
 
 function OnboardingSection() {
@@ -125,16 +125,28 @@ function OnboardingSection() {
         }}>
         {ONBOARDING_ITEMS.map((item, i) => (
           <div key={i} style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0 }}>
-            <LottiePlayer src={item.src} style={{ width: '100%', display: 'block' }} />
-            <div style={{ padding: '14px 18px', background: ONBOARDING_BG[i] }}>
-              <p style={{
-                fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
-                textTransform: 'uppercase', color: 'rgba(0,0,0,0.45)',
-              }}>{item.label}</p>
+            <div style={{ paddingTop: 40, paddingBottom: 40 }}>
+              <LottiePlayer src={item.src} style={{ width: '100%', display: 'block' }} />
             </div>
           </div>
         ))}
       </motion.div>
+
+      {/* Labels below panels */}
+      <div style={{ display: 'flex', gap: 2, maxWidth: 1100, margin: '20px auto 0', padding: '0 24px' }}>
+        {ONBOARDING_ITEMS.map((item, i) => (
+          <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
+            <span style={{
+              display: 'block', fontWeight: 700, fontSize: 11,
+              letterSpacing: '0.2em', textTransform: 'uppercase', color: A,
+            }}>{item.label}</span>
+            <span style={{
+              display: 'block', fontSize: 13, fontWeight: 300,
+              color: MUTED, marginTop: 6, lineHeight: 1.5,
+            }}>{item.sub}</span>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
