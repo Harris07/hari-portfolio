@@ -136,58 +136,41 @@ function OnboardingSection() {
         />
       </FadeSection>
 
+      {/* Panels + labels paired so on mobile each label sits under its card */}
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 32 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         className="flex flex-col md:flex-row"
-        style={{
-          gap: 2,
-          overflow: 'hidden',
-          borderRadius: 24,
-          maxWidth: 1100,
-          margin: '0 auto',
-          padding: '0 24px',
-        }}>
+        style={{ gap: 2, maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
         {ONBOARDING_ITEMS.map((item, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              overflow: 'hidden',
-              background: ONBOARDING_BG[i],
-              minWidth: 0,
-              opacity: inView && activeCard === i ? 1 : 0.1,
-              transition: 'opacity 0.4s ease',
-            }}>
-            <div style={{ paddingTop: 80, paddingBottom: 80 }}>
-              <LottiePlayer
-                src={item.src}
-                active={inView && activeCard === i}
-                onComplete={advance}
-                style={{ width: '100%', display: 'block' }}
-              />
+          <div key={i} style={{ flex: 1, minWidth: 0, opacity: inView && activeCard === i ? 1 : 0.1, transition: 'opacity 0.4s ease' }}>
+            {/* Card */}
+            <div style={{ overflow: 'hidden', borderRadius: 12, background: ONBOARDING_BG[i] }}>
+              <div style={{ paddingTop: 80, paddingBottom: 80 }}>
+                <LottiePlayer
+                  src={item.src}
+                  active={inView && activeCard === i}
+                  onComplete={advance}
+                  style={{ width: '100%', display: 'block' }}
+                />
+              </div>
+            </div>
+            {/* Label directly under its card */}
+            <div style={{ textAlign: 'center', marginTop: 16 }}>
+              <span style={{
+                display: 'block', fontWeight: 700, fontSize: 12,
+                letterSpacing: '0.1em', textTransform: 'uppercase', color: A,
+              }}>{item.label}</span>
+              <span style={{
+                display: 'block', fontSize: 12, fontWeight: 300,
+                color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5,
+              }}>{item.sub}</span>
             </div>
           </div>
         ))}
       </motion.div>
-
-      {/* Labels below panels */}
-      <div className="flex flex-col md:flex-row" style={{ gap: 2, maxWidth: 1100, margin: '20px auto 0', padding: '0 24px' }}>
-        {ONBOARDING_ITEMS.map((item, i) => (
-          <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
-            <span style={{
-              display: 'block', fontWeight: 700, fontSize: 12,
-              letterSpacing: '0.1em', textTransform: 'uppercase', color: A,
-            }}>{item.label}</span>
-            <span style={{
-              display: 'block', fontSize: 12, fontWeight: 300,
-              color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5,
-            }}>{item.sub}</span>
-          </div>
-        ))}
-      </div>
     </section>
   )
 }
