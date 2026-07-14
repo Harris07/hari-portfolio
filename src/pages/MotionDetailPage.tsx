@@ -408,8 +408,8 @@ function OnboardingSection() {
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
 type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; innerPadding?: string }
-function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false }: {
-  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean
+function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false, sectionBg }: {
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string
 }) {
   const gridClass = cols === 3 ? 'grid-cols-1 sm:grid-cols-3' : cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
   const gridRef = useRef(null)
@@ -420,7 +420,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
   prevInView.current = inView
 
   return (
-    <section style={{ background: BG, paddingTop: 100, paddingBottom: 100 }}>
+    <section style={{ background: sectionBg ?? BG, paddingTop: 100, paddingBottom: 100 }}>
       <div className="max-w-4xl mx-auto px-6 md:px-12">
         <FadeSection delay={0} startY={48}>
           <SectionHeader label={label} heading={heading} body={body} />
@@ -570,6 +570,7 @@ export default function MotionDetailPage() {
       <AnimSection
         naked
         cols={1}
+        sectionBg="linear-gradient(135deg, #0a0b10 0%, #160e2a 40%, #0a0b10 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
         body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
