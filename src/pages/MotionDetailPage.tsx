@@ -613,7 +613,7 @@ export default function MotionDetailPage() {
 
       {/* ── METRICS ── */}
       <section style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10 py-20">
+        <div className="max-w-5xl mx-auto px-6 md:px-10 py-20 text-center">
           <FadeSection delay={0} startY={20}>
             <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
           </FadeSection>
