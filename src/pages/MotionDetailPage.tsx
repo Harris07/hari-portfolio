@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll, useSpring, useTransform } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 
@@ -146,138 +146,180 @@ const ONBOARDING_ITEMS = [
   { src: '/animations/onboarding-3.json', label: '03 — Connect', sub: 'Join a community of buyers & sellers' },
 ]
 
+/* ── helpers ── */
+const cl  = (x: number) => Math.max(0, Math.min(1, x))
+const inv = (p: number, a: number, b: number) => cl((p - a) / (b - a))
+const lp  = (a: number, b: number, t: number) => a + (b - a) * t
+
 function OnboardingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
+  const progressRef = useRef(0)
 
-  /* Native scroll progress — 0 when container top hits viewport top,
-     1 when container bottom hits viewport bottom.
-     600vh outer div → 500vh of "extra" scroll budget for all phases. */
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
-  /* Spring smoothing gives organic deceleration */
-  const sp = useSpring(scrollYProgress, { stiffness: 60, damping: 22, restDelta: 0.001 })
-
-  /* ── Phase map ──────────────────────────────────────────────────
-     0.00 → 0.08  header fades + slides in
-     0.08 → 0.22  header fully visible
-     0.22 → 0.36  header fades out, cards enter from below
-     0.36 → 0.58  cards scale up (zoom)
-     0.58 → 0.72  card 1 animation
-     0.72 → 0.85  card 2 animation
-     0.85 → 0.95  card 3 animation
-     0.95 → 1.00  all cards slide up and out
-  ─────────────────────────────────────────────────────────────── */
-
-  const headerOpacity  = useTransform(sp, [0, 0.06, 0.22, 0.36], [0, 1, 1, 0])
-  const headerY        = useTransform(sp, [0, 0.14], [48, 0])
-
-  const cardsOpacity   = useTransform(sp, [0.14, 0.28], [0, 1])
-  const cardsEnterY    = useTransform(sp, [0.14, 0.30], [72, 0])
-  const panelScale     = useTransform(sp, [0.34, 0.58], [1, 1.68])
-
-  const labelsOpacity  = useTransform(sp, [0.16, 0.26, 0.30, 0.40], [0, 1, 1, 0])
-
-  /* Per-card seek fractions — subscribed to state for LottiePlayer */
-  const seek0mv = useTransform(sp, [0.58, 0.72], [0, 1])
-  const seek1mv = useTransform(sp, [0.72, 0.85], [0, 1])
-  const seek2mv = useTransform(sp, [0.85, 0.95], [0, 1])
-  const [s0, setS0] = useState(0)
-  const [s1, setS1] = useState(0)
-  const [s2, setS2] = useState(0)
   useEffect(() => {
-    const clamp = (v: number) => Math.max(0, Math.min(1, v))
-    const u0 = seek0mv.on('change', v => setS0(clamp(v)))
-    const u1 = seek1mv.on('change', v => setS1(clamp(v)))
-    const u2 = seek2mv.on('change', v => setS2(clamp(v)))
-    return () => { u0(); u1(); u2() }
-  }, [seek0mv, seek1mv, seek2mv])
+    const container = containerRef.current
+    if (!container) return
 
-  /* Card spotlight opacities */
-  const op0 = useTransform(sp, [0.34, 0.58, 0.70, 0.74], [1, 1, 1, 0.1])
-  const op1 = useTransform(sp, [0.68, 0.72, 0.83, 0.87], [0.1, 1, 1, 0.1])
-  const op2 = useTransform(sp, [0.84, 0.87, 1.0],        [0.1, 1, 1])
-  const opacities = [op0, op1, op2]
+    /* ── scroll → progress mapping ── */
+    const getP = () => {
+      const totalScroll = container.offsetHeight - window.innerHeight
+      if (totalScroll <= 0) return 0
+      return cl(-container.getBoundingClientRect().top / totalScroll)
+    }
 
-  /* Exit: whole sticky section slides upward */
-  const sectionY = useTransform(sp, [0.94, 1.0], ['0vh', '-104vh'])
+    const put = (p: number) => { progressRef.current = p; setProgress(p) }
+
+    /* ── auto-play: advances scroll & progress when user pauses ── */
+    const AUTO_SPEED  = 0.00085   // progress units per 60fps frame (~8 s total animation phase)
+    const AUTO_START  = 0.48      // kick in once cards are zoomed in
+    let autoPlaying   = false
+    let autoRaf       = 0
+    let scrollTimer   = 0
+
+    const autoTick = () => {
+      if (!autoPlaying) return
+      const p = progressRef.current
+      if (p >= 1) {
+        autoPlaying = false
+        // scroll past the container to release sticky
+        const next = container.nextElementSibling as HTMLElement | null
+        if (next) next.scrollIntoView({ behavior: 'smooth' })
+        else window.scrollTo({ top: container.offsetTop + container.offsetHeight, behavior: 'smooth' })
+        return
+      }
+      const next = cl(p + AUTO_SPEED)
+      put(next)
+      // keep actual scroll in sync so sticky math stays correct
+      const totalScroll = container.offsetHeight - window.innerHeight
+      window.scrollTo(0, container.offsetTop + next * totalScroll)
+      autoRaf = requestAnimationFrame(autoTick)
+    }
+
+    const startAuto = () => {
+      if (autoPlaying || progressRef.current < AUTO_START || progressRef.current >= 1) return
+      autoPlaying = true
+      autoRaf = requestAnimationFrame(autoTick)
+    }
+
+    const stopAuto = () => {
+      autoPlaying = false
+      cancelAnimationFrame(autoRaf)
+      clearTimeout(scrollTimer)
+    }
+
+    const onScroll = () => {
+      const p = getP()
+
+      /* if auto-play is driving scroll, a backward delta means user grabbed it */
+      if (autoPlaying) {
+        if (p < progressRef.current - 0.003) stopAuto()
+        else { put(p); return }
+      }
+
+      put(p)
+
+      /* schedule auto-play once user stops scrolling in the animation phase */
+      clearTimeout(scrollTimer)
+      if (p >= AUTO_START && p < 1) {
+        scrollTimer = window.setTimeout(startAuto, 500)
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      stopAuto()
+    }
+  }, [])
+
+  /* ── phase map (0-1) ─────────────────────────────────────────
+     0.00→0.08   header fades in + slides up
+     0.08→0.22   header fully visible
+     0.22→0.36   header fades out
+     0.14→0.30   cards enter from below
+     0.34→0.58   cards scale up 1→1.7
+     0.16→0.40   labels fade in then out (inside scale container)
+     0.58→0.72   card 1 seeks 0→1
+     0.72→0.85   card 2 seeks 0→1
+     0.85→0.95   card 3 seeks 0→1
+     0.94→1.00   whole section exits upward
+  ──────────────────────────────────────────────────────────── */
+  const p = progress
+
+  const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08))   : lp(1, 0, inv(p, 0.22, 0.36))
+  const headerY       = lp(48, 0, inv(p, 0, 0.14))
+
+  const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
+  const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
+  const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
+
+  const labelsOpacity = p < 0.26 ? lp(0, 1, inv(p, 0.16, 0.26)) : lp(1, 0, inv(p, 0.30, 0.40))
+
+  const s0 = inv(p, 0.58, 0.72)
+  const s1 = inv(p, 0.72, 0.85)
+  const s2 = inv(p, 0.85, 0.95)
+
+  const op0 = p < 0.70 ? 1           : lp(1, 0.1, inv(p, 0.70, 0.74))
+  const op1 = p < 0.68 ? 0.1 : p < 0.87 ? lp(0.1, 1, inv(p, 0.68, 0.72)) : lp(1, 0.1, inv(p, 0.87, 0.90))
+  const op2 = p < 0.84 ? 0.1         : lp(0.1, 1, inv(p, 0.84, 0.87))
+
+  const exitY = lp(0, -104, inv(p, 0.94, 1.0))
 
   return (
-    /* Outer — tall scroll budget keeps inner sticky */
     <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
-      <motion.section
-        style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          overflow: 'hidden',
-          background: '#080910',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          y: sectionY,
-        }}>
+      <section style={{
+        position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
+        background: '#080910', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        transform: `translateY(${exitY}vh)`,
+      }}>
 
-        {/* ① Header — fades in, then fades out before zoom */}
-        <motion.div style={{ opacity: headerOpacity, y: headerY, width: '100%', pointerEvents: 'none' }}>
+        {/* ① Header — visible first, fades before cards zoom */}
+        <div style={{
+          opacity: headerOpacity,
+          transform: `translateY(${headerY}px)`,
+          width: '100%', pointerEvents: 'none',
+        }}>
           <SectionHeader
             label="Onboarding"
             heading="First impressions that move."
             body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm."
           />
-        </motion.div>
+        </div>
 
-        {/* ② Cards — enter from below, then scale up, Lottie seeks on scroll */}
-        <motion.div
-          style={{
-            opacity: cardsOpacity,
-            y: cardsEnterY,
-            scale: panelScale,
-            transformOrigin: 'center center',
-            display: 'flex',
-            gap: 2,
-            maxWidth: 1100,
-            width: '100%',
-            padding: '0 24px',
-          }}>
-          {ONBOARDING_ITEMS.map((item, i) => (
-            <motion.div
-              key={i}
-              style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0, opacity: opacities[i] }}>
-              <div style={{ paddingTop: 60, paddingBottom: 60 }}>
-                <LottiePlayer
-                  src={item.src}
-                  seekFraction={[s0, s1, s2][i]}
-                  style={{ width: '100%', display: 'block' }}
-                />
+        {/* ② Cards + labels in ONE scale container — grow & exit together */}
+        <div style={{
+          opacity: cardsOpacity,
+          transform: `translateY(${cardsEnterY}px) scale(${panelScale})`,
+          transformOrigin: 'center center',
+          maxWidth: 1100, width: '100%', padding: '0 24px',
+        }}>
+          {/* card row */}
+          <div style={{ display: 'flex', gap: 2 }}>
+            {ONBOARDING_ITEMS.map((item, i) => (
+              <div key={i} style={{
+                flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0,
+                opacity: [op0, op1, op2][i], transition: 'opacity 0.25s ease',
+              }}>
+                <div style={{ paddingTop: 60, paddingBottom: 60 }}>
+                  <LottiePlayer src={item.src} seekFraction={[s0, s1, s2][i]} style={{ width: '100%', display: 'block' }} />
+                </div>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            ))}
+          </div>
 
-        {/* ③ Labels — enter with cards, fade out before zoom */}
-        <motion.div
-          style={{
-            opacity: labelsOpacity,
-            display: 'flex',
-            gap: 2,
-            maxWidth: 1100,
-            width: '100%',
-            margin: '16px auto 0',
-            padding: '0 24px',
-            pointerEvents: 'none',
-          }}>
-          {ONBOARDING_ITEMS.map((item, i) => (
-            <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
-              <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
-              <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
-            </div>
-          ))}
-        </motion.div>
+          {/* labels — directly below cards, inside the same scale transform */}
+          <div style={{ opacity: labelsOpacity, display: 'flex', gap: 2, marginTop: 16, pointerEvents: 'none' }}>
+            {ONBOARDING_ITEMS.map((item, i) => (
+              <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
+                <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
+                <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-      </motion.section>
+      </section>
     </div>
   )
 }
