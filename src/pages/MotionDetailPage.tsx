@@ -440,7 +440,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                   ) : (
                     <img key={restartGifsOnEnter ? enterCountRef.current : i}
                       src={item.src} alt={item.label}
-                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 36 }} />
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 26 }} />
                   )}
                   <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
                 </div>
