@@ -164,8 +164,7 @@ const lp  = (a: number, b: number, t: number) => a + (b - a) * t
    0.58+      animations play — virtualAnim 0→3 via RAF (forward) or scroll (backward)
    0.94→1.00  whole section exits upward
 ─────────────────────────────────────────────────────────────── */
-const ANIM_P     = 0.58   // progress where card animations begin
-const SCALE_START = 0.34  // progress where scale begins
+const ANIM_P = 0.58  // progress where card animations begin
 
 function OnboardingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -223,8 +222,20 @@ function OnboardingSection() {
           modeRef.current = 'idle'
           const totalScroll = container.offsetHeight - window.innerHeight
           setTimeout(() => {
-            window.scrollTo({ top: container.offsetTop + totalScroll + window.innerHeight * 0.5, behavior: 'smooth' })
-          }, 200)
+            const target = container.offsetTop + totalScroll + window.innerHeight * 0.5
+            const startY = window.scrollY
+            const dist = target - startY
+            let t0: number | null = null
+            const DURATION = 1800
+            const ease = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+            const scrollStep = (now: number) => {
+              if (t0 === null) t0 = now
+              const t = Math.min(1, (now - t0) / DURATION)
+              window.scrollTo(0, startY + dist * ease(t))
+              if (t < 1) requestAnimationFrame(scrollStep)
+            }
+            requestAnimationFrame(scrollStep)
+          }, 300)
           return
         }
         const card = Math.min(2, Math.floor(v))
@@ -323,10 +334,9 @@ function OnboardingSection() {
   const s1 = cl(va - 1)
   const s2 = cl(va - 2)
 
-  /* card opacity: full before scale; 10% during scale; spotlight during playback */
+  /* card opacity: 10% from the moment cards are visible; spotlight once animations start */
   const activeCardIdx = va < 1 ? 0 : va < 2 ? 1 : 2
   const cardOp = (i: number) => {
-    if (p < SCALE_START) return 1
     if (va < 0.02) return 0.1
     return activeCardIdx === i ? 1 : 0.1
   }
