@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
@@ -151,119 +151,116 @@ const cl  = (x: number) => Math.max(0, Math.min(1, x))
 const inv = (p: number, a: number, b: number) => cl((p - a) / (b - a))
 const lp  = (a: number, b: number, t: number) => a + (b - a) * t
 
+/* ── Phase map (0-1 progress) ─────────────────────────────────
+   0.00→0.08  header fades in + slides up
+   0.08→0.22  header fully visible
+   0.22→0.36  header fades out
+   0.14→0.30  cards enter from below
+   0.34→0.58  cards scale up 1→1.7
+   0.16→0.26  labels fade in — stay visible until section exits
+   0.58+      animations play at NATURAL SPEED (active mode, not seek)
+   0.94→1.00  whole section exits upward
+─────────────────────────────────────────────────────────────── */
+const ANIM_TRIGGER = 0.58   // progress where card animations begin
+const ANIM_RESET   = 0.48   // progress below which animations reset
+
 function OnboardingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-  const progressRef = useRef(0)
+  const [progress, setProgress]   = useState(0)
+  const progressRef               = useRef(0)
+  /* -1 = idle, 0/1/2 = active card index, 3 = all done */
+  const [animCard, setAnimCard]   = useState(-1)
+  const animCardRef               = useRef(-1)
+  useEffect(() => { animCardRef.current = animCard }, [animCard])
 
+  /* ── start / reset animations based on scroll progress ── */
+  useEffect(() => {
+    if (progress >= ANIM_TRIGGER && animCardRef.current === -1) setAnimCard(0)
+    if (progress < ANIM_RESET && animCardRef.current > -1 && animCardRef.current < 3) setAnimCard(-1)
+  }, [progress])
+
+  /* ── when all 3 complete, scroll past the container ── */
+  useEffect(() => {
+    if (animCard !== 3) return
+    const container = containerRef.current
+    if (!container) return
+    setTimeout(() => {
+      const totalScroll = container.offsetHeight - window.innerHeight
+      window.scrollTo({ top: container.offsetTop + totalScroll + 20, behavior: 'smooth' })
+    }, 200)
+  }, [animCard])
+
+  const onAnimComplete = useCallback(() => setAnimCard(c => c + 1), [])
+
+  /* ── scroll listener + auto-play (only advances to ANIM_TRIGGER) ── */
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    /* ── scroll → progress mapping ── */
     const getP = () => {
-      const totalScroll = container.offsetHeight - window.innerHeight
-      if (totalScroll <= 0) return 0
-      return cl(-container.getBoundingClientRect().top / totalScroll)
+      const total = container.offsetHeight - window.innerHeight
+      if (total <= 0) return 0
+      return cl(-container.getBoundingClientRect().top / total)
     }
-
     const put = (p: number) => { progressRef.current = p; setProgress(p) }
 
-    /* ── auto-play: advances scroll & progress when user pauses ── */
-    const AUTO_SPEED  = 0.00085   // progress units per 60fps frame (~8 s total animation phase)
-    const AUTO_START  = 0.48      // kick in once cards are zoomed in
-    let autoPlaying   = false
-    let autoRaf       = 0
-    let scrollTimer   = 0
+    let autoPlaying = false
+    let autoRaf     = 0
+    let scrollTimer = 0
+    const AUTO_SPEED = 0.0014  // advance pre-animation scroll smoothly
+
+    const stopAuto = () => { autoPlaying = false; cancelAnimationFrame(autoRaf); clearTimeout(scrollTimer) }
 
     const autoTick = () => {
       if (!autoPlaying) return
+      /* stop auto-advancing once animations have taken over */
+      if (animCardRef.current >= 0) { stopAuto(); return }
       const p = progressRef.current
-      if (p >= 1) {
-        autoPlaying = false
-        // scroll past the container to release sticky
-        const next = container.nextElementSibling as HTMLElement | null
-        if (next) next.scrollIntoView({ behavior: 'smooth' })
-        else window.scrollTo({ top: container.offsetTop + container.offsetHeight, behavior: 'smooth' })
-        return
-      }
+      if (p >= ANIM_TRIGGER) { stopAuto(); return }
       const next = cl(p + AUTO_SPEED)
       put(next)
-      // keep actual scroll in sync so sticky math stays correct
-      const totalScroll = container.offsetHeight - window.innerHeight
-      window.scrollTo(0, container.offsetTop + next * totalScroll)
+      const total = container.offsetHeight - window.innerHeight
+      window.scrollTo(0, container.offsetTop + next * total)
       autoRaf = requestAnimationFrame(autoTick)
-    }
-
-    const startAuto = () => {
-      if (autoPlaying || progressRef.current < AUTO_START || progressRef.current >= 1) return
-      autoPlaying = true
-      autoRaf = requestAnimationFrame(autoTick)
-    }
-
-    const stopAuto = () => {
-      autoPlaying = false
-      cancelAnimationFrame(autoRaf)
-      clearTimeout(scrollTimer)
     }
 
     const onScroll = () => {
       const p = getP()
-
-      /* if auto-play is driving scroll, a backward delta means user grabbed it */
       if (autoPlaying) {
         if (p < progressRef.current - 0.003) stopAuto()
         else { put(p); return }
       }
-
       put(p)
-
-      /* schedule auto-play once user stops scrolling in the animation phase */
       clearTimeout(scrollTimer)
-      if (p >= AUTO_START && p < 1) {
-        scrollTimer = window.setTimeout(startAuto, 500)
+      /* schedule auto-advance only before animations kick in */
+      if (p >= 0.30 && p < ANIM_TRIGGER && animCardRef.current === -1) {
+        scrollTimer = window.setTimeout(() => {
+          if (progressRef.current < ANIM_TRIGGER && animCardRef.current === -1 && !autoPlaying) {
+            autoPlaying = true; autoTick()
+          }
+        }, 500)
       }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      stopAuto()
-    }
+    return () => { window.removeEventListener('scroll', onScroll); stopAuto() }
   }, [])
 
-  /* ── phase map (0-1) ─────────────────────────────────────────
-     0.00→0.08   header fades in + slides up
-     0.08→0.22   header fully visible
-     0.22→0.36   header fades out
-     0.14→0.30   cards enter from below
-     0.34→0.58   cards scale up 1→1.7
-     0.16→0.40   labels fade in then out (inside scale container)
-     0.58→0.72   card 1 seeks 0→1
-     0.72→0.85   card 2 seeks 0→1
-     0.85→0.95   card 3 seeks 0→1
-     0.94→1.00   whole section exits upward
-  ──────────────────────────────────────────────────────────── */
+  /* ── derived visual values ── */
   const p = progress
 
-  const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08))   : lp(1, 0, inv(p, 0.22, 0.36))
+  const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
   const headerY       = lp(48, 0, inv(p, 0, 0.14))
-
   const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
   const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
+  /* labels fade IN only — stay visible while zoomed and during animations */
+  const labelsOpacity = inv(p, 0.16, 0.26)
+  const exitY         = lp(0, -104, inv(p, 0.94, 1.0))
 
-  const labelsOpacity = p < 0.26 ? lp(0, 1, inv(p, 0.16, 0.26)) : lp(1, 0, inv(p, 0.30, 0.40))
-
-  const s0 = inv(p, 0.58, 0.72)
-  const s1 = inv(p, 0.72, 0.85)
-  const s2 = inv(p, 0.85, 0.95)
-
-  const op0 = p < 0.70 ? 1           : lp(1, 0.1, inv(p, 0.70, 0.74))
-  const op1 = p < 0.68 ? 0.1 : p < 0.87 ? lp(0.1, 1, inv(p, 0.68, 0.72)) : lp(1, 0.1, inv(p, 0.87, 0.90))
-  const op2 = p < 0.84 ? 0.1         : lp(0.1, 1, inv(p, 0.84, 0.87))
-
-  const exitY = lp(0, -104, inv(p, 0.94, 1.0))
+  /* spotlight: all cards full when idle/done; active card full, others dim */
+  const cardOp = (i: number) =>
+    animCard < 0 || animCard === 3 ? 1 : animCard === i ? 1 : 0.1
 
   return (
     <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
@@ -274,12 +271,8 @@ function OnboardingSection() {
         transform: `translateY(${exitY}vh)`,
       }}>
 
-        {/* ① Header — visible first, fades before cards zoom */}
-        <div style={{
-          opacity: headerOpacity,
-          transform: `translateY(${headerY}px)`,
-          width: '100%', pointerEvents: 'none',
-        }}>
+        {/* ① Header — slides in, then fades out before zoom */}
+        <div style={{ opacity: headerOpacity, transform: `translateY(${headerY}px)`, width: '100%', pointerEvents: 'none' }}>
           <SectionHeader
             label="Onboarding"
             heading="First impressions that move."
@@ -287,28 +280,32 @@ function OnboardingSection() {
           />
         </div>
 
-        {/* ② Cards + labels in ONE scale container — grow & exit together */}
+        {/* ② Cards + labels in one scale container — grow & exit together */}
         <div style={{
           opacity: cardsOpacity,
           transform: `translateY(${cardsEnterY}px) scale(${panelScale})`,
           transformOrigin: 'center center',
           maxWidth: 1100, width: '100%', padding: '0 24px',
         }}>
-          {/* card row */}
           <div style={{ display: 'flex', gap: 2 }}>
             {ONBOARDING_ITEMS.map((item, i) => (
               <div key={i} style={{
                 flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0,
-                opacity: [op0, op1, op2][i], transition: 'opacity 0.25s ease',
+                opacity: cardOp(i), transition: 'opacity 0.3s ease',
               }}>
                 <div style={{ paddingTop: 60, paddingBottom: 60 }}>
-                  <LottiePlayer src={item.src} seekFraction={[s0, s1, s2][i]} style={{ width: '100%', display: 'block' }} />
+                  <LottiePlayer
+                    src={item.src}
+                    active={animCard === i}
+                    onComplete={onAnimComplete}
+                    style={{ width: '100%', display: 'block' }}
+                  />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* labels — directly below cards, inside the same scale transform */}
+          {/* labels stay inside the scale div — grow and exit with cards */}
           <div style={{ opacity: labelsOpacity, display: 'flex', gap: 2, marginTop: 16, pointerEvents: 'none' }}>
             {ONBOARDING_ITEMS.map((item, i) => (
               <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
