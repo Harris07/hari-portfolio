@@ -408,8 +408,8 @@ function OnboardingSection() {
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
 type GridItem = { type: 'lottie' | 'gif'; src: string; label: string }
-function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false }: {
-  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean
+function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false }: {
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean
 }) {
   const gridClass = cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
   const gridRef = useRef(null)
@@ -429,6 +429,18 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
           <div ref={gridRef} className={`grid ${gridClass} gap-4`}
             style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
             {items.map((item, i) => (
+              naked ? (
+                <div key={i}>
+                  {item.type === 'lottie' ? (
+                    <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
+                  ) : (
+                    <img key={restartGifsOnEnter ? enterCountRef.current : i}
+                      src={item.src} alt={item.label}
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16 }} />
+                  )}
+                  <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
+                </div>
+              ) : (
               <div key={i} className="rounded-2xl overflow-hidden"
                 style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                 {item.type === 'lottie' ? (
@@ -442,6 +454,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                   <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
                 </div>
               </div>
+              )
             ))}
           </div>
         </FadeSection>
@@ -553,6 +566,8 @@ export default function MotionDetailPage() {
 
       {/* ── PULL TO REFRESH ── */}
       <AnimSection
+        naked
+        cols={1}
         label="Pull to Refresh"
         heading="The gesture that earns delight."
         body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
