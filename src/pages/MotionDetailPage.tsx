@@ -598,6 +598,7 @@ export default function MotionDetailPage() {
         naked
         cols={1}
         maxWidth="100%"
+        paddingY={200}
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
