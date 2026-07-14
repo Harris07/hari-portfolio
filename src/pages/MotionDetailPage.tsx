@@ -565,7 +565,7 @@ export default function MotionDetailPage() {
       <OnboardingSection />
 
       {/* ── BRAND BANNER ── */}
-      <div style={{ marginTop: '-100vh', position: 'relative', zIndex: 1 }}>
+      <div style={{ marginTop: '-200vh', position: 'relative', zIndex: 1 }}>
       <AnimSection
         naked
         paddingY={200}
