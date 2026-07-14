@@ -425,7 +425,7 @@ function AnimSection({ label, heading, body, items, cols = 2 }: {
               <div key={i} className="rounded-2xl overflow-hidden"
                 style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                 {item.type === 'lottie' ? (
-                  <LottiePlayer src={item.src} style={{ aspectRatio: '1.1/1' }} />
+                  <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1' }} />
                 ) : (
                   <img src={item.src} alt={item.label}
                     style={{ width: '100%', display: 'block', height: 'auto' }} />
