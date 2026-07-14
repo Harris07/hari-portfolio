@@ -561,7 +561,7 @@ export default function MotionDetailPage() {
       <div style={{ marginTop: '-100vh' }}>
       <AnimSection
         naked
-        sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
+        sectionBg="linear-gradient(135deg, #0a0b10 0%, #160e2a 40%, #0a0b10 100%)"
         label="Brand Banner"
         heading="Welcome to Poshmark."
         body="The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community."
@@ -588,7 +588,7 @@ export default function MotionDetailPage() {
       <AnimSection
         naked
         cols={1}
-        sectionBg="linear-gradient(135deg, #0a0b10 0%, #160e2a 40%, #0a0b10 100%)"
+        sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
         body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
