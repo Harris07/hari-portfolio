@@ -345,7 +345,7 @@ function OnboardingSection() {
         {/* ② Cards + labels — scale together, shifted 80px down */}
         <div style={{
           opacity: cardsOpacity,
-          transform: `translateY(${cardsEnterY + 80}px) scale(${panelScale})`,
+          transform: `translateY(${cardsEnterY - 80}px) scale(${panelScale})`,
           transformOrigin: 'center center',
           maxWidth: 1100, width: '100%', padding: '0 24px',
         }}>
