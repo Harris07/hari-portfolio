@@ -454,7 +454,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                     )}
                   </div>
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3" style={{ color: A }}>{item.label}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3 text-center" style={{ color: A }}>{item.label}</p>
               </div>
               )
             ))}
