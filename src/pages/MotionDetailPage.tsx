@@ -408,10 +408,17 @@ function OnboardingSection() {
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
 type GridItem = { type: 'lottie' | 'gif'; src: string; label: string }
-function AnimSection({ label, heading, body, items, cols = 2 }: {
-  label: string; heading: string; body: string; items: GridItem[]; cols?: number
+function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false }: {
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean
 }) {
   const gridClass = cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
+  const gridRef = useRef(null)
+  const inView = useInView(gridRef, { once: false, margin: '0px' })
+  const enterCountRef = useRef(0)
+  const prevInView = useRef(false)
+  if (restartGifsOnEnter && inView && !prevInView.current) enterCountRef.current++
+  prevInView.current = inView
+
   return (
     <section style={{ background: BG, paddingTop: 100, paddingBottom: 100 }}>
       <div className="max-w-4xl mx-auto px-6 md:px-12">
@@ -419,7 +426,7 @@ function AnimSection({ label, heading, body, items, cols = 2 }: {
           <SectionHeader label={label} heading={heading} body={body} />
         </FadeSection>
         <FadeSection delay={0.5} startY={64}>
-          <div className={`grid ${gridClass} gap-4`}
+          <div ref={gridRef} className={`grid ${gridClass} gap-4`}
             style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
             {items.map((item, i) => (
               <div key={i} className="rounded-2xl overflow-hidden"
@@ -427,7 +434,8 @@ function AnimSection({ label, heading, body, items, cols = 2 }: {
                 {item.type === 'lottie' ? (
                   <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1' }} />
                 ) : (
-                  <img src={item.src} alt={item.label}
+                  <img key={restartGifsOnEnter ? enterCountRef.current : i}
+                    src={item.src} alt={item.label}
                     style={{ width: '100%', display: 'block', height: 'auto' }} />
                 )}
                 <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
@@ -532,6 +540,7 @@ export default function MotionDetailPage() {
       {/* ── APP ICON REVEAL ── */}
       <div style={{ marginTop: '-100vh' }}>
       <AnimSection
+        restartGifsOnEnter
         label="App Icon Reveal"
         heading="Launching a new face to the world."
         body="Two directions for the app icon reveal — celebrating a redesign with motion that felt worthy of the occasion. Designed to be seen once, remembered always."
