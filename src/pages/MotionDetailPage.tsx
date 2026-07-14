@@ -614,8 +614,12 @@ export default function MotionDetailPage() {
       {/* ── METRICS ── */}
       <section style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10 py-20">
-          <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
-          <h2 className="font-semibold mb-12" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3.5vw,2.6rem)' }}>Motion at scale.</h2>
+          <FadeSection delay={0} startY={20}>
+            <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
+          </FadeSection>
+          <FadeSection delay={0.12} startY={32}>
+            <h2 className="font-semibold leading-tight mb-12" style={{ color: WHITE, fontSize: 'clamp(3rem,6vw,5rem)' }}>Motion at scale.</h2>
+          </FadeSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
             {[
               { value: '5', label: 'Animation categories shipped' },
