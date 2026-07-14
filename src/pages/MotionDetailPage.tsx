@@ -427,15 +427,10 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
 
   return (
     <section style={{ background: sectionBg ?? BG, paddingTop: paddingY, paddingBottom: paddingY, position: 'relative', overflow: 'hidden' }}>
-      {glow && (
-        <div style={{
-          position: 'absolute', left: '50%', top: '55%',
-          transform: 'translate(-50%, -50%)',
-          width: '70%', height: '80%',
-          background: 'radial-gradient(ellipse at center, rgba(167,139,250,0.18) 0%, transparent 65%)',
-          pointerEvents: 'none',
-        }} />
-      )}
+      {glow && (<>
+        <div style={{ position: 'absolute', top: '55%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(167,139,250,0.13) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(167,139,250,0.35), transparent)', pointerEvents: 'none' }} />
+      </>)}
       <div className="max-w-4xl mx-auto px-6 md:px-12" style={{ position: 'relative' }}>
         <SectionHeader label={label} heading={heading} body={body} />
         <div ref={gridRef} className={`grid ${gridClass} gap-4`}
