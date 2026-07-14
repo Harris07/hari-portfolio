@@ -348,7 +348,7 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '600vh', position: 'relative', background: '#0a0b10' }}>
+    <div ref={containerRef} style={{ height: '800vh', position: 'relative', background: '#0a0b10' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
