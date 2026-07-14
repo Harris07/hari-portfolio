@@ -414,8 +414,8 @@ function OnboardingSection() {
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
 type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; innerPadding?: string }
-function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false, sectionBg, paddingY = 100, glow = false }: {
-  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string; paddingY?: number; glow?: boolean
+function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false, sectionBg, paddingY = 100, glow = false, maxWidth }: {
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string; paddingY?: number; glow?: boolean; maxWidth?: number
 }) {
   const gridClass = cols === 3 ? 'grid-cols-1 sm:grid-cols-3' : cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
   const gridRef = useRef(null)
@@ -434,7 +434,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
       <div className="max-w-4xl mx-auto px-6 md:px-12" style={{ position: 'relative' }}>
         <SectionHeader label={label} heading={heading} body={body} />
         <div ref={gridRef} className={`grid ${gridClass} gap-4`}
-          style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
+          style={{ maxWidth: maxWidth ?? (cols === 1 ? 560 : '100%'), margin: '0 auto' }}>
           {items.map((item, i) => (
             naked ? (
               <FadeSection key={i} delay={i * 0.15} startY={56}>
@@ -594,6 +594,7 @@ export default function MotionDetailPage() {
       <AnimSection
         naked
         cols={1}
+        maxWidth={360}
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
