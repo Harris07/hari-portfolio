@@ -413,7 +413,7 @@ function OnboardingSection() {
 }
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
-type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; innerPadding?: string }
+type GridItem = { type: 'lottie' | 'gif' | 'video'; src: string; label: string; innerPadding?: string }
 function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false, sectionBg, paddingY = 100, glow = false, maxWidth }: {
   label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string; paddingY?: number; glow?: boolean; maxWidth?: number | string
 }) {
@@ -441,6 +441,9 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                 <div>
                   {item.type === 'lottie' ? (
                     <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
+                  ) : item.type === 'video' ? (
+                    <video src={item.src} autoPlay loop muted playsInline
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 26 }} />
                   ) : (
                     <img key={restartGifsOnEnter ? enterCountRef.current : i}
                       src={item.src} alt={item.label}
@@ -600,7 +603,7 @@ export default function MotionDetailPage() {
         heading="The gesture that earns delight."
         body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
         items={[
-          { type: 'gif', src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
+          { type: 'video', src: '/animations/pull-to-refresh.mp4', label: 'Pull to refresh' },
         ]}
       />
 
