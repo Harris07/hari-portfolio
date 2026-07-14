@@ -612,7 +612,7 @@ export default function MotionDetailPage() {
 
       {/* ── METRICS ── */}
       <section className="py-28 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #08090f 0%, #0c0a18 50%, #08090f 100%)' }}>
+        style={{ background: 'linear-gradient(135deg, #0d0e12 0%, #13102a 50%, #0d0e12 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
           <FadeSection delay={0} startY={20}>
             <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
