@@ -312,10 +312,10 @@ function OnboardingSection() {
   const p  = progress
   const va = virtualAnim
 
-  /* exit begins immediately after animations (p=0.59) — user's natural scroll drives it */
-  const exitT         = inv(p, 0.59, 0.84)
-  const exitY         = lp(0, -108, exitT)
-  const exitFade      = lp(1, 0, inv(p, 0.59, 0.76))  // content fades first, then section clears
+  /* exit spans full remaining scroll budget (p=0.59→1.0) so section fades as PR rises in */
+  const exitT         = inv(p, 0.59, 1.0)
+  const exitY         = lp(0, -100, exitT)
+  const exitFade      = lp(1, 0, exitT)
 
   const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
   const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
