@@ -315,11 +315,11 @@ function OnboardingSection() {
   const exitY         = lp(0, -108, exitT)
   const exitFade      = lp(1, 0, inv(p, 0.59, 0.76))  // content fades first, then section clears
 
-  const headerOpacity = exitFade * (p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36)))
+  const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
   const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
   const headerExitY   = lp(0, -140, inv(p, 0.22, 0.36))
   const headerY       = headerEnterY + headerExitY
-  const cardsOpacity  = exitFade * lp(0, 1, inv(p, 0.14, 0.28))
+  const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
   /* start 64px below center so there's gap with header; settle to center by zoom */
   const cardsShift    = lp(64, 0, inv(p, 0.14, 0.58))
@@ -340,12 +340,14 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
+    <div ref={containerRef} style={{ height: '450vh', position: 'relative' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
+        opacity: exitFade,
         transform: `translateY(${exitY}vh)`,
+        zIndex: 2,
       }}>
 
         {/* ① Header — absolutely positioned so it never pushes cards down */}
@@ -527,6 +529,7 @@ export default function MotionDetailPage() {
       <OnboardingSection />
 
       {/* ── PULL TO REFRESH ── */}
+      <div style={{ marginTop: '-100vh', position: 'relative', zIndex: 1 }}>
       <AnimSection
         label="Pull to Refresh"
         heading="The gesture that earns delight."
@@ -536,6 +539,7 @@ export default function MotionDetailPage() {
           { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
         ]}
       />
+      </div>
 
       {/* ── APP ICON REVEAL ── */}
       <AnimSection
