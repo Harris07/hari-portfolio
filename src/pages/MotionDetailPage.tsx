@@ -242,15 +242,17 @@ function OnboardingSection() {
         else { put(p); return }
       }
 
-      /* while animations are playing forward, don't let scroll advance p —
-         prevents the exit phase triggering before card 3 finishes */
+      /* during forward animation: still update p so exit phase responds to scroll.
+         card seekFractions are driven by va (time-based) independently of exit. */
       if (modeRef.current === 'forward') {
         if (dir < 0) {
           cancelAnimationFrame(fwdRafRef.current)
           put(p)
           transitionRef.current = { p, v: vaRef.current }
           modeRef.current = 'backward'
+          return
         }
+        put(p)
         return
       }
 
