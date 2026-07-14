@@ -326,17 +326,22 @@ function OnboardingSection() {
   const p  = progress
   const va = virtualAnim
 
-  const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
+  /* exit starts at p=0.76 so it overlaps with the auto-scroll, not just the tail */
+  const exitT         = inv(p, 0.76, 0.97)
+  const exitY         = lp(0, -108, exitT)
+  const exitFade      = lp(1, 0, inv(p, 0.76, 0.90))  // content fades before section fully exits
+
+  const headerOpacity = exitFade * (p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36)))
   const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
   const headerExitY   = lp(0, -140, inv(p, 0.22, 0.36))
   const headerY       = headerEnterY + headerExitY
-  const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
+  const cardsOpacity  = exitFade * lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
   /* start 64px below center so there's gap with header; settle to center by zoom */
   const cardsShift    = lp(64, 0, inv(p, 0.14, 0.58))
-  const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
+  /* scale back to 1 during exit for a zoom-out-and-fly feel */
+  const panelScale    = p < 0.58 ? lp(1, 1.7, inv(p, 0.34, 0.58)) : lp(1.7, 1.0, exitT)
   const labelsOpacity = inv(p, 0.16, 0.26)
-  const exitY         = lp(0, -104, inv(p, 0.94, 1.0))
 
   /* seekFraction per card: 0→1 as virtualAnim passes through its [i, i+1] range */
   const s0 = cl(va)
