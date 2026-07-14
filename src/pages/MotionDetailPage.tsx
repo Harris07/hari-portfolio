@@ -565,8 +565,8 @@ export default function MotionDetailPage() {
         heading="Launching a new face to the world."
         body="Two directions for the app icon reveal — celebrating a redesign with motion that felt worthy of the occasion. Designed to be seen once, remembered always."
         items={[
-          { type: 'gif', src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Direction 01' },
-          { type: 'gif', src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Direction 02' },
+          { type: 'gif', src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Tile Cascade' },
+          { type: 'gif', src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Particle Burst' },
         ]}
       />
       </div>
