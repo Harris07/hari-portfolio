@@ -174,8 +174,8 @@ function OnboardingSection() {
   /* virtualAnim 0-3: card i plays when va is in [i, i+1]; drives seekFraction */
   const [virtualAnim, setVirtualAnim] = useState(0)
   const vaRef = useRef(0)
-  /* natural playback speed per card at 60fps (updated on Lottie load) */
-  const fwdSpeeds = useRef([1 / 150, 1 / 150, 1 / 150])
+  /* natural playback duration per card in seconds (updated on Lottie load) */
+  const fwdDurations = useRef([2.5, 2.5, 2.5])
   /* animation mode */
   const modeRef = useRef<'idle' | 'forward' | 'backward'>('idle')
   /* snapshot when switching from forward/done → backward */
@@ -209,22 +209,27 @@ function OnboardingSection() {
       autoRaf = requestAnimationFrame(autoTick)
     }
 
-    /* forward: RAF advances virtualAnim at natural Lottie speed */
+    /* forward: time-based RAF advances virtualAnim at true 1x Lottie speed */
     const startForward = () => {
       cancelAnimationFrame(fwdRafRef.current)
-      const tick = () => {
+      let lastTime: number | null = null
+      const tick = (now: number) => {
         if (modeRef.current !== 'forward') return
+        if (lastTime === null) { lastTime = now; fwdRafRef.current = requestAnimationFrame(tick); return }
+        const dt = Math.min((now - lastTime) / 1000, 0.1)  // seconds, capped to avoid jumps
+        lastTime = now
         const v = vaRef.current
         if (v >= 3) {
           modeRef.current = 'idle'
           const totalScroll = container.offsetHeight - window.innerHeight
           setTimeout(() => {
-            window.scrollTo({ top: container.offsetTop + totalScroll + 20, behavior: 'smooth' })
+            window.scrollTo({ top: container.offsetTop + totalScroll + window.innerHeight * 0.5, behavior: 'smooth' })
           }, 200)
           return
         }
         const card = Math.min(2, Math.floor(v))
-        putVA(Math.min(3, v + fwdSpeeds.current[card]))
+        const dur = fwdDurations.current[card]
+        putVA(Math.min(3, v + dt / dur))
         fwdRafRef.current = requestAnimationFrame(tick)
       }
       fwdRafRef.current = requestAnimationFrame(tick)
@@ -304,7 +309,9 @@ function OnboardingSection() {
   const va = virtualAnim
 
   const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
-  const headerY       = lp(48, 0, inv(p, 0, 0.14))
+  const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
+  const headerExitY   = lp(0, -56, inv(p, 0.22, 0.36))
+  const headerY       = headerEnterY + headerExitY
   const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
   const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
@@ -360,7 +367,7 @@ function OnboardingSection() {
                     src={item.src}
                     seekFraction={[s0, s1, s2][i]}
                     onLoad={(tf, fr) => {
-                      fwdSpeeds.current[i] = 1 / ((tf / Math.max(1, fr)) * 60)
+                      fwdDurations.current[i] = tf / Math.max(1, fr)
                     }}
                     style={{ width: '100%', display: 'block' }}
                   />
