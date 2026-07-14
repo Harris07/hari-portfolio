@@ -319,7 +319,7 @@ function OnboardingSection() {
   const va = virtualAnim
 
   /* exit spans full remaining scroll budget (p=0.59→1.0) so section fades as PR rises in */
-  const exitT         = inv(p, 0.59, 1.0)
+  const exitT         = inv(p, 0.59, 0.74)
   const exitY         = lp(0, -100, exitT)
   const exitFade      = lp(1, 0, exitT)
 
