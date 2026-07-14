@@ -13,30 +13,47 @@ const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.42)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
-/* ─── Lottie player — sequential mode: plays once when active, stops when inactive ─── */
-function LottiePlayer({ src, active, loop = false, onComplete, style = {} }: {
+/* ─── Lottie player — two modes:
+     auto mode  (active prop)       — plays when active, stops when inactive
+     seek mode  (seekFraction prop) — goToAndStop at 0-1 fraction of totalFrames
+─── */
+function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, style = {} }: {
   src: string
-  active: boolean
+  active?: boolean
   loop?: boolean
   onComplete?: () => void
+  seekFraction?: number
   style?: React.CSSProperties
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const animRef = useRef<any>(null)
+  const totalFramesRef = useRef(0)
   const activeRef = useRef(active)
   const onCompleteRef = useRef(onComplete)
+  const seekFractionRef = useRef(seekFraction)
 
-  useEffect(() => { activeRef.current = active; onCompleteRef.current = onComplete })
-
-  /* React to active toggling after init */
   useEffect(() => {
-    if (!animRef.current) return
+    activeRef.current = active
+    onCompleteRef.current = onComplete
+    seekFractionRef.current = seekFraction
+  })
+
+  /* Seek mode: scrub to frame on each seekFraction change */
+  useEffect(() => {
+    if (seekFraction === undefined || !animRef.current || !totalFramesRef.current) return
+    const frame = Math.round(Math.min(1, Math.max(0, seekFraction)) * totalFramesRef.current)
+    animRef.current.goToAndStop(frame, true)
+  }, [seekFraction])
+
+  /* Auto mode: play/stop on active toggle */
+  useEffect(() => {
+    if (seekFraction !== undefined || !animRef.current) return
     if (active) {
       animRef.current.goToAndPlay(0, true)
     } else {
       animRef.current.stop()
     }
-  }, [active])
+  }, [active, seekFraction])
 
   useEffect(() => {
     let destroyed = false
@@ -48,15 +65,24 @@ function LottiePlayer({ src, active, loop = false, onComplete, style = {} }: {
       const anim = lottie.loadAnimation({
         container: containerRef.current,
         renderer: 'svg',
-        loop,
+        loop: seekFractionRef.current !== undefined ? false : loop,
         autoplay: false,
         path: src,
       })
       animRef.current = anim
-      anim.addEventListener('complete', () => {
-        if (!destroyed && onCompleteRef.current) onCompleteRef.current()
+      anim.addEventListener('DOMLoaded', () => {
+        totalFramesRef.current = Math.max(1, anim.totalFrames - 1)
+        if (seekFractionRef.current !== undefined) {
+          anim.goToAndStop(0, true)
+        } else if (activeRef.current) {
+          anim.play()
+        }
       })
-      if (activeRef.current) anim.play()
+      anim.addEventListener('complete', () => {
+        if (!destroyed && onCompleteRef.current && seekFractionRef.current === undefined) {
+          onCompleteRef.current()
+        }
+      })
     }
     if ((window as any).lottie) {
       init()
@@ -121,57 +147,208 @@ const ONBOARDING_ITEMS = [
 ]
 
 function OnboardingSection() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const sectionRef = useRef<HTMLElement>(null)
+  const placeholderRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  /* Mobile detection */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  /* Mobile: sequential auto-play */
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' })
   const [activeCard, setActiveCard] = useState(0)
   const advance = useCallback(() => setActiveCard(c => (c + 1) % 3), [])
 
-  return (
-    <section style={{ background: '#080910', paddingTop: 100, paddingBottom: 100 }}>
-      <FadeSection>
-        <SectionHeader
-          label="Onboarding"
-          heading="First impressions that move."
-          body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm."
-        />
-      </FadeSection>
+  /* Desktop: scroll-lock + virtual playhead */
+  useEffect(() => {
+    if (isMobile) return
+    const section = sectionRef.current
+    const placeholder = placeholderRef.current
+    if (!section || !placeholder) return
 
-      {/* Panels + labels paired so on mobile each label sits under its card */}
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 32 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className="flex flex-col md:flex-row"
-        style={{ gap: 2, maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-        {ONBOARDING_ITEMS.map((item, i) => (
-          <div key={i} style={{ flex: 1, minWidth: 0, opacity: inView && activeCard === i ? 1 : 0.1, transition: 'opacity 0.4s ease' }}>
-            {/* Card */}
-            <div style={{ overflow: 'hidden', background: ONBOARDING_BG[i] }}>
-              <div style={{ paddingTop: 80, paddingBottom: 80 }}>
-                <LottiePlayer
-                  src={item.src}
-                  active={inView && activeCard === i}
-                  onComplete={advance}
-                  style={{ width: '100%', display: 'block' }}
-                />
+    let playhead = 0
+    let velocity = 0
+    let locked = false
+    let released = false
+    let rafId = 0
+    let lockScrollY = 0
+    const BASE = 0.003
+    const FRICTION = 0.95
+
+    const tick = () => {
+      velocity = Math.max(velocity, BASE)
+      velocity *= FRICTION
+      playhead = Math.min(1, playhead + velocity)
+      setProgress(playhead)
+      if (playhead >= 1) { release(); return }
+      rafId = requestAnimationFrame(tick)
+    }
+
+    const lock = () => {
+      if (locked || released) return
+      locked = true
+      lockScrollY = window.scrollY
+      placeholder.style.height = section.offsetHeight + 'px'
+      placeholder.style.display = 'block'
+      section.style.position = 'fixed'
+      section.style.top = '0'
+      section.style.left = '0'
+      section.style.width = '100%'
+      section.style.zIndex = '100'
+      document.documentElement.style.overflow = 'hidden'
+      rafId = requestAnimationFrame(tick)
+    }
+
+    const release = () => {
+      if (released) return
+      released = true
+      locked = false
+      cancelAnimationFrame(rafId)
+      section.style.position = ''
+      section.style.top = ''
+      section.style.left = ''
+      section.style.width = ''
+      section.style.zIndex = ''
+      document.documentElement.style.overflow = ''
+      window.scrollTo({ top: lockScrollY + window.innerHeight + 80, behavior: 'smooth' })
+      setTimeout(() => { placeholder.style.display = 'none' }, 900)
+    }
+
+    const onWheel = (e: WheelEvent) => {
+      if (!locked) return
+      e.preventDefault()
+      if (e.deltaY > 0) {
+        velocity += e.deltaY * 0.00015
+        velocity = Math.min(velocity, 0.06)
+      }
+    }
+
+    const onScroll = () => {
+      if (locked || released) return
+      const rect = section.getBoundingClientRect()
+      if (rect.top <= 2) lock()
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('wheel', onWheel)
+      cancelAnimationFrame(rafId)
+      if (locked && !released) {
+        section.style.position = ''
+        section.style.top = ''
+        section.style.left = ''
+        section.style.width = ''
+        section.style.zIndex = ''
+        document.documentElement.style.overflow = ''
+        placeholder.style.display = 'none'
+      }
+    }
+  }, [isMobile])
+
+  /* ── Derived visual values (desktop) ── */
+  const headerOpacity = Math.max(0, 1 - progress * 9)
+  const panelScale = 1 + progress * 0.65
+  const seeks = [
+    Math.min(1, Math.max(0, progress * 3)),
+    Math.min(1, Math.max(0, (progress - 1 / 3) * 3)),
+    Math.min(1, Math.max(0, (progress - 2 / 3) * 3)),
+  ]
+  const cardOpacities = [
+    progress < 0.38 ? 1 : 0.1,
+    progress >= 0.28 && progress < 0.72 ? 1 : 0.1,
+    progress >= 0.62 ? 1 : 0.1,
+  ]
+
+  /* ── MOBILE layout ── */
+  if (isMobile) {
+    return (
+      <section ref={sectionRef} style={{ background: '#080910', paddingTop: 100, paddingBottom: 100 }}>
+        <FadeSection>
+          <SectionHeader label="Onboarding" heading="First impressions that move."
+            body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm." />
+        </FadeSection>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
+          {ONBOARDING_ITEMS.map((item, i) => (
+            <div key={i} style={{ minWidth: 0, opacity: inView && activeCard === i ? 1 : 0.1, transition: 'opacity 0.4s ease' }}>
+              <div style={{ overflow: 'hidden', background: ONBOARDING_BG[i] }}>
+                <div style={{ paddingTop: 80, paddingBottom: 80 }}>
+                  <LottiePlayer src={item.src} active={inView && activeCard === i} onComplete={advance} style={{ width: '100%', display: 'block' }} />
+                </div>
+              </div>
+              <div style={{ textAlign: 'center', marginTop: 16, marginBottom: i < 2 ? 40 : 0 }}>
+                <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
+                <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
               </div>
             </div>
-            {/* Label directly under its card */}
-            <div style={{ textAlign: 'center', marginTop: 16, marginBottom: i < 2 ? 40 : 0 }}>
-              <span style={{
-                display: 'block', fontWeight: 700, fontSize: 12,
-                letterSpacing: '0.1em', textTransform: 'uppercase', color: A,
-              }}>{item.label}</span>
-              <span style={{
-                display: 'block', fontSize: 12, fontWeight: 300,
-                color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5,
-              }}>{item.sub}</span>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  /* ── DESKTOP layout ── */
+  return (
+    <>
+      <div ref={placeholderRef} style={{ display: 'none', background: '#080910' }} />
+      <section
+        ref={sectionRef}
+        style={{
+          background: '#080910',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}>
+        {/* Header fades out as scroll progresses */}
+        <div style={{ opacity: headerOpacity, width: '100%', pointerEvents: 'none' }}>
+          <SectionHeader label="Onboarding" heading="First impressions that move."
+            body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm." />
+        </div>
+
+        {/* 3 panels — scale up and animate on scroll */}
+        <div style={{
+          display: 'flex',
+          gap: 2,
+          maxWidth: 1100,
+          width: '100%',
+          padding: '0 24px',
+          transform: `scale(${panelScale})`,
+          transformOrigin: 'center center',
+        }}>
+          {ONBOARDING_ITEMS.map((item, i) => (
+            <div key={i} style={{
+              flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0,
+              opacity: cardOpacities[i], transition: 'opacity 0.3s ease',
+            }}>
+              <div style={{ paddingTop: 60, paddingBottom: 60 }}>
+                <LottiePlayer src={item.src} seekFraction={seeks[i]} style={{ width: '100%', display: 'block' }} />
+              </div>
             </div>
-          </div>
-        ))}
-      </motion.div>
-    </section>
+          ))}
+        </div>
+
+        {/* Labels fade out with header */}
+        <div style={{ opacity: headerOpacity, display: 'flex', gap: 2, maxWidth: 1100, width: '100%', margin: '16px auto 0', padding: '0 24px', pointerEvents: 'none' }}>
+          {ONBOARDING_ITEMS.map((item, i) => (
+            <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
+              <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
+              <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   )
 }
 
