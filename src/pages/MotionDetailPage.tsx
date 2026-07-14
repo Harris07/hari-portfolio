@@ -158,7 +158,7 @@ function OnboardingSection() {
               </div>
             </div>
             {/* Label directly under its card */}
-            <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <div style={{ textAlign: 'center', marginTop: 16, marginBottom: i < 2 ? 40 : 0 }}>
               <span style={{
                 display: 'block', fontWeight: 700, fontSize: 12,
                 letterSpacing: '0.1em', textTransform: 'uppercase', color: A,
