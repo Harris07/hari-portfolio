@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
@@ -17,12 +17,13 @@ const BORDER = 'rgba(255,255,255,0.07)'
      auto mode  (active prop)       — plays when active, stops when inactive
      seek mode  (seekFraction prop) — goToAndStop at 0-1 fraction of totalFrames
 ─── */
-function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, style = {} }: {
+function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, onLoad, style = {} }: {
   src: string
   active?: boolean
   loop?: boolean
   onComplete?: () => void
   seekFraction?: number
+  onLoad?: (totalFrames: number, frameRate: number) => void
   style?: React.CSSProperties
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -31,11 +32,13 @@ function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, sty
   const activeRef = useRef(active)
   const onCompleteRef = useRef(onComplete)
   const seekFractionRef = useRef(seekFraction)
+  const onLoadRef = useRef(onLoad)
 
   useEffect(() => {
     activeRef.current = active
     onCompleteRef.current = onComplete
     seekFractionRef.current = seekFraction
+    onLoadRef.current = onLoad
   })
 
   /* Seek mode: scrub to frame on each seekFraction change */
@@ -72,6 +75,7 @@ function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, sty
       animRef.current = anim
       anim.addEventListener('DOMLoaded', () => {
         totalFramesRef.current = Math.max(1, anim.totalFrames - 1)
+        if (onLoadRef.current) onLoadRef.current(anim.totalFrames, anim.frameRate)
         if (seekFractionRef.current !== undefined) {
           anim.goToAndStop(0, true)
         } else if (activeRef.current) {
@@ -156,43 +160,29 @@ const lp  = (a: number, b: number, t: number) => a + (b - a) * t
    0.08→0.22  header fully visible
    0.22→0.36  header fades out
    0.14→0.30  cards enter from below
-   0.34→0.58  cards scale up 1→1.7
-   0.16→0.26  labels fade in — stay visible until section exits
-   0.58+      animations play at NATURAL SPEED (active mode, not seek)
+   0.34→0.58  cards scale up 1→1.7 (all cards at 10% opacity)
+   0.58+      animations play — virtualAnim 0→3 via RAF (forward) or scroll (backward)
    0.94→1.00  whole section exits upward
 ─────────────────────────────────────────────────────────────── */
-const ANIM_TRIGGER = 0.58   // progress where card animations begin
-const ANIM_RESET   = 0.48   // progress below which animations reset
+const ANIM_P     = 0.58   // progress where card animations begin
+const SCALE_START = 0.34  // progress where scale begins
 
 function OnboardingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress]   = useState(0)
-  const progressRef               = useRef(0)
-  /* -1 = idle, 0/1/2 = active card index, 3 = all done */
-  const [animCard, setAnimCard]   = useState(-1)
-  const animCardRef               = useRef(-1)
-  useEffect(() => { animCardRef.current = animCard }, [animCard])
+  const [progress, setProgress] = useState(0)
+  const progressRef = useRef(0)
+  /* virtualAnim 0-3: card i plays when va is in [i, i+1]; drives seekFraction */
+  const [virtualAnim, setVirtualAnim] = useState(0)
+  const vaRef = useRef(0)
+  /* natural playback speed per card at 60fps (updated on Lottie load) */
+  const fwdSpeeds = useRef([1 / 150, 1 / 150, 1 / 150])
+  /* animation mode */
+  const modeRef = useRef<'idle' | 'forward' | 'backward'>('idle')
+  /* snapshot when switching from forward/done → backward */
+  const transitionRef = useRef({ p: ANIM_P, v: 0 })
+  const fwdRafRef = useRef(0)
+  const prevPRef = useRef(0)
 
-  /* ── start / reset animations based on scroll progress ── */
-  useEffect(() => {
-    if (progress >= ANIM_TRIGGER && animCardRef.current === -1) setAnimCard(0)
-    if (progress < ANIM_RESET && animCardRef.current > -1 && animCardRef.current < 3) setAnimCard(-1)
-  }, [progress])
-
-  /* ── when all 3 complete, scroll past the container ── */
-  useEffect(() => {
-    if (animCard !== 3) return
-    const container = containerRef.current
-    if (!container) return
-    setTimeout(() => {
-      const totalScroll = container.offsetHeight - window.innerHeight
-      window.scrollTo({ top: container.offsetTop + totalScroll + 20, behavior: 'smooth' })
-    }, 200)
-  }, [animCard])
-
-  const onAnimComplete = useCallback(() => setAnimCard(c => c + 1), [])
-
-  /* ── scroll listener + auto-play (only advances to ANIM_TRIGGER) ── */
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -202,40 +192,99 @@ function OnboardingSection() {
       if (total <= 0) return 0
       return cl(-container.getBoundingClientRect().top / total)
     }
-    const put = (p: number) => { progressRef.current = p; setProgress(p) }
+    const put  = (p: number) => { progressRef.current = p; setProgress(p) }
+    const putVA = (v: number) => { vaRef.current = v; setVirtualAnim(v) }
 
-    let autoPlaying = false
-    let autoRaf     = 0
-    let scrollTimer = 0
-    const AUTO_SPEED = 0.0014  // advance pre-animation scroll smoothly
-
+    /* auto-advance scroll to ANIM_P when user pauses mid-scale */
+    let autoPlaying = false, autoRaf = 0, scrollTimer = 0
+    const AUTO_SPEED = 0.0014
     const stopAuto = () => { autoPlaying = false; cancelAnimationFrame(autoRaf); clearTimeout(scrollTimer) }
-
     const autoTick = () => {
       if (!autoPlaying) return
-      /* stop auto-advancing once animations have taken over */
-      if (animCardRef.current >= 0) { stopAuto(); return }
-      const p = progressRef.current
-      if (p >= ANIM_TRIGGER) { stopAuto(); return }
-      const next = cl(p + AUTO_SPEED)
+      if (progressRef.current >= ANIM_P) { stopAuto(); return }
+      const next = cl(progressRef.current + AUTO_SPEED)
       put(next)
       const total = container.offsetHeight - window.innerHeight
       window.scrollTo(0, container.offsetTop + next * total)
       autoRaf = requestAnimationFrame(autoTick)
     }
 
+    /* forward: RAF advances virtualAnim at natural Lottie speed */
+    const startForward = () => {
+      cancelAnimationFrame(fwdRafRef.current)
+      const tick = () => {
+        if (modeRef.current !== 'forward') return
+        const v = vaRef.current
+        if (v >= 3) {
+          modeRef.current = 'idle'
+          const totalScroll = container.offsetHeight - window.innerHeight
+          setTimeout(() => {
+            window.scrollTo({ top: container.offsetTop + totalScroll + 20, behavior: 'smooth' })
+          }, 200)
+          return
+        }
+        const card = Math.min(2, Math.floor(v))
+        putVA(Math.min(3, v + fwdSpeeds.current[card]))
+        fwdRafRef.current = requestAnimationFrame(tick)
+      }
+      fwdRafRef.current = requestAnimationFrame(tick)
+    }
+
     const onScroll = () => {
       const p = getP()
+      const prevP = prevPRef.current
+      const dir = p > prevP + 0.0001 ? 1 : p < prevP - 0.0001 ? -1 : 0
+      prevPRef.current = p
+
       if (autoPlaying) {
-        if (p < progressRef.current - 0.003) stopAuto()
+        if (dir < 0) stopAuto()
         else { put(p); return }
       }
       put(p)
+
+      const mode = modeRef.current
+
+      /* idle → forward */
+      if (mode === 'idle' && vaRef.current < 3 && p >= ANIM_P && dir >= 0) {
+        modeRef.current = 'forward'
+        startForward()
+        return
+      }
+
+      /* forward → backward (user scrolls back while animations are playing) */
+      if (mode === 'forward' && dir < 0) {
+        cancelAnimationFrame(fwdRafRef.current)
+        transitionRef.current = { p, v: vaRef.current }
+        modeRef.current = 'backward'
+      }
+
+      /* idle (done, va=3) → backward */
+      if (mode === 'idle' && vaRef.current >= 3 && dir < 0) {
+        transitionRef.current = { p, v: vaRef.current }
+        modeRef.current = 'backward'
+      }
+
+      /* backward → forward */
+      if (modeRef.current === 'backward' && dir > 0 && p >= ANIM_P) {
+        modeRef.current = 'forward'
+        startForward()
+        return
+      }
+
+      /* backward: map p proportionally back to 0 */
+      if (modeRef.current === 'backward') {
+        const { p: tp, v: tv } = transitionRef.current
+        const denom = tp - 0.30
+        const ratio = denom > 0.001 ? Math.max(0, (p - 0.30) / denom) : 0
+        putVA(Math.max(0, tv * ratio))
+        if (p <= 0.31) { modeRef.current = 'idle'; putVA(0) }
+      }
+
+      /* auto-advance when user pauses in the scale zone */
       clearTimeout(scrollTimer)
-      /* schedule auto-advance only before animations kick in */
-      if (p >= 0.30 && p < ANIM_TRIGGER && animCardRef.current === -1) {
+      if (p >= 0.30 && p < ANIM_P && modeRef.current === 'idle') {
         scrollTimer = window.setTimeout(() => {
-          if (progressRef.current < ANIM_TRIGGER && animCardRef.current === -1 && !autoPlaying) {
+          if (progressRef.current < ANIM_P && modeRef.current === 'idle' && !autoPlaying) {
             autoPlaying = true; autoTick()
           }
         }, 500)
@@ -243,24 +292,37 @@ function OnboardingSection() {
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { window.removeEventListener('scroll', onScroll); stopAuto() }
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      stopAuto()
+      cancelAnimationFrame(fwdRafRef.current)
+    }
   }, [])
 
   /* ── derived visual values ── */
-  const p = progress
+  const p  = progress
+  const va = virtualAnim
 
   const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
   const headerY       = lp(48, 0, inv(p, 0, 0.14))
   const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
   const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
-  /* labels fade IN only — stay visible while zoomed and during animations */
   const labelsOpacity = inv(p, 0.16, 0.26)
   const exitY         = lp(0, -104, inv(p, 0.94, 1.0))
 
-  /* spotlight: all cards full when idle/done; active card full, others dim */
-  const cardOp = (i: number) =>
-    animCard < 0 || animCard === 3 ? 1 : animCard === i ? 1 : 0.1
+  /* seekFraction per card: 0→1 as virtualAnim passes through its [i, i+1] range */
+  const s0 = cl(va)
+  const s1 = cl(va - 1)
+  const s2 = cl(va - 2)
+
+  /* card opacity: full before scale; 10% during scale; spotlight during playback */
+  const activeCardIdx = va < 1 ? 0 : va < 2 ? 1 : 2
+  const cardOp = (i: number) => {
+    if (p < SCALE_START) return 1
+    if (va < 0.02) return 0.1
+    return activeCardIdx === i ? 1 : 0.1
+  }
 
   return (
     <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
@@ -271,7 +333,7 @@ function OnboardingSection() {
         transform: `translateY(${exitY}vh)`,
       }}>
 
-        {/* ① Header — slides in, then fades out before zoom */}
+        {/* ① Header — slides in, fades out before zoom */}
         <div style={{ opacity: headerOpacity, transform: `translateY(${headerY}px)`, width: '100%', pointerEvents: 'none' }}>
           <SectionHeader
             label="Onboarding"
@@ -280,10 +342,10 @@ function OnboardingSection() {
           />
         </div>
 
-        {/* ② Cards + labels in one scale container — grow & exit together */}
+        {/* ② Cards + labels — scale together, shifted 80px down */}
         <div style={{
           opacity: cardsOpacity,
-          transform: `translateY(${cardsEnterY}px) scale(${panelScale})`,
+          transform: `translateY(${cardsEnterY + 80}px) scale(${panelScale})`,
           transformOrigin: 'center center',
           maxWidth: 1100, width: '100%', padding: '0 24px',
         }}>
@@ -296,8 +358,10 @@ function OnboardingSection() {
                 <div style={{ paddingTop: 60, paddingBottom: 60 }}>
                   <LottiePlayer
                     src={item.src}
-                    active={animCard === i}
-                    onComplete={onAnimComplete}
+                    seekFraction={[s0, s1, s2][i]}
+                    onLoad={(tf, fr) => {
+                      fwdSpeeds.current[i] = 1 / ((tf / Math.max(1, fr)) * 60)
+                    }}
                     style={{ width: '100%', display: 'block' }}
                   />
                 </div>
@@ -305,7 +369,7 @@ function OnboardingSection() {
             ))}
           </div>
 
-          {/* labels stay inside the scale div — grow and exit with cards */}
+          {/* labels inside scale div — grow and exit with cards */}
           <div style={{ opacity: labelsOpacity, display: 'flex', gap: 2, marginTop: 16, pointerEvents: 'none' }}>
             {ONBOARDING_ITEMS.map((item, i) => (
               <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
