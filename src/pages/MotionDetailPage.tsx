@@ -220,13 +220,12 @@ function OnboardingSection() {
         const v = vaRef.current
         if (v >= 3) {
           modeRef.current = 'idle'
-          const totalScroll = container.offsetHeight - window.innerHeight
           setTimeout(() => {
-            const target = container.offsetTop + totalScroll + window.innerHeight * 0.5
+            const target = container.offsetTop + container.offsetHeight + 100
             const startY = window.scrollY
             const dist = target - startY
             let t0: number | null = null
-            const DURATION = 1800
+            const DURATION = 1100
             const ease = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
             const scrollStep = (now: number) => {
               if (t0 === null) t0 = now
@@ -256,6 +255,19 @@ function OnboardingSection() {
         if (dir < 0) stopAuto()
         else { put(p); return }
       }
+
+      /* while animations are playing forward, don't let scroll advance p —
+         prevents the exit phase triggering before card 3 finishes */
+      if (modeRef.current === 'forward') {
+        if (dir < 0) {
+          cancelAnimationFrame(fwdRafRef.current)
+          put(p)
+          transitionRef.current = { p, v: vaRef.current }
+          modeRef.current = 'backward'
+        }
+        return
+      }
+
       put(p)
 
       const mode = modeRef.current
@@ -265,13 +277,6 @@ function OnboardingSection() {
         modeRef.current = 'forward'
         startForward()
         return
-      }
-
-      /* forward → backward (user scrolls back while animations are playing) */
-      if (mode === 'forward' && dir < 0) {
-        cancelAnimationFrame(fwdRafRef.current)
-        transitionRef.current = { p, v: vaRef.current }
-        modeRef.current = 'backward'
       }
 
       /* idle (done, va=3) → backward */
