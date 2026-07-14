@@ -523,7 +523,7 @@ export default function FitzooDetailPage() {
 
       {/* ── OUTCOMES ── */}
       <section className="py-28 overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #1a0800 0%, #2a1000 50%, #1a0800 100%)' }}>
+        style={{ background: 'linear-gradient(135deg, #06090f 0%, #080c18 50%, #06090f 100%)' }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
           <FadeUp>
             <SectionLabel>Outcomes</SectionLabel>

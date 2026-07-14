@@ -611,15 +611,16 @@ export default function MotionDetailPage() {
       />
 
       {/* ── METRICS ── */}
-      <section style={{ background: BG, borderTop: `1px solid ${BORDER}` }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10 py-20 text-center">
+      <section className="py-28 overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #08090f 0%, #0c0a18 50%, #08090f 100%)' }}>
+        <div className="max-w-5xl mx-auto px-6 md:px-10 text-center">
           <FadeSection delay={0} startY={20}>
             <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-3" style={{ color: A }}>By the Numbers</p>
           </FadeSection>
           <FadeSection delay={0.12} startY={32}>
-            <h2 className="font-semibold leading-tight mb-12" style={{ color: WHITE, fontSize: 'clamp(3rem,6vw,5rem)' }}>Motion at scale.</h2>
+            <h2 className="font-semibold leading-tight mb-14" style={{ color: WHITE, fontSize: 'clamp(3rem,6vw,5rem)' }}>Motion at scale.</h2>
           </FadeSection>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {[
               { value: '5', label: 'Animation categories shipped' },
               { value: '10+', label: 'Individual Lottie & GIF assets' },
@@ -628,10 +629,10 @@ export default function MotionDetailPage() {
               { value: '100%', label: 'Built in After Effects + Lottie' },
               { value: 'Live', label: "Across Poshmark's product today" },
             ].map(({ value, label }) => (
-              <div key={label} className="py-8 px-6 rounded-2xl"
-                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
-                <p className="font-bold mb-2" style={{ color: A, fontSize: 'clamp(2rem,4vw,3rem)' }}>{value}</p>
-                <p className="text-sm font-light" style={{ color: MUTED }}>{label}</p>
+              <div key={label} className="p-6 rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid' }}>
+                <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{value}</span>
+                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</span>
               </div>
             ))}
           </div>
