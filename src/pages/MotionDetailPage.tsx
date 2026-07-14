@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 
@@ -147,229 +147,138 @@ const ONBOARDING_ITEMS = [
 ]
 
 function OnboardingSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const placeholderRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  /* All scroll state in a single ref — survives re-entries */
-  const s = useRef({
-    playhead: 0,
-    velocity: 0,
-    locked: false,
-    canLock: true,        // reset after each release so section can be re-entered
-    fromBottom: false,    // direction section was entered from
-    rafId: 0,
-    lockScrollY: 0,
-    touchY: 0,
+  /* Native scroll progress — 0 when container top hits viewport top,
+     1 when container bottom hits viewport bottom.
+     600vh outer div → 500vh of "extra" scroll budget for all phases. */
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
   })
+  /* Spring smoothing gives organic deceleration */
+  const sp = useSpring(scrollYProgress, { stiffness: 60, damping: 22, restDelta: 0.001 })
 
+  /* ── Phase map ──────────────────────────────────────────────────
+     0.00 → 0.08  header fades + slides in
+     0.08 → 0.22  header fully visible
+     0.22 → 0.36  header fades out, cards enter from below
+     0.36 → 0.58  cards scale up (zoom)
+     0.58 → 0.72  card 1 animation
+     0.72 → 0.85  card 2 animation
+     0.85 → 0.95  card 3 animation
+     0.95 → 1.00  all cards slide up and out
+  ─────────────────────────────────────────────────────────────── */
+
+  const headerOpacity  = useTransform(sp, [0, 0.06, 0.22, 0.36], [0, 1, 1, 0])
+  const headerY        = useTransform(sp, [0, 0.14], [48, 0])
+
+  const cardsOpacity   = useTransform(sp, [0.14, 0.28], [0, 1])
+  const cardsEnterY    = useTransform(sp, [0.14, 0.30], [72, 0])
+  const panelScale     = useTransform(sp, [0.34, 0.58], [1, 1.68])
+
+  const labelsOpacity  = useTransform(sp, [0.16, 0.26, 0.30, 0.40], [0, 1, 1, 0])
+
+  /* Per-card seek fractions — subscribed to state for LottiePlayer */
+  const seek0mv = useTransform(sp, [0.58, 0.72], [0, 1])
+  const seek1mv = useTransform(sp, [0.72, 0.85], [0, 1])
+  const seek2mv = useTransform(sp, [0.85, 0.95], [0, 1])
+  const [s0, setS0] = useState(0)
+  const [s1, setS1] = useState(0)
+  const [s2, setS2] = useState(0)
   useEffect(() => {
-    const section = sectionRef.current
-    const placeholder = placeholderRef.current
-    if (!section || !placeholder) return
+    const clamp = (v: number) => Math.max(0, Math.min(1, v))
+    const u0 = seek0mv.on('change', v => setS0(clamp(v)))
+    const u1 = seek1mv.on('change', v => setS1(clamp(v)))
+    const u2 = seek2mv.on('change', v => setS2(clamp(v)))
+    return () => { u0(); u1(); u2() }
+  }, [seek0mv, seek1mv, seek2mv])
 
-    const BASE = 0.003      // minimum forward speed when not scrolling
-    const FRICTION = 0.94
+  /* Card spotlight opacities */
+  const op0 = useTransform(sp, [0.34, 0.58, 0.70, 0.74], [1, 1, 1, 0.1])
+  const op1 = useTransform(sp, [0.68, 0.72, 0.83, 0.87], [0.1, 1, 1, 0.1])
+  const op2 = useTransform(sp, [0.84, 0.87, 1.0],        [0.1, 1, 1])
+  const opacities = [op0, op1, op2]
 
-    /* ── RAF tick ── */
-    const tick = () => {
-      const st = s.current
-      // Minimum speed in the entry direction (so animation always completes)
-      if (!st.fromBottom && st.velocity >= 0) st.velocity = Math.max(st.velocity, BASE)
-      if (st.fromBottom && st.velocity <= 0) st.velocity = Math.min(st.velocity, -BASE)
-
-      st.velocity *= FRICTION
-      st.playhead = Math.min(1, Math.max(0, st.playhead + st.velocity))
-      setProgress(st.playhead)
-
-      if (st.playhead >= 1) { releaseForward(); return }
-      if (st.playhead <= 0) { releaseBackward(); return }
-      st.rafId = requestAnimationFrame(tick)
-    }
-
-    const applyFixed = () => {
-      const st = s.current
-      st.lockScrollY = window.scrollY
-      placeholder.style.height = window.innerHeight + 'px'
-      placeholder.style.display = 'block'
-      section.style.position = 'fixed'
-      section.style.top = '0'
-      section.style.left = '0'
-      section.style.width = '100%'
-      section.style.zIndex = '100'
-      document.documentElement.style.overflow = 'hidden'
-    }
-
-    const restoreFixed = () => {
-      section.style.position = ''
-      section.style.top = ''
-      section.style.left = ''
-      section.style.width = ''
-      section.style.zIndex = ''
-      document.documentElement.style.overflow = ''
-    }
-
-    const lock = (fromBottom: boolean) => {
-      const st = s.current
-      if (st.locked || !st.canLock) return
-      st.locked = true
-      st.canLock = false
-      st.fromBottom = fromBottom
-      st.playhead = fromBottom ? 1 : 0
-      st.velocity = fromBottom ? -BASE * 3 : BASE * 3
-      setProgress(st.playhead)
-      applyFixed()
-      cancelAnimationFrame(st.rafId)
-      st.rafId = requestAnimationFrame(tick)
-    }
-
-    const releaseForward = () => {
-      const st = s.current
-      if (!st.locked) return
-      st.locked = false
-      cancelAnimationFrame(st.rafId)
-      restoreFixed()
-      const target = st.lockScrollY + window.innerHeight + 80
-      window.scrollTo({ top: target, behavior: 'smooth' })
-      // Re-enable locking after scroll settles (allows backward re-entry)
-      setTimeout(() => {
-        placeholder.style.display = 'none'
-        st.canLock = true
-      }, 900)
-    }
-
-    const releaseBackward = () => {
-      const st = s.current
-      if (!st.locked) return
-      st.locked = false
-      cancelAnimationFrame(st.rafId)
-      restoreFixed()
-      const target = Math.max(0, st.lockScrollY - 60)
-      window.scrollTo({ top: target, behavior: 'smooth' })
-      setTimeout(() => {
-        placeholder.style.display = 'none'
-        st.canLock = true
-      }, 900)
-    }
-
-    /* ── Input handlers ── */
-    const onWheel = (e: WheelEvent) => {
-      if (!s.current.locked) return
-      e.preventDefault()
-      const delta = e.deltaY * 0.00015
-      s.current.velocity += delta
-      s.current.velocity = Math.max(-0.07, Math.min(0.07, s.current.velocity))
-    }
-
-    const onTouchStart = (e: TouchEvent) => {
-      if (!s.current.locked) return
-      s.current.touchY = e.touches[0].clientY
-    }
-    const onTouchMove = (e: TouchEvent) => {
-      if (!s.current.locked) return
-      e.preventDefault()
-      const dy = s.current.touchY - e.touches[0].clientY
-      s.current.touchY = e.touches[0].clientY
-      s.current.velocity += dy * 0.0012
-      s.current.velocity = Math.max(-0.07, Math.min(0.07, s.current.velocity))
-    }
-
-    const onScroll = () => {
-      if (s.current.locked) return
-      const rect = section.getBoundingClientRect()
-      const vh = window.innerHeight
-      // Entering from top (scrolling down)
-      if (rect.top <= 2 && rect.top >= -vh * 0.4) {
-        lock(false)
-      }
-      // Entering from bottom (scrolling up after section)
-      else if (rect.bottom >= vh - 2 && rect.bottom <= vh + section.offsetHeight * 0.6) {
-        lock(true)
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('wheel', onWheel, { passive: false })
-    window.addEventListener('touchstart', onTouchStart, { passive: true })
-    window.addEventListener('touchmove', onTouchMove, { passive: false })
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
-      cancelAnimationFrame(s.current.rafId)
-      if (s.current.locked) { restoreFixed(); placeholder.style.display = 'none' }
-    }
-  }, [])
-
-  /* ── Derived visual values ── */
-  const headerOpacity = Math.max(0, 1 - progress * 9)
-  const panelScale = 1 + progress * 0.65
-  const seeks = [
-    Math.min(1, Math.max(0, progress * 3)),
-    Math.min(1, Math.max(0, (progress - 1 / 3) * 3)),
-    Math.min(1, Math.max(0, (progress - 2 / 3) * 3)),
-  ]
-  const cardOpacities = [
-    progress < 0.38 ? 1 : 0.1,
-    progress >= 0.28 && progress < 0.72 ? 1 : 0.1,
-    progress >= 0.62 ? 1 : 0.1,
-  ]
+  /* Exit: whole sticky section slides upward */
+  const sectionY = useTransform(sp, [0.94, 1.0], ['0vh', '-104vh'])
 
   return (
-    <>
-      <div ref={placeholderRef} style={{ display: 'none', background: '#080910' }} />
-      <section
-        ref={sectionRef}
+    /* Outer — tall scroll budget keeps inner sticky */
+    <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
+      <motion.section
         style={{
-          background: '#080910',
+          position: 'sticky',
+          top: 0,
           height: '100vh',
+          overflow: 'hidden',
+          background: '#080910',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          overflow: 'hidden',
+          y: sectionY,
         }}>
-        {/* Header — fades out as cards zoom in */}
-        <div style={{ opacity: headerOpacity, width: '100%', pointerEvents: 'none' }}>
-          <SectionHeader label="Onboarding" heading="First impressions that move."
-            body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm." />
-        </div>
 
-        {/* 3 panels — scroll-synced zoom + Lottie seek */}
-        <div style={{
-          display: 'flex',
-          gap: 2,
-          maxWidth: 1100,
-          width: '100%',
-          padding: '0 24px',
-          transform: `scale(${panelScale})`,
-          transformOrigin: 'center center',
-        }}>
+        {/* ① Header — fades in, then fades out before zoom */}
+        <motion.div style={{ opacity: headerOpacity, y: headerY, width: '100%', pointerEvents: 'none' }}>
+          <SectionHeader
+            label="Onboarding"
+            heading="First impressions that move."
+            body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm."
+          />
+        </motion.div>
+
+        {/* ② Cards — enter from below, then scale up, Lottie seeks on scroll */}
+        <motion.div
+          style={{
+            opacity: cardsOpacity,
+            y: cardsEnterY,
+            scale: panelScale,
+            transformOrigin: 'center center',
+            display: 'flex',
+            gap: 2,
+            maxWidth: 1100,
+            width: '100%',
+            padding: '0 24px',
+          }}>
           {ONBOARDING_ITEMS.map((item, i) => (
-            <div key={i} style={{
-              flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0,
-              opacity: cardOpacities[i], transition: 'opacity 0.3s ease',
-            }}>
+            <motion.div
+              key={i}
+              style={{ flex: 1, overflow: 'hidden', background: ONBOARDING_BG[i], minWidth: 0, opacity: opacities[i] }}>
               <div style={{ paddingTop: 60, paddingBottom: 60 }}>
-                <LottiePlayer src={item.src} seekFraction={seeks[i]} style={{ width: '100%', display: 'block' }} />
+                <LottiePlayer
+                  src={item.src}
+                  seekFraction={[s0, s1, s2][i]}
+                  style={{ width: '100%', display: 'block' }}
+                />
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Labels — fade out with header */}
-        <div style={{ opacity: headerOpacity, display: 'flex', gap: 2, maxWidth: 1100, width: '100%', margin: '16px auto 0', padding: '0 24px', pointerEvents: 'none' }}>
+        {/* ③ Labels — enter with cards, fade out before zoom */}
+        <motion.div
+          style={{
+            opacity: labelsOpacity,
+            display: 'flex',
+            gap: 2,
+            maxWidth: 1100,
+            width: '100%',
+            margin: '16px auto 0',
+            padding: '0 24px',
+            pointerEvents: 'none',
+          }}>
           {ONBOARDING_ITEMS.map((item, i) => (
             <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
               <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
               <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
             </div>
           ))}
-        </div>
-      </section>
-    </>
+        </motion.div>
+
+      </motion.section>
+    </div>
   )
 }
 
