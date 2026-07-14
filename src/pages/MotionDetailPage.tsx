@@ -585,7 +585,7 @@ export default function MotionDetailPage() {
         heading="Making waiting feel worth it."
         body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
         items={[
-          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh', innerPadding: '7.5%' },
+          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh', innerPadding: '10%' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
           { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', innerPadding: '15%' },
         ]}
