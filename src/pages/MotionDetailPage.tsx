@@ -116,14 +116,14 @@ function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, onL
 }
 
 /* ─── Section wrapper with fade-up on scroll ─── */
-function FadeSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+function FadeSection({ children, className = '', delay = 0, startY = 40 }: { children: React.ReactNode; className?: string; delay?: number; startY?: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: false, margin: '0px' })
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1], delay }}>
+      initial={{ opacity: 0, y: startY }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: startY }}
+      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay }}>
       {children}
     </motion.div>
   )
@@ -428,10 +428,10 @@ function AnimSection({ label, heading, body, items, cols = 2 }: {
   return (
     <section style={{ background: BG, paddingTop: 100, paddingBottom: 100 }}>
       <div className="max-w-4xl mx-auto px-6 md:px-12">
-        <FadeSection delay={0}>
+        <FadeSection delay={0} startY={48}>
           <SectionHeader label={label} heading={heading} body={body} />
         </FadeSection>
-        <FadeSection delay={0.18}>
+        <FadeSection delay={0.5} startY={64}>
           <div className={`grid ${gridClass} gap-4`}
             style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
             {items.map((item, i) => (
