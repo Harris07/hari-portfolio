@@ -348,7 +348,7 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '680vh', position: 'relative', background: '#080910' }}>
+    <div ref={containerRef} style={{ height: '600vh', position: 'relative', background: 'linear-gradient(to bottom, #080910 0%, #080910 58%, #0f0c1e 80%, #0a0b10 100%)' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
@@ -563,6 +563,9 @@ export default function MotionDetailPage() {
 
       {/* ── ONBOARDING ── */}
       <OnboardingSection />
+
+      {/* ── BRIDGE ── */}
+      <div style={{ height: 200, background: 'linear-gradient(to bottom, #0a0b10, #0a0b10)' }} />
 
       {/* ── BRAND BANNER ── */}
       <div style={{ position: 'relative', zIndex: 1 }}>
