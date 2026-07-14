@@ -594,6 +594,7 @@ export default function MotionDetailPage() {
 
       {/* ── BRAND BANNER ── */}
       <AnimSection
+        naked
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Brand Banner"
         heading="Welcome to Poshmark."
