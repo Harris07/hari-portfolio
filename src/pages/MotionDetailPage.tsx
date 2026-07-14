@@ -585,7 +585,7 @@ export default function MotionDetailPage() {
         items={[
           { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
-          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', mediaStyle: { aspectRatio: '1.1/1', transform: 'scale(0.65)', transformOrigin: 'center center' } },
+          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', mediaStyle: { aspectRatio: '1.1/1', width: '85%', margin: '0 auto' } },
         ]}
       />
 
