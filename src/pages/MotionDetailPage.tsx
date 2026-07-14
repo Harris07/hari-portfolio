@@ -549,7 +549,6 @@ export default function MotionDetailPage() {
         body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
         items={[
           { type: 'gif', src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
-          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
         ]}
       />
 
@@ -559,6 +558,7 @@ export default function MotionDetailPage() {
         heading="Making waiting feel worth it."
         body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
         items={[
+          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
           { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader' },
         ]}
