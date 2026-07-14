@@ -118,7 +118,7 @@ function LottiePlayer({ src, active, loop = false, onComplete, seekFraction, onL
 /* ─── Section wrapper with fade-up on scroll ─── */
 function FadeSection({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '0px' })
   return (
     <motion.div ref={ref} className={className}
       initial={{ opacity: 0, y: 40 }}
@@ -221,7 +221,8 @@ function OnboardingSection() {
         if (v >= 3) {
           modeRef.current = 'idle'
           setTimeout(() => {
-            const target = container.offsetTop + container.offsetHeight + 100
+            const totalScroll = container.offsetHeight - window.innerHeight
+            const target = container.offsetTop + totalScroll + Math.round(window.innerHeight * 0.65)
             const startY = window.scrollY
             const dist = target - startY
             let t0: number | null = null
@@ -326,10 +327,12 @@ function OnboardingSection() {
 
   const headerOpacity = p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36))
   const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
-  const headerExitY   = lp(0, -56, inv(p, 0.22, 0.36))
+  const headerExitY   = lp(0, -140, inv(p, 0.22, 0.36))
   const headerY       = headerEnterY + headerExitY
   const cardsOpacity  = lp(0, 1, inv(p, 0.14, 0.28))
   const cardsEnterY   = lp(72, 0, inv(p, 0.14, 0.30))
+  /* start 64px below center so there's gap with header; settle to center by zoom */
+  const cardsShift    = lp(64, 0, inv(p, 0.14, 0.58))
   const panelScale    = lp(1, 1.7, inv(p, 0.34, 0.58))
   const labelsOpacity = inv(p, 0.16, 0.26)
   const exitY         = lp(0, -104, inv(p, 0.94, 1.0))
@@ -370,7 +373,7 @@ function OnboardingSection() {
         {/* ② Cards + labels — centered in viewport, shifted 80px up */}
         <div style={{
           opacity: cardsOpacity,
-          transform: `translateY(${cardsEnterY - 80}px) scale(${panelScale})`,
+          transform: `translateY(${cardsEnterY + cardsShift}px) scale(${panelScale})`,
           transformOrigin: 'center center',
           maxWidth: 1100, width: '100%', padding: '0 24px',
         }}>
