@@ -319,7 +319,7 @@ function OnboardingSection() {
   const va = virtualAnim
 
   /* exit spans full remaining scroll budget (p=0.59→1.0) so section fades as PR rises in */
-  const exitT         = inv(p, 0.59, 0.74)
+  const exitT         = inv(p, 0.59, 1.0)
   const exitY         = lp(0, -100, exitT)
   const exitFade      = lp(1, 0, exitT)
 
@@ -348,7 +348,7 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '800vh', position: 'relative', background: '#080910' }}>
+    <div ref={containerRef} style={{ height: '680vh', position: 'relative', background: '#080910' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
