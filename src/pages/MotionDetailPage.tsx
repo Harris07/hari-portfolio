@@ -340,14 +340,13 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '450vh', position: 'relative' }}>
+    <div ref={containerRef} style={{ height: '600vh', position: 'relative' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         opacity: exitFade,
         transform: `translateY(${exitY}vh)`,
-        zIndex: 2,
       }}>
 
         {/* ① Header — absolutely positioned so it never pushes cards down */}
@@ -529,7 +528,7 @@ export default function MotionDetailPage() {
       <OnboardingSection />
 
       {/* ── PULL TO REFRESH ── */}
-      <div style={{ marginTop: '-100vh', position: 'relative', zIndex: 1 }}>
+      <div style={{ marginTop: '-100vh' }}>
       <AnimSection
         label="Pull to Refresh"
         heading="The gesture that earns delight."
