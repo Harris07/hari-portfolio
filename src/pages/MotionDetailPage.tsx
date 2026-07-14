@@ -133,11 +133,17 @@ function FadeSection({ children, className = '', delay = 0, startY = 40 }: { chi
 function SectionHeader({ label, heading, body }: { label: string; heading: string; body: string }) {
   return (
     <div className="text-center mb-10 max-w-2xl mx-auto">
-      <p className="text-xs uppercase tracking-[0.28em] font-semibold mb-3" style={{ color: A }}>{label}</p>
-      <h2 className="font-semibold leading-tight mb-4" style={{ color: WHITE, fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
-        {heading}
-      </h2>
-      <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>{body}</p>
+      <FadeSection delay={0} startY={20}>
+        <p className="text-xs uppercase tracking-[0.28em] font-semibold mb-3" style={{ color: A }}>{label}</p>
+      </FadeSection>
+      <FadeSection delay={0.12} startY={32}>
+        <h2 className="font-semibold leading-tight mb-4" style={{ color: WHITE, fontSize: 'clamp(1.7rem, 3vw, 2.4rem)' }}>
+          {heading}
+        </h2>
+      </FadeSection>
+      <FadeSection delay={0.22} startY={20}>
+        <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>{body}</p>
+      </FadeSection>
     </div>
   )
 }
@@ -422,15 +428,13 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
   return (
     <section style={{ background: sectionBg ?? BG, paddingTop: 100, paddingBottom: 100 }}>
       <div className="max-w-4xl mx-auto px-6 md:px-12">
-        <FadeSection delay={0} startY={48}>
-          <SectionHeader label={label} heading={heading} body={body} />
-        </FadeSection>
-        <FadeSection delay={0.5} startY={64}>
-          <div ref={gridRef} className={`grid ${gridClass} gap-4`}
-            style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
-            {items.map((item, i) => (
-              naked ? (
-                <div key={i}>
+        <SectionHeader label={label} heading={heading} body={body} />
+        <div ref={gridRef} className={`grid ${gridClass} gap-4`}
+          style={{ maxWidth: cols === 1 ? 560 : '100%', margin: '0 auto' }}>
+          {items.map((item, i) => (
+            naked ? (
+              <FadeSection key={i} delay={i * 0.15} startY={56}>
+                <div>
                   {item.type === 'lottie' ? (
                     <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
                   ) : (
@@ -440,26 +444,28 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                   )}
                   <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
                 </div>
-              ) : (
-              <div key={i}>
-                <div className="rounded-2xl overflow-hidden"
-                  style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, aspectRatio: '1/1' }}>
-                  <div style={{ padding: item.innerPadding ?? 0, height: '100%', boxSizing: 'border-box' }}>
-                    {item.type === 'lottie' ? (
-                      <LottiePlayer src={item.src} active loop style={{ height: '100%' }} />
-                    ) : (
-                      <img key={restartGifsOnEnter ? enterCountRef.current : i}
-                        src={item.src} alt={item.label}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    )}
+              </FadeSection>
+            ) : (
+              <FadeSection key={i} delay={i * 0.15} startY={56}>
+                <div>
+                  <div className="rounded-2xl overflow-hidden"
+                    style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, aspectRatio: '1/1' }}>
+                    <div style={{ padding: item.innerPadding ?? 0, height: '100%', boxSizing: 'border-box' }}>
+                      {item.type === 'lottie' ? (
+                        <LottiePlayer src={item.src} active loop style={{ height: '100%' }} />
+                      ) : (
+                        <img key={restartGifsOnEnter ? enterCountRef.current : i}
+                          src={item.src} alt={item.label}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                      )}
+                    </div>
                   </div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3 text-center" style={{ color: A }}>{item.label}</p>
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3 text-center" style={{ color: A }}>{item.label}</p>
-              </div>
-              )
-            ))}
-          </div>
-        </FadeSection>
+              </FadeSection>
+            )
+          ))}
+        </div>
       </div>
     </section>
   )
