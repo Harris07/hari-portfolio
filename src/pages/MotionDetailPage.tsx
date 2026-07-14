@@ -454,7 +454,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                     )}
                   </div>
                 </div>
-                <p className="text-xs font-light mt-3" style={{ color: MUTED }}>{item.label}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3" style={{ color: A }}>{item.label}</p>
               </div>
               )
             ))}
@@ -585,7 +585,7 @@ export default function MotionDetailPage() {
         heading="Making waiting feel worth it."
         body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
         items={[
-          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh' },
+          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh', innerPadding: '7.5%' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
           { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', innerPadding: '15%' },
         ]}
