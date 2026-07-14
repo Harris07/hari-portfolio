@@ -407,11 +407,11 @@ function OnboardingSection() {
 }
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
-type GridItem = { type: 'lottie' | 'gif'; src: string; label: string }
+type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; mediaStyle?: React.CSSProperties }
 function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false }: {
   label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean
 }) {
-  const gridClass = cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
+  const gridClass = cols === 3 ? 'grid-cols-1 sm:grid-cols-3' : cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
   const gridRef = useRef(null)
   const inView = useInView(gridRef, { once: false, margin: '0px' })
   const enterCountRef = useRef(0)
@@ -432,11 +432,11 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
               naked ? (
                 <div key={i}>
                   {item.type === 'lottie' ? (
-                    <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
+                    <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16, ...item.mediaStyle }} />
                   ) : (
                     <img key={restartGifsOnEnter ? enterCountRef.current : i}
                       src={item.src} alt={item.label}
-                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16 }} />
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16, ...item.mediaStyle }} />
                   )}
                   <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
                 </div>
@@ -444,11 +444,11 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
               <div key={i} className="rounded-2xl overflow-hidden"
                 style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                 {item.type === 'lottie' ? (
-                  <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1' }} />
+                  <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', ...item.mediaStyle }} />
                 ) : (
                   <img key={restartGifsOnEnter ? enterCountRef.current : i}
                     src={item.src} alt={item.label}
-                    style={{ width: '100%', display: 'block', height: 'auto' }} />
+                    style={{ width: '100%', display: 'block', height: 'auto', ...item.mediaStyle }} />
                 )}
                 <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
                   <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
@@ -578,13 +578,14 @@ export default function MotionDetailPage() {
 
       {/* ── REWARDS & LOADERS ── */}
       <AnimSection
+        cols={3}
         label="Rewards & Loaders"
         heading="Making waiting feel worth it."
         body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
         items={[
           { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
-          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader' },
+          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', mediaStyle: { aspectRatio: '1.1/1', transform: 'scale(0.72)', transformOrigin: 'center center' } },
         ]}
       />
 
