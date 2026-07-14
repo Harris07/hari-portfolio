@@ -415,7 +415,7 @@ function OnboardingSection() {
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
 type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; innerPadding?: string }
 function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false, sectionBg, paddingY = 100, glow = false, maxWidth }: {
-  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string; paddingY?: number; glow?: boolean; maxWidth?: number
+  label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean; sectionBg?: string; paddingY?: number; glow?: boolean; maxWidth?: number | string
 }) {
   const gridClass = cols === 3 ? 'grid-cols-1 sm:grid-cols-3' : cols === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'
   const gridRef = useRef(null)
@@ -594,7 +594,7 @@ export default function MotionDetailPage() {
       <AnimSection
         naked
         cols={1}
-        maxWidth={480}
+        maxWidth="100%"
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
