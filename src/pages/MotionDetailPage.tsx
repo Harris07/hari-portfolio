@@ -226,8 +226,9 @@ function OnboardingSection() {
             const startY = window.scrollY
             const dist = target - startY
             let t0: number | null = null
-            const DURATION = 1100
-            const ease = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+            const DURATION = 900
+            // cubic ease-out: starts at pace, decelerates smoothly to stop
+            const ease = (t: number) => 1 - Math.pow(1 - t, 3)
             const scrollStep = (now: number) => {
               if (t0 === null) t0 = now
               const t = Math.min(1, (now - t0) / DURATION)
@@ -235,7 +236,7 @@ function OnboardingSection() {
               if (t < 1) requestAnimationFrame(scrollStep)
             }
             requestAnimationFrame(scrollStep)
-          }, 300)
+          }, 80)
           return
         }
         const card = Math.min(2, Math.floor(v))
