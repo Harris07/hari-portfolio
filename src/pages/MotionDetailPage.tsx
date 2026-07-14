@@ -594,7 +594,7 @@ export default function MotionDetailPage() {
       <AnimSection
         naked
         cols={1}
-        maxWidth={360}
+        maxWidth={480}
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
