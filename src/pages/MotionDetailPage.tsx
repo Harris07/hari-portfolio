@@ -407,7 +407,7 @@ function OnboardingSection() {
 }
 
 /* ─── Generic animation section (2-col or 1-col grid) ─── */
-type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; mediaStyle?: React.CSSProperties }
+type GridItem = { type: 'lottie' | 'gif'; src: string; label: string; innerPadding?: string }
 function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter = false, naked = false }: {
   label: string; heading: string; body: string; items: GridItem[]; cols?: number; restartGifsOnEnter?: boolean; naked?: boolean
 }) {
@@ -432,27 +432,29 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
               naked ? (
                 <div key={i}>
                   {item.type === 'lottie' ? (
-                    <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16, ...item.mediaStyle }} />
+                    <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
                   ) : (
                     <img key={restartGifsOnEnter ? enterCountRef.current : i}
                       src={item.src} alt={item.label}
-                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16, ...item.mediaStyle }} />
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16 }} />
                   )}
                   <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
                 </div>
               ) : (
-              <div key={i} className="rounded-2xl overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
-                {item.type === 'lottie' ? (
-                  <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', ...item.mediaStyle }} />
-                ) : (
-                  <img key={restartGifsOnEnter ? enterCountRef.current : i}
-                    src={item.src} alt={item.label}
-                    style={{ width: '100%', display: 'block', height: 'auto', ...item.mediaStyle }} />
-                )}
-                <div className="px-4 py-3" style={{ borderTop: `1px solid ${BORDER}` }}>
-                  <p className="text-xs font-light" style={{ color: MUTED }}>{item.label}</p>
+              <div key={i}>
+                <div className="rounded-2xl overflow-hidden"
+                  style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}`, aspectRatio: '1/1' }}>
+                  <div style={{ padding: item.innerPadding ?? 0, height: '100%', boxSizing: 'border-box' }}>
+                    {item.type === 'lottie' ? (
+                      <LottiePlayer src={item.src} active loop style={{ height: '100%' }} />
+                    ) : (
+                      <img key={restartGifsOnEnter ? enterCountRef.current : i}
+                        src={item.src} alt={item.label}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    )}
+                  </div>
                 </div>
+                <p className="text-xs font-light mt-3" style={{ color: MUTED }}>{item.label}</p>
               </div>
               )
             ))}
@@ -585,7 +587,7 @@ export default function MotionDetailPage() {
         items={[
           { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
-          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', mediaStyle: { aspectRatio: '1.1/1', width: '85%', margin: '0 auto' } },
+          { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', innerPadding: '15%' },
         ]}
       />
 
