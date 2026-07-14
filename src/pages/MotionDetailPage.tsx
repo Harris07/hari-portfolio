@@ -220,23 +220,7 @@ function OnboardingSection() {
         const v = vaRef.current
         if (v >= 3) {
           modeRef.current = 'idle'
-          setTimeout(() => {
-            const totalScroll = container.offsetHeight - window.innerHeight
-            const target = container.offsetTop + totalScroll + Math.round(window.innerHeight * 0.65)
-            const startY = window.scrollY
-            const dist = target - startY
-            let t0: number | null = null
-            const DURATION = 900
-            // cubic ease-out: starts at pace, decelerates smoothly to stop
-            const ease = (t: number) => 1 - Math.pow(1 - t, 3)
-            const scrollStep = (now: number) => {
-              if (t0 === null) t0 = now
-              const t = Math.min(1, (now - t0) / DURATION)
-              window.scrollTo(0, startY + dist * ease(t))
-              if (t < 1) requestAnimationFrame(scrollStep)
-            }
-            requestAnimationFrame(scrollStep)
-          }, 80)
+          put(getP())  // sync progress with actual scroll so exit plays on next natural scroll
           return
         }
         const card = Math.min(2, Math.floor(v))
@@ -326,10 +310,10 @@ function OnboardingSection() {
   const p  = progress
   const va = virtualAnim
 
-  /* exit starts at p=0.76 so it overlaps with the auto-scroll, not just the tail */
-  const exitT         = inv(p, 0.76, 0.97)
+  /* exit begins immediately after animations (p=0.59) — user's natural scroll drives it */
+  const exitT         = inv(p, 0.59, 0.84)
   const exitY         = lp(0, -108, exitT)
-  const exitFade      = lp(1, 0, inv(p, 0.76, 0.90))  // content fades before section fully exits
+  const exitFade      = lp(1, 0, inv(p, 0.59, 0.76))  // content fades first, then section clears
 
   const headerOpacity = exitFade * (p < 0.15 ? lp(0, 1, inv(p, 0, 0.08)) : lp(1, 0, inv(p, 0.22, 0.36)))
   const headerEnterY  = lp(48, 0, inv(p, 0, 0.14))
