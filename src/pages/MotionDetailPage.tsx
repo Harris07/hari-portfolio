@@ -529,20 +529,8 @@ export default function MotionDetailPage() {
       {/* ── ONBOARDING ── */}
       <OnboardingSection />
 
-      {/* ── PULL TO REFRESH ── */}
-      <div style={{ marginTop: '-100vh' }}>
-      <AnimSection
-        label="Pull to Refresh"
-        heading="The gesture that earns delight."
-        body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
-        items={[
-          { type: 'gif', src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
-          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
-        ]}
-      />
-      </div>
-
       {/* ── APP ICON REVEAL ── */}
+      <div style={{ marginTop: '-100vh' }}>
       <AnimSection
         label="App Icon Reveal"
         heading="Launching a new face to the world."
@@ -550,6 +538,18 @@ export default function MotionDetailPage() {
         items={[
           { type: 'gif', src: '/animations/app-icon-reveal-v1-opt.gif', label: 'Direction 01' },
           { type: 'gif', src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Direction 02' },
+        ]}
+      />
+      </div>
+
+      {/* ── PULL TO REFRESH ── */}
+      <AnimSection
+        label="Pull to Refresh"
+        heading="The gesture that earns delight."
+        body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
+        items={[
+          { type: 'gif', src: '/animations/pull-to-refresh-hackathon-opt.gif', label: 'Hackathon version' },
+          { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Brand version' },
         ]}
       />
 
