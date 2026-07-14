@@ -350,8 +350,11 @@ function OnboardingSection() {
         transform: `translateY(${exitY}vh)`,
       }}>
 
-        {/* ① Header — slides in, fades out before zoom */}
-        <div style={{ opacity: headerOpacity, transform: `translateY(${headerY}px)`, width: '100%', pointerEvents: 'none' }}>
+        {/* ① Header — absolutely positioned so it never pushes cards down */}
+        <div style={{
+          position: 'absolute', top: '10%', left: 0, right: 0,
+          opacity: headerOpacity, transform: `translateY(${headerY}px)`, pointerEvents: 'none',
+        }}>
           <SectionHeader
             label="Onboarding"
             heading="First impressions that move."
@@ -359,7 +362,7 @@ function OnboardingSection() {
           />
         </div>
 
-        {/* ② Cards + labels — scale together, shifted 80px down */}
+        {/* ② Cards + labels — centered in viewport, shifted 80px up */}
         <div style={{
           opacity: cardsOpacity,
           transform: `translateY(${cardsEnterY - 80}px) scale(${panelScale})`,
