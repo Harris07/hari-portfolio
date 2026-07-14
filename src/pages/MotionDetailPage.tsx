@@ -147,7 +147,7 @@ function OnboardingSection() {
         {ONBOARDING_ITEMS.map((item, i) => (
           <div key={i} style={{ flex: 1, minWidth: 0, opacity: inView && activeCard === i ? 1 : 0.1, transition: 'opacity 0.4s ease' }}>
             {/* Card */}
-            <div style={{ overflow: 'hidden', borderRadius: 12, background: ONBOARDING_BG[i] }}>
+            <div style={{ overflow: 'hidden', background: ONBOARDING_BG[i] }}>
               <div style={{ paddingTop: 80, paddingBottom: 80 }}>
                 <LottiePlayer
                   src={item.src}
