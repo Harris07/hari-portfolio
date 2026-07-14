@@ -442,7 +442,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                       src={item.src} alt={item.label}
                       style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 26 }} />
                   )}
-                  <p className="text-xs font-light mt-2" style={{ color: MUTED }}>{item.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] mt-3 text-center" style={{ color: A }}>{item.label}</p>
                 </div>
               </FadeSection>
             ) : (
