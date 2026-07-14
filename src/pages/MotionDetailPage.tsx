@@ -348,14 +348,13 @@ function OnboardingSection() {
   }
 
   return (
-    <div ref={containerRef} style={{ height: '600vh', position: 'relative', background: '#080910' }}>
+    <div ref={containerRef} style={{ height: '600vh', position: 'relative', background: '#0a0b10' }}>
       <section style={{
         position: 'sticky', top: 0, height: '100vh', overflow: 'hidden',
         background: '#080910', display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         opacity: exitFade,
         transform: `translateY(${exitY}vh)`,
-        zIndex: 2,
       }}>
 
         {/* ① Header — absolutely positioned so it never pushes cards down */}
@@ -566,7 +565,7 @@ export default function MotionDetailPage() {
       <OnboardingSection />
 
       {/* ── BRAND BANNER ── */}
-      <div style={{ marginTop: '-300vh', position: 'relative', zIndex: 1 }}>
+      <div style={{ marginTop: '-100vh', position: 'relative', zIndex: 1 }}>
       <AnimSection
         naked
         paddingY={200}
