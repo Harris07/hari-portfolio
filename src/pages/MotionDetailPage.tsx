@@ -557,8 +557,22 @@ export default function MotionDetailPage() {
       {/* ── ONBOARDING ── */}
       <OnboardingSection />
 
-      {/* ── APP ICON REVEAL ── */}
+      {/* ── BRAND BANNER ── */}
       <div style={{ marginTop: '-100vh' }}>
+      <AnimSection
+        naked
+        sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
+        label="Brand Banner"
+        heading="Welcome to Poshmark."
+        body="The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community."
+        cols={1}
+        items={[
+          { type: 'gif', src: '/animations/welcome-banner-opt.gif', label: 'Welcome banner' },
+        ]}
+      />
+      </div>
+
+      {/* ── APP ICON REVEAL ── */}
       <AnimSection
         restartGifsOnEnter
         label="App Icon Reveal"
@@ -569,7 +583,6 @@ export default function MotionDetailPage() {
           { type: 'gif', src: '/animations/app-icon-reveal-v2-opt.gif', label: 'Particle Burst' },
         ]}
       />
-      </div>
 
       {/* ── PULL TO REFRESH ── */}
       <AnimSection
@@ -594,19 +607,6 @@ export default function MotionDetailPage() {
           { type: 'lottie', src: '/animations/pull-to-refresh-brand.json', label: 'Pull to refresh', innerPadding: '15%' },
           { type: 'lottie', src: '/animations/gift-box.json', label: 'Gift box reveal' },
           { type: 'lottie', src: '/animations/partner-loader.json', label: 'Partner loader', innerPadding: '15%' },
-        ]}
-      />
-
-      {/* ── BRAND BANNER ── */}
-      <AnimSection
-        naked
-        sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
-        label="Brand Banner"
-        heading="Welcome to Poshmark."
-        body="The welcome banner introduces new users with energy and warmth — the motion equivalent of opening a door to a community."
-        cols={1}
-        items={[
-          { type: 'gif', src: '/animations/welcome-banner-opt.gif', label: 'Welcome banner' },
         ]}
       />
 
