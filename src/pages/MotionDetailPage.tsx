@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
@@ -150,51 +150,47 @@ function OnboardingSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const placeholderRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
 
-  /* Mobile detection */
+  /* All scroll state in a single ref — survives re-entries */
+  const s = useRef({
+    playhead: 0,
+    velocity: 0,
+    locked: false,
+    canLock: true,        // reset after each release so section can be re-entered
+    fromBottom: false,    // direction section was entered from
+    rafId: 0,
+    lockScrollY: 0,
+    touchY: 0,
+  })
+
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
-
-  /* Mobile: sequential auto-play */
-  const inView = useInView(sectionRef, { once: true, margin: '-80px' })
-  const [activeCard, setActiveCard] = useState(0)
-  const advance = useCallback(() => setActiveCard(c => (c + 1) % 3), [])
-
-  /* Desktop: scroll-lock + virtual playhead */
-  useEffect(() => {
-    if (isMobile) return
     const section = sectionRef.current
     const placeholder = placeholderRef.current
     if (!section || !placeholder) return
 
-    let playhead = 0
-    let velocity = 0
-    let locked = false
-    let released = false
-    let rafId = 0
-    let lockScrollY = 0
-    const BASE = 0.003
-    const FRICTION = 0.95
+    const BASE = 0.003      // minimum forward speed when not scrolling
+    const FRICTION = 0.94
 
+    /* ── RAF tick ── */
     const tick = () => {
-      velocity = Math.max(velocity, BASE)
-      velocity *= FRICTION
-      playhead = Math.min(1, playhead + velocity)
-      setProgress(playhead)
-      if (playhead >= 1) { release(); return }
-      rafId = requestAnimationFrame(tick)
+      const st = s.current
+      // Minimum speed in the entry direction (so animation always completes)
+      if (!st.fromBottom && st.velocity >= 0) st.velocity = Math.max(st.velocity, BASE)
+      if (st.fromBottom && st.velocity <= 0) st.velocity = Math.min(st.velocity, -BASE)
+
+      st.velocity *= FRICTION
+      st.playhead = Math.min(1, Math.max(0, st.playhead + st.velocity))
+      setProgress(st.playhead)
+
+      if (st.playhead >= 1) { releaseForward(); return }
+      if (st.playhead <= 0) { releaseBackward(); return }
+      st.rafId = requestAnimationFrame(tick)
     }
 
-    const lock = () => {
-      if (locked || released) return
-      locked = true
-      lockScrollY = window.scrollY
-      placeholder.style.height = section.offsetHeight + 'px'
+    const applyFixed = () => {
+      const st = s.current
+      st.lockScrollY = window.scrollY
+      placeholder.style.height = window.innerHeight + 'px'
       placeholder.style.display = 'block'
       section.style.position = 'fixed'
       section.style.top = '0'
@@ -202,59 +198,112 @@ function OnboardingSection() {
       section.style.width = '100%'
       section.style.zIndex = '100'
       document.documentElement.style.overflow = 'hidden'
-      rafId = requestAnimationFrame(tick)
     }
 
-    const release = () => {
-      if (released) return
-      released = true
-      locked = false
-      cancelAnimationFrame(rafId)
+    const restoreFixed = () => {
       section.style.position = ''
       section.style.top = ''
       section.style.left = ''
       section.style.width = ''
       section.style.zIndex = ''
       document.documentElement.style.overflow = ''
-      window.scrollTo({ top: lockScrollY + window.innerHeight + 80, behavior: 'smooth' })
-      setTimeout(() => { placeholder.style.display = 'none' }, 900)
     }
 
+    const lock = (fromBottom: boolean) => {
+      const st = s.current
+      if (st.locked || !st.canLock) return
+      st.locked = true
+      st.canLock = false
+      st.fromBottom = fromBottom
+      st.playhead = fromBottom ? 1 : 0
+      st.velocity = fromBottom ? -BASE * 3 : BASE * 3
+      setProgress(st.playhead)
+      applyFixed()
+      cancelAnimationFrame(st.rafId)
+      st.rafId = requestAnimationFrame(tick)
+    }
+
+    const releaseForward = () => {
+      const st = s.current
+      if (!st.locked) return
+      st.locked = false
+      cancelAnimationFrame(st.rafId)
+      restoreFixed()
+      const target = st.lockScrollY + window.innerHeight + 80
+      window.scrollTo({ top: target, behavior: 'smooth' })
+      // Re-enable locking after scroll settles (allows backward re-entry)
+      setTimeout(() => {
+        placeholder.style.display = 'none'
+        st.canLock = true
+      }, 900)
+    }
+
+    const releaseBackward = () => {
+      const st = s.current
+      if (!st.locked) return
+      st.locked = false
+      cancelAnimationFrame(st.rafId)
+      restoreFixed()
+      const target = Math.max(0, st.lockScrollY - 60)
+      window.scrollTo({ top: target, behavior: 'smooth' })
+      setTimeout(() => {
+        placeholder.style.display = 'none'
+        st.canLock = true
+      }, 900)
+    }
+
+    /* ── Input handlers ── */
     const onWheel = (e: WheelEvent) => {
-      if (!locked) return
+      if (!s.current.locked) return
       e.preventDefault()
-      if (e.deltaY > 0) {
-        velocity += e.deltaY * 0.00015
-        velocity = Math.min(velocity, 0.06)
-      }
+      const delta = e.deltaY * 0.00015
+      s.current.velocity += delta
+      s.current.velocity = Math.max(-0.07, Math.min(0.07, s.current.velocity))
+    }
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (!s.current.locked) return
+      s.current.touchY = e.touches[0].clientY
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (!s.current.locked) return
+      e.preventDefault()
+      const dy = s.current.touchY - e.touches[0].clientY
+      s.current.touchY = e.touches[0].clientY
+      s.current.velocity += dy * 0.0012
+      s.current.velocity = Math.max(-0.07, Math.min(0.07, s.current.velocity))
     }
 
     const onScroll = () => {
-      if (locked || released) return
+      if (s.current.locked) return
       const rect = section.getBoundingClientRect()
-      if (rect.top <= 2) lock()
+      const vh = window.innerHeight
+      // Entering from top (scrolling down)
+      if (rect.top <= 2 && rect.top >= -vh * 0.4) {
+        lock(false)
+      }
+      // Entering from bottom (scrolling up after section)
+      else if (rect.bottom >= vh - 2 && rect.bottom <= vh + section.offsetHeight * 0.6) {
+        lock(true)
+      }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('wheel', onWheel, { passive: false })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: false })
 
     return () => {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('wheel', onWheel)
-      cancelAnimationFrame(rafId)
-      if (locked && !released) {
-        section.style.position = ''
-        section.style.top = ''
-        section.style.left = ''
-        section.style.width = ''
-        section.style.zIndex = ''
-        document.documentElement.style.overflow = ''
-        placeholder.style.display = 'none'
-      }
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      cancelAnimationFrame(s.current.rafId)
+      if (s.current.locked) { restoreFixed(); placeholder.style.display = 'none' }
     }
-  }, [isMobile])
+  }, [])
 
-  /* ── Derived visual values (desktop) ── */
+  /* ── Derived visual values ── */
   const headerOpacity = Math.max(0, 1 - progress * 9)
   const panelScale = 1 + progress * 0.65
   const seeks = [
@@ -268,34 +317,6 @@ function OnboardingSection() {
     progress >= 0.62 ? 1 : 0.1,
   ]
 
-  /* ── MOBILE layout ── */
-  if (isMobile) {
-    return (
-      <section ref={sectionRef} style={{ background: '#080910', paddingTop: 100, paddingBottom: 100 }}>
-        <FadeSection>
-          <SectionHeader label="Onboarding" heading="First impressions that move."
-            body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm." />
-        </FadeSection>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-          {ONBOARDING_ITEMS.map((item, i) => (
-            <div key={i} style={{ minWidth: 0, opacity: inView && activeCard === i ? 1 : 0.1, transition: 'opacity 0.4s ease' }}>
-              <div style={{ overflow: 'hidden', background: ONBOARDING_BG[i] }}>
-                <div style={{ paddingTop: 80, paddingBottom: 80 }}>
-                  <LottiePlayer src={item.src} active={inView && activeCard === i} onComplete={advance} style={{ width: '100%', display: 'block' }} />
-                </div>
-              </div>
-              <div style={{ textAlign: 'center', marginTop: 16, marginBottom: i < 2 ? 40 : 0 }}>
-                <span style={{ display: 'block', fontWeight: 700, fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase', color: A }}>{item.label}</span>
-                <span style={{ display: 'block', fontSize: 12, fontWeight: 300, color: 'rgba(255,255,255,0.5)', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  /* ── DESKTOP layout ── */
   return (
     <>
       <div ref={placeholderRef} style={{ display: 'none', background: '#080910' }} />
@@ -310,13 +331,13 @@ function OnboardingSection() {
           justifyContent: 'center',
           overflow: 'hidden',
         }}>
-        {/* Header fades out as scroll progresses */}
+        {/* Header — fades out as cards zoom in */}
         <div style={{ opacity: headerOpacity, width: '100%', pointerEvents: 'none' }}>
           <SectionHeader label="Onboarding" heading="First impressions that move."
             body="Three-screen onboarding sequence introducing new sellers to Poshmark's core value — listing, earning, and community. Each scene was engineered to be lightweight, loopable, and culturally warm." />
         </div>
 
-        {/* 3 panels — scale up and animate on scroll */}
+        {/* 3 panels — scroll-synced zoom + Lottie seek */}
         <div style={{
           display: 'flex',
           gap: 2,
@@ -338,7 +359,7 @@ function OnboardingSection() {
           ))}
         </div>
 
-        {/* Labels fade out with header */}
+        {/* Labels — fade out with header */}
         <div style={{ opacity: headerOpacity, display: 'flex', gap: 2, maxWidth: 1100, width: '100%', margin: '16px auto 0', padding: '0 24px', pointerEvents: 'none' }}>
           {ONBOARDING_ITEMS.map((item, i) => (
             <div key={i} style={{ flex: 1, textAlign: 'center', minWidth: 0 }}>
