@@ -611,6 +611,7 @@ export default function MotionDetailPage() {
       {/* ── REWARDS & LOADERS ── */}
       <AnimSection
         cols={3}
+        paddingY={150}
         label="Rewards & Loaders"
         heading="Making waiting feel worth it."
         body="Loaders that don't feel like waiting. The gift box turns reward reveals into celebrations. The partner loader transforms a necessary pause into a brand touchpoint."
