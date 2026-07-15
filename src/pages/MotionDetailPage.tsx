@@ -487,8 +487,8 @@ export default function MotionDetailPage() {
         style={{ background: 'rgba(13,14,18,0.88)', backdropFilter: 'blur(20px)', borderBottom: `1px solid ${BORDER}` }}>
         <Link to="/"
           className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest hover:opacity-50 transition-opacity"
-          style={{ color: MUTED, textDecoration: 'none' }}>
-          <ArrowLeft size={14} /> Back
+          style={{ color: WHITE, textDecoration: 'none' }}>
+          <ArrowLeft size={14} /> Home
         </Link>
         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
           style={{ color: A, background: AB, border: `1px solid ${AL}` }}>POSHMARK</span>

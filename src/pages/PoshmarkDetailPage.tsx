@@ -132,7 +132,7 @@ export default function PoshmarkDetailPage() {
         style={{ background: 'rgba(13,14,18,0.82)', backdropFilter: 'blur(18px)', borderBottom: `1px solid ${BORDER}` }}>
         <Link to="/" className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest hover:opacity-50 transition-opacity"
           style={{ color: WHITE, textDecoration: 'none' }}>
-          <ArrowLeft size={13} /> Portfolio
+          <ArrowLeft size={13} /> Home
         </Link>
         <Chip>Poshmark</Chip>
       </nav>
