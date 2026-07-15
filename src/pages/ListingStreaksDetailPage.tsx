@@ -452,7 +452,7 @@ export default function ListingStreaksDetailPage() {
                   tracks: 'Daily XP-earning lesson',
                   hook: 'Flame in the nav header — visible before the user even starts a lesson. Loss aversion is the engine: protecting the number becomes the motivation.',
                   mechanic: 'Streak Freeze (purchasable), hidden grace window, post-hoc Streak Repair',
-                  icon: '🔥',
+                  logo: '/images/logo-duolingo.svg',
                 },
                 {
                   app: 'Snapchat',
@@ -461,7 +461,7 @@ export default function ListingStreaksDetailPage() {
                   tracks: 'Mutual daily Snap exchange between two friends',
                   hook: 'Bilateral streak — both users must act within 24 hrs. A ⏳ hourglass appears ~4 hrs before expiry, creating a micro-deadline that drives immediate action.',
                   mechanic: '1 lifetime free restore (Snapchat+ gets 5/month), no grace period',
-                  icon: '👻',
+                  logo: '/images/logo-snapchat.svg',
                 },
                 {
                   app: 'Habitica',
@@ -470,7 +470,7 @@ export default function ListingStreaksDetailPage() {
                   tracks: 'User-defined daily tasks on a self-set schedule',
                   hook: 'Compounding reward — each streak day adds +1% gold value to that task. Missing a day damages your avatar HP and harms your party members.',
                   mechanic: 'No freeze. RPG damage is the penalty — social accountability at group scale.',
-                  icon: '⚔️',
+                  logo: '/images/logo-habitica.svg',
                 },
                 {
                   app: 'BeReal',
@@ -479,7 +479,7 @@ export default function ListingStreaksDetailPage() {
                   tracks: 'Daily dual-camera post within a random 2-minute window',
                   hook: '5-day minimum before the flame icon appears — front-loads commitment so only proven users see the mechanic. Late posts within the same day still count.',
                   mechanic: 'No restore or freeze. Zero-tolerance reset, but late posts add a flexibility buffer.',
-                  icon: '📸',
+                  logo: '/images/logo-bereal.svg',
                 },
                 {
                   app: 'LinkedIn Games',
@@ -488,9 +488,9 @@ export default function ListingStreaksDetailPage() {
                   tracks: 'Daily play of in-app word/logic games (Queens, Pinpoint)',
                   hook: "The streak is a Trojan horse — 2-minute games are a low-friction daily touchpoint that drives broader app opens on a platform users don't naturally visit daily.",
                   mechanic: "No freeze. Low session length is itself the forgiveness — barrier to maintaining is very low.",
-                  icon: '💼',
+                  logo: '/images/logo-linkedin.svg',
                 },
-              ].map(({ app, tag, image, tracks, hook, mechanic, icon }) => (
+              ].map(({ app, tag, image, tracks, hook, mechanic, logo }) => (
                 <div key={app} className="rounded-2xl overflow-hidden flex flex-col"
                   style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                   {/* Reference image */}
@@ -501,7 +501,7 @@ export default function ListingStreaksDetailPage() {
                   {/* Card content */}
                   <div className="p-6 flex flex-col gap-4 flex-1">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">{icon}</span>
+                      <img src={logo} alt={app} style={{ width: 28, height: 28, objectFit: 'contain' }} />
                       <div>
                         <p className="font-semibold text-sm" style={{ color: WHITE }}>{app}</p>
                         <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.28)' }}>{tag}</p>
