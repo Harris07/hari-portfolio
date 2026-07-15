@@ -443,7 +443,7 @@ function AnimSection({ label, heading, body, items, cols = 2, restartGifsOnEnter
                     <LottiePlayer src={item.src} active loop style={{ aspectRatio: '1.1/1', borderRadius: 16 }} />
                   ) : item.type === 'video' ? (
                     <video src={item.src} autoPlay loop muted playsInline
-                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 26 }} />
+                      style={{ width: '100%', display: 'block', height: 'auto', borderRadius: 16 }} />
                   ) : (
                     <img key={restartGifsOnEnter ? enterCountRef.current : i}
                       src={item.src} alt={item.label}
