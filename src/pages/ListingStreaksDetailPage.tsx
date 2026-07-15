@@ -524,20 +524,6 @@ export default function ListingStreaksDetailPage() {
                   </div>
                 </div>
               ))}
-
-              {/* Synthesis card — full width */}
-              <div className="md:col-span-2 p-8 rounded-2xl flex flex-col md:flex-row gap-6 items-start"
-                style={{ background: 'rgba(201,23,126,0.06)', border: '1px solid rgba(201,23,126,0.2)' }}>
-                <div className="flex-shrink-0">
-                  <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: A }}>Synthesis</p>
-                  <p className="font-semibold leading-snug" style={{ color: WHITE, fontSize: 'clamp(1rem,1.5vw,1.2rem)', maxWidth: 320 }}>The streak counter must be visible before the user acts — not after.</p>
-                </div>
-                <p className="text-sm font-light leading-relaxed" style={{ color: MUTED }}>
-                  Every effective streak places the number where users see it before deciding whether to engage.
-                  For Poshmark sellers, this meant surfacing the streak on the listing entry point — not buried in a profile or a dashboard tab.
-                  The bilateral accountability from Snapchat and the escalating reward model from Habitica both informed how we designed the streak's social layer and reward tiers.
-                </p>
-              </div>
             </div>
           </FadeUp>
         </div>
