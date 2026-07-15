@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, TrendingUp, ShieldCheck, BarChart2, Handshake } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 import { PROJECTS } from '../data/projects'
 
@@ -592,34 +592,36 @@ export default function ListingStreaksDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {[
                 {
-                  icon: '💰',
+                  Icon: TrendingUp,
                   title: 'Tie streaks to earnings, not activity',
                   body: 'Design the streak around listings that sell — not just any listing. When sellers see a direct line between streak consistency and income, the mechanic becomes self-reinforcing. The motivation is intrinsic.',
                   tag: 'Core differentiator',
                 },
                 {
-                  icon: '🛡️',
+                  Icon: ShieldCheck,
                   title: 'Introduce a grace period as a feature, not a workaround',
                   body: "Frame a 24-hour grace window as a built-in seller courtesy — a recognition that life happens. This removes anxiety without removing stakes, and models Poshmark as a product that's on the seller's side.",
                   tag: 'Retention lever',
                 },
                 {
-                  icon: '📈',
+                  Icon: BarChart2,
                   title: 'Build a mastery arc into the streak progression',
                   body: 'Design milestones at 7, 30, 90, and 365 days with unlockable benefits — early access, promoted listings, seller badges. Sellers should feel they are leveling up, not just surviving.',
                   tag: 'Engagement depth',
                 },
                 {
-                  icon: '🤝',
+                  Icon: Handshake,
                   title: 'Add a social layer unique to commerce',
                   body: "Buyer visibility into a seller's streak creates a trust signal that has no equivalent in any competitor. A seller's streak length becomes a proxy for reliability — bridging the social accountability gap that only Snapchat comes close to solving.",
                   tag: 'Unique to Poshmark',
                 },
-              ].map(({ icon, title, body, tag }) => (
+              ].map(({ Icon, title, body, tag }) => (
                 <div key={title} className="p-7 rounded-2xl flex flex-col gap-4"
                   style={{ background: 'rgba(201,23,126,0.04)', border: '1px solid rgba(201,23,126,0.15)' }}>
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-2xl">{icon}</span>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(201,23,126,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon size={20} color={A} strokeWidth={2} />
+                    </div>
                     <span className="text-xs uppercase tracking-widest px-3 py-1 rounded-full"
                       style={{ background: 'rgba(201,23,126,0.12)', color: A }}>{tag}</span>
                   </div>
