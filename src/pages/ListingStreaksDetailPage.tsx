@@ -554,11 +554,6 @@ export default function ListingStreaksDetailPage() {
                 },
                 {
                   number: '02',
-                  title: 'All-or-nothing reset kills momentum',
-                  body: 'Most platforms (BeReal, Habitica) offer zero forgiveness — a single missed day destroys weeks of progress. This creates anxiety rather than motivation, and drives abandonment at the exact moment re-engagement matters most.',
-                },
-                {
-                  number: '03',
                   title: 'Social pressure is generic or absent',
                   body: "Snapchat's bilateral system works because both parties feel the cost. But no commerce platform has translated that mutual accountability into a seller-to-buyer or seller-to-seller context — leaving a massive social retention lever untapped.",
                 },
