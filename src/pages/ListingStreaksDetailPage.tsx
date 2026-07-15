@@ -397,7 +397,7 @@ export default function ListingStreaksDetailPage() {
           </div>
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '14%', d: 'SA AU weekly lister conversion at baseline' },
+              { v: '14%', d: 'of active sellers converted to weekly listers at baseline' },
               { v: '2×', d: 'Target increase in weekly lister conversion' },
               { v: '10%', d: 'Target growth in Habitual Listers' },
             ].map(({ v, d }) => (
