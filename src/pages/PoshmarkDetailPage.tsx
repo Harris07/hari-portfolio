@@ -10,7 +10,7 @@ import BeforeAfterSlider from '../components/BeforeAfterSlider'
 const B = '#00B3FF'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.42)'
+const MUTED = 'rgba(255,255,255,0.65)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 /* ─── animation helpers ─── */
@@ -369,7 +369,7 @@ export default function PoshmarkDetailPage() {
           <FadeUp delay={0.05}>
             <div className="flex flex-wrap items-center gap-3 p-5 rounded-2xl"
               style={{ background: 'rgba(0,179,255,0.05)', border: '1px solid rgba(0,179,255,0.15)' }}>
-              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.4)' }}>Artboard spec</span>
+              <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.65)' }}>Artboard spec</span>
               <div className="flex flex-wrap gap-2">
                 <Spec>48×48px</Spec>
                 <Spec>2px min padding</Spec>
@@ -623,9 +623,9 @@ export default function PoshmarkDetailPage() {
           </FadeUp>
 
           <FadeUp delay={0.2} className="mt-8 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>Background shapes use brand colours at</span>
+            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>Background shapes use brand colours at</span>
             <Spec>Light: 20% opacity</Spec>
-            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>or</span>
+            <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>or</span>
             <Spec>Dark: 50% opacity</Spec>
           </FadeUp>
         </div>
@@ -765,7 +765,7 @@ export default function PoshmarkDetailPage() {
               <div key={l} className="p-6 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid' }}>
                 <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{v}</span>
-                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>{l}</span>
+                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>{l}</span>
               </div>
             ))}
           </FadeUp>

@@ -14,7 +14,7 @@ function BehanceIcon({ size = 18 }: { size?: number }) {
 const Y = '#F1FF58'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.42)'
+const MUTED = 'rgba(255,255,255,0.65)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 function FadeUp({ children, delay = 0, className = '' }: {

@@ -9,7 +9,7 @@ import { PROJECTS } from '../data/projects'
 const A = '#C9177E'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.42)'
+const MUTED = 'rgba(255,255,255,0.65)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 /* ─── helpers ─── */
@@ -244,7 +244,7 @@ function LineChart() {
               return (
                 <g>
                   <rect x={tx} y={ty} width="68" height="48" rx="5" fill="rgba(20,10,20,0.92)" stroke="rgba(201,23,126,0.3)" strokeWidth="1" />
-                  <text x={tx + 8} y={ty + 13} fill="rgba(255,255,255,0.4)" fontSize="8">W{hover.i + 1}</text>
+                  <text x={tx + 8} y={ty + 13} fill="rgba(255,255,255,0.65)" fontSize="8">W{hover.i + 1}</text>
                   <text x={tx + 8} y={ty + 27} fill={A} fontSize="10" fontWeight="700">+{(WEEKLY_DATA[hover.i] - 100).toFixed(1)}%</text>
                   <text x={tx + 8} y={ty + 27} fill="rgba(255,255,255,0.18)" fontSize="8" dy="12">+{(PREV_DATA[hover.i] - 100).toFixed(1)}% prior yr</text>
                 </g>
@@ -289,7 +289,7 @@ function MetricBar({ label, before, after, suffix = '%', delay = 0 }: {
       {/* Context: before → after */}
       <div className="flex items-center gap-2 mb-1">
         <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Pre-launch</span>
-        <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.4)' }}>{before}{suffix}</span>
+        <span className="text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.65)' }}>{before}{suffix}</span>
         <span className="text-xs mx-1" style={{ color: 'rgba(255,255,255,0.2)' }}>→</span>
         <span className="text-sm font-semibold" style={{ color: MUTED }}>Post-launch</span>
         <span className="text-sm font-semibold" style={{ color: MUTED }}>{after}{suffix}</span>

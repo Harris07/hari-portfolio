@@ -10,7 +10,7 @@ const AL = 'rgba(167,139,250,0.18)'
 const AB = 'rgba(167,139,250,0.08)'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.42)'
+const MUTED = 'rgba(255,255,255,0.65)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 /* ─── Lottie player — two modes:
@@ -644,7 +644,7 @@ export default function MotionDetailPage() {
               <div key={label} className="p-6 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid' }}>
                 <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{value}</span>
-                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</span>
+                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>{label}</span>
               </div>
             ))}
           </div>

@@ -9,7 +9,7 @@ import { PROJECTS } from '../data/projects'
 const O = '#FF5C2B'
 const BG = '#0d0e12'
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.42)'
+const MUTED = 'rgba(255,255,255,0.65)'
 const BORDER = 'rgba(255,255,255,0.07)'
 
 /* ─── helpers ─── */
@@ -241,14 +241,14 @@ export default function FitzooDetailPage() {
                       {painPoints.map((pt, j) => (
                         <li key={j} className="flex gap-1.5 items-start">
                           <span className="flex-shrink-0 rounded-full" style={{ width: 3, height: 3, background: 'rgba(255,92,43,0.6)', marginTop: 5 }} />
-                          <span className="font-light leading-snug" style={{ color: 'rgba(255,255,255,0.42)', fontSize: '0.72rem' }}>{pt}</span>
+                          <span className="font-light leading-snug" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.72rem' }}>{pt}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
                     <p className="font-semibold mb-1.5" style={{ color: WHITE, fontSize: '0.63rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Core Need</p>
-                    <p className="font-light leading-snug" style={{ color: 'rgba(255,255,255,0.42)', fontSize: '0.72rem' }}>{need}</p>
+                    <p className="font-light leading-snug" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.72rem' }}>{need}</p>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {tags.map(t => (
@@ -541,7 +541,7 @@ export default function FitzooDetailPage() {
               <div key={l} className="p-6 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid' }}>
                 <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{v}</span>
-                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.4)' }}>{l}</span>
+                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>{l}</span>
               </div>
             ))}
           </FadeUp>
