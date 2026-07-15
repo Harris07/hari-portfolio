@@ -9,6 +9,7 @@ function ScrollToTop() {
 import HeroSection from './components/HeroSection'
 import MarqueeSection from './components/MarqueeSection'
 import AboutSection from './components/AboutSection'
+import ExperienceSection from './components/ExperienceSection'
 import ServicesSection from './components/ServicesSection'
 import ProjectsSection from './components/ProjectsSection'
 import ToolsSection from './components/ToolsSection'
@@ -25,6 +26,7 @@ function HomePage() {
       <HeroSection />
       <MarqueeSection />
       <AboutSection />
+      <ExperienceSection />
       <ServicesSection />
       <ToolsSection />
       <ProjectsSection />
