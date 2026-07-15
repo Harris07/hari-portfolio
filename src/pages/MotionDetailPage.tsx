@@ -602,7 +602,7 @@ export default function MotionDetailPage() {
         sectionBg="linear-gradient(135deg, #0d0e12 0%, #0e0d1a 60%, #0d0e12 100%)"
         label="Pull to Refresh"
         heading="The gesture that earns delight."
-        body="Pull-to-refresh reimagined as a brand moment. The hackathon version was rapid and playful; the production version was polished for scale. Both turned a loading pause into a Poshmark signature."
+        body="Pull-to-refresh reimagined as a brand moment — designed and shipped in a single day during a hackathon. What started as a rapid experiment turned a mundane loading pause into something genuinely delightful."
         items={[
           { type: 'video', src: '/animations/pull-to-refresh.mp4', label: 'Pull to refresh' },
         ]}
