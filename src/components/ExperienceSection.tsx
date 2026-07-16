@@ -435,8 +435,7 @@ export default function ExperienceSection() {
         style={{
           position: 'absolute',
           right: 0,
-          top: 0,
-          bottom: 0,
+          top: 290,
           width: PHOTO_W,
           height: 850,
           borderRadius: '16px 0 0 16px',
