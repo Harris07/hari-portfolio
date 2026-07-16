@@ -387,7 +387,7 @@ export default function ExperienceSection() {
                               {heading}
                             </p>
                             {/* Body */}
-                            <p style={{ color: MUTED, fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', lineHeight: 1.75 }}>
+                            <p style={{ color: MUTED, fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', lineHeight: 1.75, fontFamily: "'Poppins', sans-serif" }}>
                               {body}
                             </p>
                           </div>
