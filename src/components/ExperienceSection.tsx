@@ -94,6 +94,7 @@ const COMPANIES: Company[] = [
         bullets: [
           { Icon: Layers, heading: 'End-to-end Product Design', body: 'Owned the full design of customer-facing web and mobile experiences for a gold investment platform — from discovery to pixel-perfect delivery.' },
           { Icon: BookOpen, heading: 'Design Language & Standards', body: 'Established design guidelines, component standards, and best practices that gave the product a coherent, trustworthy visual language.' },
+          { Icon: Zap, heading: 'Motion Design', body: 'Brought the brand to life through motion — animated the company logo and crafted presentation videos that elevated how the product was communicated to stakeholders and users alike.' },
         ],
       },
     ],
