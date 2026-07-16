@@ -15,27 +15,27 @@ const TRACK_HEIGHT = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 660px
 const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) => i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2)
 // [26, 178, 330, 482, 634]
 
-// Line SVG geometry — line on RIGHT side, bulge goes LEFT toward logos
-const SVG_W = 56
-const LINE_X = 46     // straight line sits on right side (toward content)
-const BULGE_X = 18    // bulge peak on left side (toward logos)
-const CIRCLE_R = 18   // arrow circle radius
-const BULGE_SPREAD = 52 // how far up/down the curve extends
+// Line SVG geometry
+// Line is on the LEFT side; circle is separate on the RIGHT side of the container
+const CONTAINER_W = 96
+const LINE_X = 16       // thin vertical line, left portion
+const BULGE_X = 4       // bulge peak — goes LEFT toward logos
+const CIRCLE_X = 68     // circle center x — right side, next to (not on) the line
+const CIRCLE_R = 28     // +20px diameter vs original 18r (36 → 56 diameter)
+const BULGE_SPREAD = 50
 
 function buildLinePath(arrowY: number): string {
   const top = 0
   const bot = TRACK_HEIGHT
-  // Clamp so curve never extends outside track bounds (fixes top stub)
   const y0 = Math.max(top, arrowY - BULGE_SPREAD)
   const y1 = Math.min(bot, arrowY + BULGE_SPREAD)
-  const sa = arrowY - y0  // available spread above
-  const sb = y1 - arrowY  // available spread below
-
+  const sa = arrowY - y0
+  const sb = y1 - arrowY
   const parts: string[] = [`M ${LINE_X} ${top}`]
   if (y0 > top) parts.push(`L ${LINE_X} ${y0}`)
   parts.push(
-    `C ${LINE_X} ${arrowY - sa * 0.45}, ${BULGE_X} ${arrowY - sa * 0.15}, ${BULGE_X} ${arrowY}`,
-    `C ${BULGE_X} ${arrowY + sb * 0.15}, ${LINE_X} ${arrowY + sb * 0.45}, ${LINE_X} ${y1}`,
+    `C ${LINE_X} ${arrowY - sa * 0.45}, ${BULGE_X} ${arrowY - sa * 0.12}, ${BULGE_X} ${arrowY}`,
+    `C ${BULGE_X} ${arrowY + sb * 0.12}, ${LINE_X} ${arrowY + sb * 0.45}, ${LINE_X} ${y1}`,
   )
   if (y1 < bot) parts.push(`L ${LINE_X} ${bot}`)
   return parts.join(' ')
@@ -228,55 +228,43 @@ export default function ExperienceSection() {
             ))}
           </div>
 
-          {/* ── CENTER: SVG line + bulge + draggable arrow ── */}
+          {/* ── CENTER: SVG line (left) + draggable circle (right, separate) ── */}
           <div
             className="flex-shrink-0 relative select-none"
-            style={{ width: SVG_W, height: TRACK_HEIGHT }}
+            style={{ width: CONTAINER_W, height: TRACK_HEIGHT }}
           >
-            {/* SVG line with animated bulge */}
+            {/* SVG — only draws the vertical line with left-facing bulge */}
             <svg
               ref={svgRef}
-              width={SVG_W}
+              width={CONTAINER_W}
               height={TRACK_HEIGHT}
               style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}
             >
               <defs>
                 <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
-                  <stop offset="0%" stopColor={ACCENT} stopOpacity="0" />
-                  <stop offset="20%" stopColor={ACCENT} stopOpacity="0.6" />
-                  <stop offset="50%" stopColor={ACCENT} stopOpacity="1" />
-                  <stop offset="80%" stopColor={ACCENT} stopOpacity="0.6" />
+                  <stop offset="0%"   stopColor={ACCENT} stopOpacity="0" />
+                  <stop offset="20%"  stopColor={ACCENT} stopOpacity="0.5" />
+                  <stop offset="50%"  stopColor={ACCENT} stopOpacity="1" />
+                  <stop offset="80%"  stopColor={ACCENT} stopOpacity="0.5" />
                   <stop offset="100%" stopColor={ACCENT} stopOpacity="0" />
                 </linearGradient>
-                {/* Glow filter */}
-                <filter id="glow" x="-200%" y="-50%" width="500%" height="200%">
+                <filter id="lineGlow" x="-400%" y="-20%" width="900%" height="140%">
                   <feGaussianBlur stdDeviation="3" result="blur" />
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
-              {/* Glow copy */}
-              <motion.path
-                d={linePath}
-                fill="none"
-                stroke={ACCENT}
-                strokeWidth={4}
-                strokeOpacity={0.3}
-                filter="url(#glow)"
+              {/* Soft glow behind line */}
+              <motion.path d={linePath} fill="none" stroke={ACCENT}
+                strokeWidth={5} strokeOpacity={0.25} filter="url(#lineGlow)"
                 animate={{ d: linePath }}
-                transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }}
-              />
+                transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }} />
               {/* Main line */}
-              <motion.path
-                d={linePath}
-                fill="none"
-                stroke="url(#lineGrad)"
-                strokeWidth={2}
+              <motion.path d={linePath} fill="none" stroke="url(#lineGrad)" strokeWidth={2}
                 animate={{ d: linePath }}
-                transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }}
-              />
+                transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }} />
             </svg>
 
-            {/* Arrow circle — draggable */}
+            {/* Arrow circle — right side, separate from line, draggable */}
             <motion.div
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -286,13 +274,14 @@ export default function ExperienceSection() {
               transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }}
               style={{
                 position: 'absolute',
-                left: BULGE_X - CIRCLE_R,
+                left: CIRCLE_X - CIRCLE_R,
                 top: 0,
                 width: CIRCLE_R * 2,
                 height: CIRCLE_R * 2,
                 borderRadius: '50%',
-                background: ACCENT,
-                boxShadow: `0 0 20px rgba(241,255,88,0.5), 0 4px 12px rgba(0,0,0,0.4)`,
+                background: 'rgba(17,18,0,0.92)',
+                border: `1.5px solid rgba(241,255,88,0.7)`,
+                boxShadow: `0 0 0 5px rgba(241,255,88,0.1), 0 0 18px rgba(241,255,88,0.4), 0 0 40px rgba(241,255,88,0.15)`,
                 cursor: dragging ? 'grabbing' : 'grab',
                 display: 'flex',
                 alignItems: 'center',
@@ -301,10 +290,9 @@ export default function ExperienceSection() {
                 zIndex: 10,
               }}
             >
-              {/* Double chevron up/down */}
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 5.5L7 2L11 5.5" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 8.5L7 12L11 8.5" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6L8 2.5L12 6"    stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 10L8 13.5L12 10" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </motion.div>
           </div>
