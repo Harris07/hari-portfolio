@@ -55,7 +55,7 @@ const COMPANIES: Company[] = [
     id: 'poshmark', name: 'Poshmark', logo: '/images/poshmark-logo.png', initials: 'PM',
     roles: [
       {
-        title: 'Principal Product Designer', period: '2022 – Present',
+        title: 'Product Designer', period: 'Feb 2022 – Present',
         bullets: [
           'Led end-to-end design for seller growth features including Listing Streaks, earning a 14% weekly lister conversion uplift.',
           'Owned the Motion & Animation design system — Pull-to-Refresh, onboarding, and brand moments shipped to millions of users.',
@@ -63,41 +63,59 @@ const COMPANIES: Company[] = [
           'Established design principles and component libraries adopted across 3+ product teams.',
         ],
       },
-      {
-        title: 'Senior Product Designer', period: '2020 – 2022',
-        bullets: [
-          'Designed the Poshmark Illustration System — a comprehensive visual language unifying brand storytelling across the app.',
-          'Collaborated with the data science team to instrument UX metrics and iterate on A/B test results.',
-          'Mentored 2 junior designers, conducting weekly design critiques and building a culture of craft.',
-        ],
-      },
     ],
   },
   {
-    id: 'fitzoo', name: 'Fitzoo', logo: '/images/fitzoo-logo.png', initials: 'FZ',
+    id: 'goldsetu', name: 'Goldsetu', logo: null, initials: 'GS',
     roles: [
       {
-        title: 'Lead Product Designer', period: '2018 – 2020',
+        title: 'Product Designer', period: 'Oct 2021 – Jan 2022',
         bullets: [
-          'Designed Fitzoo from 0→1 — strategy, information architecture, visual design, and design system.',
-          'Built end-to-end user flows for fitness tracking, coach panels, and personalized workout experiences.',
-          'Conducted user research with 50+ athletes to validate feature prioritisation and prototype iterations.',
-          'Shipped the iOS app in 6 months with a Net Promoter Score of 72 at launch.',
+          'Designed product flows and motion design for a gold investment platform targeting first-time investors.',
+          'Delivered end-to-end UI for onboarding, portfolio, and transaction experiences in 4 months.',
+          'Collaborated closely with engineering to ship pixel-perfect components on a tight timeline.',
         ],
       },
     ],
   },
   {
-    id: 'company3', name: 'Company Name', logo: null, initials: 'C3',
-    roles: [{ title: 'Product Designer', period: '2016 – 2018', bullets: ['Add your role and responsibilities here.', 'Describe key projects and outcomes.', 'Highlight measurable impact and team contributions.'] }],
+    id: 'iofactory', name: 'IO Factory', logo: null, initials: 'IO',
+    roles: [
+      {
+        title: 'Product Designer', period: 'May 2019 – Oct 2021',
+        bullets: [
+          'Designed across multiple client products — fintech, health, and e-commerce — spanning 0→1 and iteration phases.',
+          'Led user research, wireframing, and high-fidelity prototyping for 6+ shipped products over 2.5 years.',
+          'Built and maintained design systems that reduced handoff friction and accelerated delivery by 30%.',
+        ],
+      },
+    ],
   },
   {
-    id: 'company4', name: 'Company Name', logo: null, initials: 'C4',
-    roles: [{ title: 'UI/UX Designer', period: '2015 – 2016', bullets: ['Add your role and responsibilities here.', 'Describe key projects and outcomes.', 'Highlight measurable impact and team contributions.'] }],
+    id: 'kilobyte', name: 'Kilobyte Technologies', logo: null, initials: 'KB',
+    roles: [
+      {
+        title: 'UI/UX Designer', period: 'May 2018 – Apr 2019',
+        bullets: [
+          'Designed UI for SaaS dashboards and mobile apps, translating complex data into intuitive interfaces.',
+          'Conducted usability testing sessions and iterated on designs based on user feedback.',
+          'Produced design specs, style guides, and assets for engineering handoff.',
+        ],
+      },
+    ],
   },
   {
-    id: 'company5', name: 'Company Name', logo: null, initials: 'C5',
-    roles: [{ title: 'Junior Designer', period: '2013 – 2015', bullets: ['Add your role and responsibilities here.', 'Describe key projects and outcomes.', 'Highlight measurable impact and team contributions.'] }],
+    id: 'firius', name: 'Firius Technologies', logo: null, initials: 'FT',
+    roles: [
+      {
+        title: 'UI/UX Designer', period: 'Jul 2015 – Jul 2016',
+        bullets: [
+          'Created visual designs and interaction flows for web and mobile products across diverse industries.',
+          'Developed graphic design assets, brand materials, and marketing collateral.',
+          'Collaborated with developers to ensure design fidelity through the build process.',
+        ],
+      },
+    ],
   },
 ]
 
@@ -217,19 +235,32 @@ export default function ExperienceSection() {
                     <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
                   )}
                 </div>
-                {/* Company name */}
-                <span
-                  className="font-medium transition-all duration-300 hidden md:block"
-                  style={{
-                    color: i === active ? WHITE : MUTED,
-                    fontSize: 'clamp(0.82rem, 1vw, 0.95rem)',
-                    fontFamily: "'Poppins', sans-serif",
-                    whiteSpace: 'nowrap',
-                    transition: 'color 0.3s',
-                  }}
-                >
-                  {co.name}
-                </span>
+                {/* Company name + period */}
+                <div className="hidden md:flex flex-col gap-0.5">
+                  <span
+                    className="font-medium"
+                    style={{
+                      color: i === active ? WHITE : MUTED,
+                      fontSize: 'clamp(0.82rem, 1vw, 0.95rem)',
+                      fontFamily: "'Poppins', sans-serif",
+                      whiteSpace: 'nowrap',
+                      transition: 'color 0.3s',
+                    }}
+                  >
+                    {co.name}
+                  </span>
+                  <span
+                    style={{
+                      color: i === active ? 'rgba(241,255,88,0.6)' : 'rgba(255,255,255,0.3)',
+                      fontSize: '0.72rem',
+                      fontFamily: "'Poppins', sans-serif",
+                      whiteSpace: 'nowrap',
+                      transition: 'color 0.3s',
+                    }}
+                  >
+                    {co.roles[0].period}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
