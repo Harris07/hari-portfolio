@@ -517,8 +517,12 @@ export default function ExperienceSection() {
       </div>
 
       {/* Photo — desktop only, bleeds right edge */}
-      <div
+      <motion.div
         className="hidden lg:block"
+        initial={{ opacity: 0, x: 80 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
         style={{
           position: 'absolute', right: 0, top: 190,
           width: PHOTO_W, height: 850,
@@ -535,7 +539,7 @@ export default function ExperienceSection() {
           background: `linear-gradient(to bottom, ${BG} 0%, transparent 15%, transparent 80%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 30%)`,
           pointerEvents: 'none',
         }} />
-      </div>
+      </motion.div>
     </section>
   )
 }
