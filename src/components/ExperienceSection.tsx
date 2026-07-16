@@ -341,45 +341,48 @@ export default function ExperienceSection() {
           {/* ── RIGHT: Role cards + Photo ── */}
           <div className="flex flex-1 gap-6 lg:gap-8 min-w-0 items-start">
 
-            {/* Role content */}
+            {/* Role content — open layout, no cards */}
             <div className="flex-1 min-w-0" ref={contentRef}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active}
-                  initial={{ opacity: 0, x: 16 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -16 }}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
                 >
-                  <p className="text-xs uppercase tracking-widest font-semibold mb-5"
-                    style={{ color: ACCENT, fontFamily: "'Poppins', sans-serif" }}>
-                    {COMPANIES[active].name}
-                  </p>
-                  <div className="flex flex-col gap-5">
-                    {COMPANIES[active].roles.map((role, ri) => (
-                      <div key={ri} className="rounded-2xl p-6"
-                        style={{ background: CARD_BG, border: `1px solid ${CARD_BORDER}` }}>
-                        <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
-                          <h3 className="font-semibold"
-                            style={{ color: WHITE, fontSize: 'clamp(0.95rem, 1.3vw, 1.1rem)', fontFamily: "'Poppins', sans-serif" }}>
-                            {role.title}
-                          </h3>
-                          <span className="text-xs px-3 py-1 rounded-full flex-shrink-0"
-                            style={{ background: 'rgba(241,255,88,0.1)', color: ACCENT, border: `1px solid rgba(241,255,88,0.2)`, fontFamily: "'Poppins', sans-serif" }}>
-                            {role.period}
-                          </span>
-                        </div>
-                        <ul className="flex flex-col gap-2">
-                          {role.bullets.map((b, bi) => (
-                            <li key={bi} className="flex items-start gap-3">
-                              <span className="mt-[7px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                              <span style={{ color: MUTED, fontSize: 'clamp(0.83rem, 1.05vw, 0.93rem)', lineHeight: 1.7 }}>{b}</span>
-                            </li>
-                          ))}
-                        </ul>
+                  {COMPANIES[active].roles.map((role, ri) => (
+                    <div key={ri} className={ri > 0 ? 'mt-10 pt-10' : ''}
+                      style={ri > 0 ? { borderTop: '1px solid rgba(255,255,255,0.07)' } : {}}>
+
+                      {/* Big company name */}
+                      <h3 className="font-semibold leading-tight mb-3"
+                        style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
+                        {COMPANIES[active].name}
+                      </h3>
+
+                      {/* Role title + period row */}
+                      <div className="flex items-center gap-3 mb-6 flex-wrap">
+                        <span style={{ color: ACCENT, fontSize: '0.9rem', fontWeight: 600, fontFamily: "'Poppins', sans-serif" }}>
+                          {role.title}
+                        </span>
+                        <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                        <span style={{ color: MUTED, fontSize: '0.85rem', fontFamily: "'Poppins', sans-serif" }}>
+                          {role.period}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+
+                      {/* Bullets — open list */}
+                      <ul className="flex flex-col gap-4">
+                        {role.bullets.map((b, bi) => (
+                          <li key={bi} className="flex items-start gap-4">
+                            <span className="mt-[9px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
+                            <span style={{ color: MUTED, fontSize: 'clamp(0.88rem, 1.1vw, 1rem)', lineHeight: 1.75 }}>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </motion.div>
               </AnimatePresence>
             </div>
