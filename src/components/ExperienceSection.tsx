@@ -78,7 +78,7 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Feb 2022 – Present',
         bullets: [
-          { Icon: Zap, heading: 'Go-to Animation Expert', body: 'Poshmark\'s resident motion design lead — crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers.' },
+          { Icon: Zap, heading: 'Motion & Delight at Scale', body: 'Crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers across the Poshmark app.' },
           { Icon: TrendingUp, heading: 'Seller Growth & Engagement', body: 'Designed Listing Streaks end-to-end, driving a 14% weekly lister conversion uplift. Also led casual seller initiatives and the Push Prompt Post-Listing Creation flow to reduce first-time seller order cancellations.' },
           { Icon: Layers, heading: 'Major Product Initiatives', body: 'Drove design for Consignment, App Redesign, Closet Page Redesign, Reposh, Bulk System Actions, and New KYC flow (Project Socure) — spanning 0→1 features and large-scale system work.' },
           { Icon: Workflow, heading: 'Multi-project Ownership', body: 'Took on full ownership of the Ops Pod, managing and delivering multiple concurrent projects while maintaining high design quality and strong stakeholder alignment.' },
