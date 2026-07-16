@@ -12,7 +12,7 @@ const MUTED = 'rgba(255,255,255,0.65)'
 // Fixed geometry
 const SLOT_SIZE = 52    // logo bubble diameter
 const SLOT_GAP = 50     // visual gap between logos
-const TRACK_HEIGHT = 660  // full line height (unchanged)
+const TRACK_HEIGHT = 680  // full line height
 const LOGO_BLOCK_H = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 460px
 const LOGO_OFFSET = (TRACK_HEIGHT - LOGO_BLOCK_H) / 2  // 100px top padding to center logos in track
 // Arrow snap positions — centered within the track
