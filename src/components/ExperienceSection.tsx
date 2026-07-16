@@ -247,11 +247,11 @@ export default function ExperienceSection() {
               style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}
             >
               <defs>
-                <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2={TRACK_HEIGHT} gradientUnits="userSpaceOnUse">
                   <stop offset="0%"   stopColor={ACCENT} stopOpacity="0" />
-                  <stop offset="20%"  stopColor={ACCENT} stopOpacity="0.5" />
+                  <stop offset="12%"  stopColor={ACCENT} stopOpacity="0.7" />
                   <stop offset="50%"  stopColor={ACCENT} stopOpacity="1" />
-                  <stop offset="80%"  stopColor={ACCENT} stopOpacity="0.5" />
+                  <stop offset="88%"  stopColor={ACCENT} stopOpacity="0.7" />
                   <stop offset="100%" stopColor={ACCENT} stopOpacity="0" />
                 </linearGradient>
                 <filter id="lineGlow" x="-400%" y="-20%" width="900%" height="140%">
