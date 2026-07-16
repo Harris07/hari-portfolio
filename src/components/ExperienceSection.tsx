@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Layers, BookOpen, Package, Target, Users, Sparkles, UserPlus, Trophy, TrendingUp, Layout, Megaphone, Shield, Workflow, PenTool, Zap } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 const ACCENT = '#F1FF58'
 const BG = '#111200'
@@ -46,7 +48,8 @@ function buildLinePath(arrowY: number): string {
   return parts.join(' ')
 }
 
-interface Role { title: string; period: string; bullets: string[] }
+interface Bullet { Icon: LucideIcon; heading: string; body: string }
+interface Role { title: string; period: string; bullets: Bullet[] }
 interface Company { id: string; name: string; logo: string | null; initials: string; roles: Role[] }
 
 const COMPANIES: Company[] = [
@@ -56,10 +59,10 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Feb 2022 – Present',
         bullets: [
-          'Led end-to-end design for seller growth features including Listing Streaks, earning a 14% weekly lister conversion uplift.',
-          'Owned the Motion & Animation design system — Pull-to-Refresh, onboarding, and brand moments shipped to millions of users.',
-          'Drove cross-functional alignment across Product, Engineering, and Marketing to ship high-impact features quarterly.',
-          'Established design principles and component libraries adopted across 3+ product teams.',
+          { Icon: TrendingUp, heading: 'Seller Growth Design', body: 'Led end-to-end design for seller growth features including Listing Streaks, earning a 14% weekly lister conversion uplift.' },
+          { Icon: Zap, heading: 'Motion & Animation System', body: 'Owned the Motion & Animation design system — Pull-to-Refresh, onboarding, and brand moments shipped to millions of users.' },
+          { Icon: Workflow, heading: 'Cross-functional Leadership', body: 'Drove cross-functional alignment across Product, Engineering, and Marketing to ship high-impact features quarterly.' },
+          { Icon: BookOpen, heading: 'Design System & Standards', body: 'Established design principles and component libraries adopted across 3+ product teams.' },
         ],
       },
     ],
@@ -70,8 +73,8 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Oct 2021 – Jan 2022',
         bullets: [
-          'Owned the end-to-end design of customer-facing web and mobile experiences for a gold investment platform — from discovery to pixel-perfect delivery.',
-          'Established design guidelines, component standards, and best practices that gave the product a coherent, trustworthy visual language.',
+          { Icon: Layers, heading: 'End-to-end Product Design', body: 'Owned the full design of customer-facing web and mobile experiences for a gold investment platform — from discovery to pixel-perfect delivery.' },
+          { Icon: BookOpen, heading: 'Design Language & Standards', body: 'Established design guidelines, component standards, and best practices that gave the product a coherent, trustworthy visual language.' },
         ],
       },
     ],
@@ -82,12 +85,12 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'May 2019 – Sep 2021',
         bullets: [
-          'Designed new products, interfaces, and user experiences across 30+ SaaS platforms — including Pipeline, People, Budget, Mapbox, and VR Viewer.',
-          'Single-handedly drove design strategy and tactical execution across complex, multi-stakeholder projects from brief to ship.',
-          'Partnered with engineering and product managers to produce user flows, wireframes, high-fidelity mockups, and micro-interaction prototypes.',
-          'Simplified complex user interactions while preserving each product\'s brand personality and unique identity.',
-          'Defined design guidelines and best practices that standardised quality across the studio\'s portfolio.',
-          'Hired and mentored freelance designers and interns, scaling the team\'s capacity to meet product demand.',
+          { Icon: Package, heading: '30+ SaaS Products Shipped', body: 'Designed new products, interfaces, and user experiences across 30+ SaaS platforms — including Pipeline, People, Budget, Mapbox, and VR Viewer.' },
+          { Icon: Target, heading: 'Strategy to Execution', body: 'Single-handedly drove design strategy and tactical execution across complex, multi-stakeholder projects from brief to ship.' },
+          { Icon: Users, heading: 'Engineering Collaboration', body: 'Partnered with engineering and product managers to produce user flows, wireframes, high-fidelity mockups, and micro-interaction prototypes.' },
+          { Icon: Sparkles, heading: 'Brand-led Simplicity', body: "Simplified complex user interactions while preserving each product's brand personality and unique identity." },
+          { Icon: BookOpen, heading: 'Studio Design Standards', body: "Defined design guidelines and best practices that standardised quality across the studio's portfolio." },
+          { Icon: UserPlus, heading: 'Team Building & Mentorship', body: "Hired and mentored freelance designers and interns, scaling the team's capacity to meet product demand." },
         ],
       },
     ],
@@ -98,10 +101,10 @@ const COMPANIES: Company[] = [
       {
         title: 'UI/UX Designer', period: 'May 2018 – Apr 2019',
         bullets: [
-          'Led projects end-to-end — accountable not just for design delivery but for managing client relationships and expectations throughout.',
-          'Contributed hands-on at every stage, from early concept exploration through to detailed end-to-end implementation.',
-          'Shaped business development by crafting compelling design proposals for prospective clients.',
-          'Managed junior designers, setting direction and ensuring on-time delivery to a high standard.',
+          { Icon: Trophy, heading: 'Client Ownership', body: 'Led projects end-to-end — accountable not just for design delivery but for managing client relationships and expectations throughout.' },
+          { Icon: Layers, heading: 'Concept to Implementation', body: 'Contributed hands-on at every stage, from early concept exploration through to detailed end-to-end implementation.' },
+          { Icon: TrendingUp, heading: 'Business Development', body: 'Shaped business development by crafting compelling design proposals for prospective clients.' },
+          { Icon: Users, heading: 'Team Management', body: 'Managed junior designers, setting direction and ensuring on-time delivery to a high standard.' },
         ],
       },
     ],
@@ -112,10 +115,10 @@ const COMPANIES: Company[] = [
       {
         title: 'UI/UX Designer', period: 'Jul 2015 – Jul 2016',
         bullets: [
-          'Designed webpage layouts, wireframes, and interaction flows for web and mobile apps across a range of client industries.',
-          'Delivered digital marketing assets — ads, event creatives, sales decks, and brand collateral — at pace and to brief.',
-          'Upheld brand consistency by working within predefined brand guidelines on every project.',
-          'Collaborated closely with the Creative and Digital Marketing teams to ensure cohesive, on-brand output.',
+          { Icon: Layout, heading: 'Web & Mobile Interfaces', body: 'Designed webpage layouts, wireframes, and interaction flows for web and mobile apps across a range of client industries.' },
+          { Icon: Megaphone, heading: 'Marketing & Brand Assets', body: 'Delivered digital marketing assets — ads, event creatives, sales decks, and brand collateral — at pace and to brief.' },
+          { Icon: Shield, heading: 'Brand Consistency', body: 'Upheld brand consistency by working within predefined brand guidelines on every project.' },
+          { Icon: PenTool, heading: 'Creative Collaboration', body: 'Collaborated closely with the Creative and Digital Marketing teams to ensure cohesive, on-brand output.' },
         ],
       },
     ],
@@ -371,15 +374,31 @@ export default function ExperienceSection() {
                         </span>
                       </div>
 
-                      {/* Bullets — open list */}
-                      <ul className="flex flex-col gap-4">
-                        {role.bullets.map((b, bi) => (
-                          <li key={bi} className="flex items-start gap-4">
-                            <span className="mt-[9px] flex-shrink-0 w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                            <span style={{ color: MUTED, fontSize: 'clamp(0.88rem, 1.1vw, 1rem)', lineHeight: 1.75 }}>{b}</span>
-                          </li>
+                      {/* Bullets — icon + heading + body grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+                        {role.bullets.map(({ Icon, heading, body }, bi) => (
+                          <div key={bi} className="flex flex-col gap-3">
+                            {/* Icon circle */}
+                            <div style={{
+                              width: 44, height: 44, borderRadius: '50%',
+                              background: 'rgba(241,255,88,0.07)',
+                              border: '1px solid rgba(241,255,88,0.15)',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              flexShrink: 0,
+                            }}>
+                              <Icon size={18} color={ACCENT} strokeWidth={1.5} />
+                            </div>
+                            {/* Heading */}
+                            <p style={{ color: WHITE, fontWeight: 600, fontSize: 'clamp(0.9rem, 1.2vw, 1rem)', fontFamily: "'Poppins', sans-serif", lineHeight: 1.3 }}>
+                              {heading}
+                            </p>
+                            {/* Body */}
+                            <p style={{ color: MUTED, fontSize: 'clamp(0.82rem, 1vw, 0.92rem)', lineHeight: 1.75 }}>
+                              {body}
+                            </p>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   ))}
                 </motion.div>
