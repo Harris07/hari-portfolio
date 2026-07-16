@@ -438,7 +438,7 @@ export default function ExperienceSection() {
           top: '50%',
           transform: 'translateY(-50%)',
           width: PHOTO_W,
-          height: 800,
+          height: 850,
           borderRadius: '16px 0 0 16px',
           overflow: 'hidden',
         }}
@@ -446,7 +446,7 @@ export default function ExperienceSection() {
         <img
           src="/images/Portfolio%20pic.png"
           alt="Hari Prasad L"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'right top', display: 'block' }}
         />
         {/* Blend edges into background */}
         <div style={{
