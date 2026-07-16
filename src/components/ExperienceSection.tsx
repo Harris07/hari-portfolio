@@ -285,9 +285,9 @@ export default function ExperienceSection() {
                 width: CIRCLE_R * 2,
                 height: CIRCLE_R * 2,
                 borderRadius: '50%',
-                background: 'rgba(17,18,0,0.92)',
-                border: `1.5px solid rgba(241,255,88,0.7)`,
-                boxShadow: `0 0 0 5px rgba(241,255,88,0.1), 0 0 18px rgba(241,255,88,0.4), 0 0 40px rgba(241,255,88,0.15)`,
+                background: ACCENT,
+                border: `1.5px solid rgba(241,255,88,0.9)`,
+                boxShadow: `0 0 0 10px rgba(241,255,88,0.18), 0 0 22px rgba(241,255,88,0.45), 0 0 45px rgba(241,255,88,0.18)`,
                 cursor: dragging ? 'grabbing' : 'grab',
                 display: 'flex',
                 alignItems: 'center',
@@ -297,8 +297,8 @@ export default function ExperienceSection() {
               }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4 6L8 2.5L12 6"    stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4 10L8 13.5L12 10" stroke={ACCENT} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 6L8 2.5L12 6"    stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 10L8 13.5L12 10" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </motion.div>
           </div>
