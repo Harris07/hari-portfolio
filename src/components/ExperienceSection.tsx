@@ -352,7 +352,7 @@ export default function ExperienceSection() {
                       style={ri > 0 ? { borderTop: '1px solid rgba(255,255,255,0.07)' } : {}}>
 
                       {/* Big company name */}
-                      <h3 className="font-semibold leading-tight mb-3"
+                      <h3 className="font-semibold leading-tight mb-1"
                         style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
                         {COMPANIES[active].name}
                       </h3>
