@@ -259,9 +259,9 @@ export default function ExperienceSection() {
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
-              {/* Soft glow behind line */}
-              <motion.path d={linePath} fill="none" stroke={ACCENT}
-                strokeWidth={5} strokeOpacity={0.25} filter="url(#lineGlow)"
+              {/* Soft glow behind line — same gradient so ends fade too */}
+              <motion.path d={linePath} fill="none" stroke="url(#lineGrad)"
+                strokeWidth={6} strokeOpacity={0.3} filter="url(#lineGlow)"
                 animate={{ d: linePath }}
                 transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }} />
               {/* Main line */}
