@@ -78,10 +78,12 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Feb 2022 – Present',
         bullets: [
-          { Icon: TrendingUp, heading: 'Seller Growth Design', body: 'Led end-to-end design for seller growth features including Listing Streaks, earning a 14% weekly lister conversion uplift.' },
-          { Icon: Zap, heading: 'Motion & Animation System', body: 'Owned the Motion & Animation design system — Pull-to-Refresh, onboarding, and brand moments shipped to millions of users.' },
-          { Icon: Workflow, heading: 'Cross-functional Leadership', body: 'Drove cross-functional alignment across Product, Engineering, and Marketing to ship high-impact features quarterly.' },
-          { Icon: BookOpen, heading: 'Design System & Standards', body: 'Established design principles and component libraries adopted across 3+ product teams.' },
+          { Icon: Zap, heading: 'Go-to Animation Expert', body: 'Poshmark\'s resident motion design lead — crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers.' },
+          { Icon: TrendingUp, heading: 'Seller Growth & Engagement', body: 'Designed Listing Streaks end-to-end, driving a 14% weekly lister conversion uplift. Also led casual seller initiatives and the Push Prompt Post-Listing Creation flow to reduce first-time seller order cancellations.' },
+          { Icon: Layers, heading: 'Major Product Initiatives', body: 'Drove design for Consignment, App Redesign, Closet Page Redesign, Reposh, Bulk System Actions, and New KYC flow (Project Socure) — spanning 0→1 features and large-scale system work.' },
+          { Icon: Workflow, heading: 'Multi-project Ownership', body: 'Took on full ownership of the Ops Pod, managing and delivering multiple concurrent projects while maintaining high design quality and strong stakeholder alignment.' },
+          { Icon: Package, heading: 'Cross-market Expansion', body: 'Collaborated closely with stakeholders to deliver Canada Purolator and Overweight Shipping Labels — extending Poshmark\'s logistics experience to new markets.' },
+          { Icon: BookOpen, heading: 'Design Quality & Standards', body: 'Established a high bar for craft from day one — adapting to the design system within weeks, contributing to guidelines, and setting a benchmark for visual quality and attention to detail across the team.' },
         ],
       },
     ],
