@@ -138,16 +138,7 @@ export default function ExperienceSection() {
 
   // Content area ref to measure height for photo
   const contentRef = useRef<HTMLDivElement>(null)
-  const [contentH, setContentH] = useState<number | null>(null)
-
-  useLayoutEffect(() => {
-    if (!contentRef.current) return
-    const ro = new ResizeObserver(entries => {
-      setContentH(entries[0].contentRect.height)
-    })
-    ro.observe(contentRef.current)
-    return () => ro.disconnect()
-  }, [active])
+  useLayoutEffect(() => {}, [active])
 
   const snapToSlot = useCallback((idx: number) => {
     setActive(idx)
