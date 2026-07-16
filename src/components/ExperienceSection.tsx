@@ -438,17 +438,22 @@ export default function ExperienceSection() {
           top: '50%',
           transform: 'translateY(-50%)',
           width: PHOTO_W,
-          height: PHOTO_H,
+          height: 800,
           borderRadius: '16px 0 0 16px',
           overflow: 'hidden',
-          boxShadow: '-20px 0 60px rgba(0,0,0,0.5)',
         }}
       >
         <img
-          src="/images/Portfolio pic.png"
+          src="/images/Portfolio%20pic.png"
           alt="Hari Prasad L"
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
         />
+        {/* Blend edges into background */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(to bottom, ${BG} 0%, transparent 15%, transparent 80%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 30%)`,
+          pointerEvents: 'none',
+        }} />
       </div>
     </section>
   )
