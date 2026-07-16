@@ -25,7 +25,7 @@ const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) =>
 const CONTAINER_W = 96
 const LINE_X = 16       // thin vertical line, left portion
 const BULGE_X = 4       // bulge peak — goes LEFT toward logos
-const CIRCLE_X = 68     // circle center x — right side, next to (not on) the line
+const CIRCLE_X = 63     // circle center x — right side, next to (not on) the line
 const CIRCLE_R = 28     // +20px diameter vs original 18r (36 → 56 diameter)
 const BULGE_SPREAD = 70
 
