@@ -24,29 +24,24 @@ function getDuration(period: string): string {
 
 const ACCENT = '#F1FF58'
 const BG = '#0b0a00'
-
 const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.65)'
 
 // Fixed geometry
-const SLOT_SIZE = 52    // logo bubble diameter
-const SLOT_GAP = 50     // visual gap between logos
-const TRACK_HEIGHT = 700  // full line height
-const LOGO_BLOCK_H = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 460px
-const LOGO_OFFSET = (TRACK_HEIGHT - LOGO_BLOCK_H) / 2  // 100px top padding to center logos in track
-// Arrow snap positions — centered within the track
+const SLOT_SIZE = 52
+const SLOT_GAP = 50
+const TRACK_HEIGHT = 700
+const LOGO_BLOCK_H = 5 * SLOT_SIZE + 4 * SLOT_GAP
+const LOGO_OFFSET = (TRACK_HEIGHT - LOGO_BLOCK_H) / 2
 const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) =>
   LOGO_OFFSET + i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2
 )
-// [126, 228, 330, 432, 534]
 
-// Line SVG geometry
-// Line is on the LEFT side; circle is separate on the RIGHT side of the container
 const CONTAINER_W = 96
-const LINE_X = 16       // thin vertical line, left portion
-const BULGE_X = 4       // bulge peak — goes LEFT toward logos
-const CIRCLE_X = 58     // circle center x — right side, next to (not on) the line
-const CIRCLE_R = 28     // +20px diameter vs original 18r (36 → 56 diameter)
+const LINE_X = 16
+const BULGE_X = 4
+const CIRCLE_X = 58
+const CIRCLE_R = 28
 const BULGE_SPREAD = 70
 
 function buildLinePath(arrowY: number): string {
@@ -58,7 +53,6 @@ function buildLinePath(arrowY: number): string {
   const sb = y1 - arrowY
   const parts: string[] = [`M ${LINE_X} ${top}`]
   if (y0 > top) parts.push(`L ${LINE_X} ${y0}`)
-  // Wider control point spread makes the S-curve smooth, not pinched
   parts.push(
     `C ${LINE_X} ${arrowY - sa * 0.5}, ${BULGE_X} ${arrowY - sa * 0.35}, ${BULGE_X} ${arrowY}`,
     `C ${BULGE_X} ${arrowY + sb * 0.35}, ${LINE_X} ${arrowY + sb * 0.5}, ${LINE_X} ${y1}`,
@@ -147,18 +141,30 @@ const COMPANIES: Company[] = [
   },
 ]
 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 32 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.6, ease: EASE, delay },
+})
+
+const slideLeft = (delay = 0) => ({
+  initial: { opacity: 0, x: -28 },
+  whileInView: { opacity: 1, x: 0 },
+  viewport: { once: true, margin: '-60px' },
+  transition: { duration: 0.55, ease: EASE, delay },
+})
+
 export default function ExperienceSection() {
   const [active, setActive] = useState(0)
-  // arrowY is in "track coordinates" (0 = top of track)
   const [arrowY, setArrowY] = useState(SLOT_POSITIONS[0])
   const [dragging, setDragging] = useState(false)
 
-  // Ref to the SVG element so we can map pointer clientY → track coords
   const svgRef = useRef<SVGSVGElement>(null)
   const dragStartClientY = useRef(0)
   const dragStartArrowY = useRef(0)
-
-  // Content area ref to measure height for photo
   const contentRef = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {}, [active])
 
@@ -204,9 +210,7 @@ export default function ExperienceSection() {
   }
 
   const linePath = buildLinePath(arrowY)
-
   const PHOTO_W = 480
-  const PHOTO_H = 600
 
   return (
     <section id="experience" style={{ background: BG, fontFamily: "'Kanit', sans-serif", position: 'relative', overflow: 'hidden' }}>
@@ -214,39 +218,37 @@ export default function ExperienceSection() {
       <div className="mx-auto px-6 md:px-12 py-24 md:py-32" style={{ maxWidth: 1480 }}>
 
         {/* Header */}
-        <div className="mb-16 md:mb-20 text-center">
+        <motion.div className="mb-12 md:mb-20 text-center" {...fadeUp(0)}>
           <p className="uppercase tracking-[0.22em] text-xs font-semibold mb-3"
             style={{ color: ACCENT, fontFamily: "'Poppins', sans-serif" }}>My Journey</p>
           <h2 className="font-semibold leading-tight"
             style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
             Over The Years
           </h2>
-        </div>
+        </motion.div>
 
-        {/* Main layout */}
-        <div className="flex items-start gap-2 md:gap-3">
-
-          {/* ── LEFT: Fixed-spaced company list ── */}
-          <div
-            className="flex-shrink-0 flex flex-col"
-            style={{ gap: SLOT_GAP, paddingTop: LOGO_OFFSET }}
+        {/* ── MOBILE layout (< lg) ── */}
+        <div className="lg:hidden">
+          {/* Horizontal logo selector */}
+          <motion.div
+            className="flex gap-4 overflow-x-auto pb-4 mb-8"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            {...fadeUp(0.1)}
           >
             {COMPANIES.map((co, i) => (
               <button
                 key={co.id}
-                onClick={() => snapToSlot(i)}
-                className="flex items-center gap-4 text-left"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', height: SLOT_SIZE }}
+                onClick={() => setActive(i)}
+                className="flex-shrink-0 flex flex-col items-center gap-2"
+                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                {/* Logo bubble */}
                 <div
-                  className="flex-shrink-0 flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
+                  className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
                   style={{
-                    width: SLOT_SIZE,
-                    height: SLOT_SIZE,
+                    width: 56, height: 56,
                     background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
-                    border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.1)'}`,
-                    boxShadow: i === active ? `0 0 16px rgba(241,255,88,0.25)` : 'none',
+                    border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
+                    boxShadow: i === active ? `0 0 18px rgba(241,255,88,0.3)` : 'none',
                     transition: 'all 0.3s',
                   }}
                 >
@@ -257,42 +259,145 @@ export default function ExperienceSection() {
                     <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
                   )}
                 </div>
-                {/* Company name + period */}
-                <div className="hidden md:flex flex-col gap-0.5">
-                  <span
-                    className="font-medium"
-                    style={{
-                      color: i === active ? WHITE : MUTED,
-                      fontSize: 'clamp(0.82rem, 1vw, 0.95rem)',
-                      fontFamily: "'Poppins', sans-serif",
-                      whiteSpace: 'nowrap',
-                      transition: 'color 0.3s',
-                    }}
-                  >
-                    {co.name}
-                  </span>
-                  <span
-                    style={{
-                      color: i === active ? 'rgba(241,255,88,0.6)' : 'rgba(255,255,255,0.3)',
-                      fontSize: '0.72rem',
-                      fontFamily: "'Poppins', sans-serif",
-                      whiteSpace: 'nowrap',
-                      transition: 'color 0.3s',
-                    }}
-                  >
-                    {co.roles[0].period}
-                  </span>
-                </div>
+                <span style={{
+                  color: i === active ? ACCENT : MUTED,
+                  fontSize: '0.65rem', fontFamily: "'Poppins', sans-serif",
+                  fontWeight: i === active ? 600 : 400,
+                  whiteSpace: 'nowrap', transition: 'color 0.3s',
+                }}>
+                  {co.name.split(' ')[0]}
+                </span>
               </button>
+            ))}
+          </motion.div>
+
+          {/* Dot indicators */}
+          <div className="flex gap-2 mb-8 justify-center">
+            {COMPANIES.map((_, i) => (
+              <button key={i} onClick={() => setActive(i)}
+                style={{
+                  width: i === active ? 24 : 6, height: 6, borderRadius: 3,
+                  background: i === active ? ACCENT : 'rgba(255,255,255,0.2)',
+                  border: 'none', cursor: 'pointer', padding: 0,
+                  transition: 'all 0.3s ease',
+                }} />
             ))}
           </div>
 
-          {/* ── CENTER: SVG line (left) + draggable circle (right, separate) ── */}
-          <div
+          {/* Mobile content */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.35, ease: EASE }}
+            >
+              {COMPANIES[active].roles.map((role, ri) => (
+                <div key={ri} className={ri > 0 ? 'mt-10 pt-10' : ''}
+                  style={ri > 0 ? { borderTop: '1px solid rgba(255,255,255,0.07)' } : {}}>
+                  <h3 className="font-semibold leading-tight mb-1"
+                    style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
+                    {COMPANIES[active].name}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2 mb-6">
+                    <span style={{ color: ACCENT, fontSize: '0.85rem', fontWeight: 600, fontFamily: "'Poppins', sans-serif" }}>
+                      {role.title}
+                    </span>
+                    <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                    <span style={{ color: MUTED, fontSize: '0.8rem', fontFamily: "'Poppins', sans-serif" }}>
+                      {role.period}
+                    </span>
+                    <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                    <span style={{ color: 'rgba(241,255,88,0.5)', fontSize: '0.78rem', fontFamily: "'Poppins', sans-serif" }}>
+                      {getDuration(role.period)}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    {role.bullets.map(({ Icon, heading, body }, bi) => (
+                      <div key={bi} className="flex flex-col gap-2">
+                        <div style={{
+                          width: 40, height: 40, borderRadius: '50%',
+                          background: 'rgba(241,255,88,0.07)',
+                          border: '1px solid rgba(241,255,88,0.15)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                        }}>
+                          <Icon size={16} color={ACCENT} strokeWidth={1.5} />
+                        </div>
+                        <p style={{ color: WHITE, fontWeight: 600, fontSize: '0.9rem', fontFamily: "'Poppins', sans-serif", lineHeight: 1.3 }}>
+                          {heading}
+                        </p>
+                        <p style={{ color: MUTED, fontSize: '0.88rem', lineHeight: 1.7, fontFamily: "'Poppins', sans-serif" }}>
+                          {body}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ── DESKTOP layout (lg+) ── */}
+        <div className="hidden lg:flex items-start gap-2 md:gap-3">
+
+          {/* LEFT: company list */}
+          <div className="flex-shrink-0 flex flex-col" style={{ gap: SLOT_GAP, paddingTop: LOGO_OFFSET }}>
+            {COMPANIES.map((co, i) => (
+              <motion.div key={co.id} {...slideLeft(0.1 + i * 0.07)}>
+                <button
+                  onClick={() => snapToSlot(i)}
+                  className="flex items-center gap-4 text-left"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', height: SLOT_SIZE }}
+                >
+                  <div
+                    className="flex-shrink-0 flex items-center justify-center rounded-full overflow-hidden"
+                    style={{
+                      width: SLOT_SIZE, height: SLOT_SIZE,
+                      background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
+                      border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.1)'}`,
+                      boxShadow: i === active ? `0 0 16px rgba(241,255,88,0.25)` : 'none',
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    {co.logo ? (
+                      <img src={co.logo} alt={co.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                    ) : (
+                      <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span style={{
+                      color: i === active ? WHITE : MUTED,
+                      fontSize: 'clamp(0.82rem, 1vw, 0.95rem)', fontFamily: "'Poppins', sans-serif",
+                      whiteSpace: 'nowrap', transition: 'color 0.3s', fontWeight: 500,
+                    }}>
+                      {co.name}
+                    </span>
+                    <span style={{
+                      color: i === active ? 'rgba(241,255,88,0.6)' : 'rgba(255,255,255,0.3)',
+                      fontSize: '0.72rem', fontFamily: "'Poppins', sans-serif",
+                      whiteSpace: 'nowrap', transition: 'color 0.3s',
+                    }}>
+                      {co.roles[0].period}
+                    </span>
+                  </div>
+                </button>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CENTER: SVG line + draggable circle */}
+          <motion.div
             className="flex-shrink-0 relative select-none"
             style={{ width: CONTAINER_W, height: TRACK_HEIGHT }}
+            initial={{ opacity: 0, scaleY: 0.6 }}
+            whileInView={{ opacity: 1, scaleY: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.2 }}
           >
-            {/* SVG — only draws the vertical line with left-facing bulge */}
             <svg
               ref={svgRef}
               width={CONTAINER_W}
@@ -312,18 +417,15 @@ export default function ExperienceSection() {
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
-              {/* Soft glow behind line — same gradient so ends fade too */}
               <motion.path d={linePath} fill="none" stroke="url(#lineGrad)"
                 strokeWidth={6} strokeOpacity={0.3} filter="url(#lineGlow)"
                 animate={{ d: linePath }}
                 transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }} />
-              {/* Main line */}
               <motion.path d={linePath} fill="none" stroke="url(#lineGrad)" strokeWidth={2}
                 animate={{ d: linePath }}
                 transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }} />
             </svg>
 
-            {/* Arrow circle — right side, separate from line, draggable */}
             <motion.div
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
@@ -332,21 +434,13 @@ export default function ExperienceSection() {
               animate={{ y: arrowY - CIRCLE_R }}
               transition={dragging ? { duration: 0 } : { type: 'spring', stiffness: 260, damping: 28 }}
               style={{
-                position: 'absolute',
-                left: CIRCLE_X - CIRCLE_R,
-                top: 0,
-                width: CIRCLE_R * 2,
-                height: CIRCLE_R * 2,
-                borderRadius: '50%',
-                background: ACCENT,
-                border: `1.5px solid rgba(241,255,88,0.9)`,
+                position: 'absolute', left: CIRCLE_X - CIRCLE_R, top: 0,
+                width: CIRCLE_R * 2, height: CIRCLE_R * 2, borderRadius: '50%',
+                background: ACCENT, border: `1.5px solid rgba(241,255,88,0.9)`,
                 boxShadow: `0 0 0 10px rgba(241,255,88,0.18), 0 0 22px rgba(241,255,88,0.45), 0 0 45px rgba(241,255,88,0.18)`,
                 cursor: dragging ? 'grabbing' : 'grab',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                touchAction: 'none',
-                zIndex: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                touchAction: 'none', zIndex: 10,
               }}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -354,32 +448,26 @@ export default function ExperienceSection() {
                 <path d="M4 10L8 13.5L12 10" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </motion.div>
-          </div>
+          </motion.div>
 
-          {/* ── RIGHT: Role content (photo is outside container) ── */}
+          {/* RIGHT: Role content */}
           <div className="flex flex-1 min-w-0 items-start" style={{ paddingLeft: 40, paddingRight: 252 }}>
-
-            {/* Role content — open layout, no cards */}
             <div className="flex-1 min-w-0" ref={contentRef}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={active}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.38, ease: EASE }}
                 >
                   {COMPANIES[active].roles.map((role, ri) => (
                     <div key={ri} className={ri > 0 ? 'mt-10 pt-10' : ''}
                       style={ri > 0 ? { borderTop: '1px solid rgba(255,255,255,0.07)' } : {}}>
-
-                      {/* Big company name */}
                       <h3 className="font-semibold leading-tight mb-1"
                         style={{ fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
                         {COMPANIES[active].name}
                       </h3>
-
-                      {/* Role title + period row */}
                       <div className="flex items-center gap-3 mb-6 flex-wrap">
                         <span style={{ color: ACCENT, fontSize: '0.9rem', fontWeight: 600, fontFamily: "'Poppins', sans-serif" }}>
                           {role.title}
@@ -393,30 +481,30 @@ export default function ExperienceSection() {
                           {getDuration(role.period)}
                         </span>
                       </div>
-
-                      {/* Bullets — icon + heading + body grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
                         {role.bullets.map(({ Icon, heading, body }, bi) => (
-                          <div key={bi} className="flex flex-col gap-3">
-                            {/* Icon circle */}
+                          <motion.div
+                            key={bi}
+                            className="flex flex-col gap-3"
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, ease: EASE, delay: bi * 0.06 }}
+                          >
                             <div style={{
                               width: 44, height: 44, borderRadius: '50%',
                               background: 'rgba(241,255,88,0.07)',
                               border: '1px solid rgba(241,255,88,0.15)',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              flexShrink: 0,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                             }}>
                               <Icon size={18} color={ACCENT} strokeWidth={1.5} />
                             </div>
-                            {/* Heading */}
                             <p style={{ color: WHITE, fontWeight: 600, fontSize: 'clamp(0.9rem, 1.2vw, 1rem)', fontFamily: "'Poppins', sans-serif", lineHeight: 1.3 }}>
                               {heading}
                             </p>
-                            {/* Body */}
                             <p style={{ color: MUTED, fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', lineHeight: 1.75, fontFamily: "'Poppins', sans-serif" }}>
                               {body}
                             </p>
-                          </div>
+                          </motion.div>
                         ))}
                       </div>
                     </div>
@@ -424,22 +512,17 @@ export default function ExperienceSection() {
                 </motion.div>
               </AnimatePresence>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* Photo — bleeds to right edge, fixed size, outside container */}
+      {/* Photo — desktop only, bleeds right edge */}
       <div
         className="hidden lg:block"
         style={{
-          position: 'absolute',
-          right: 0,
-          top: 190,
-          width: PHOTO_W,
-          height: 850,
-          borderRadius: '16px 0 0 16px',
-          overflow: 'hidden',
+          position: 'absolute', right: 0, top: 190,
+          width: PHOTO_W, height: 850,
+          borderRadius: '16px 0 0 16px', overflow: 'hidden',
         }}
       >
         <img
@@ -447,7 +530,6 @@ export default function ExperienceSection() {
           alt="Hari Prasad L"
           style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }}
         />
-        {/* Blend edges into background */}
         <div style={{
           position: 'absolute', inset: 0,
           background: `linear-gradient(to bottom, ${BG} 0%, transparent 15%, transparent 80%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 30%)`,
