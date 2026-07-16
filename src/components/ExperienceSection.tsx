@@ -451,7 +451,14 @@ export default function ExperienceSection() {
           </motion.div>
 
           {/* RIGHT: Role content */}
-          <div className="flex flex-1 min-w-0 items-start" style={{ paddingLeft: 40, paddingRight: 252 }}>
+          <motion.div
+            className="flex flex-1 min-w-0 items-start"
+            style={{ paddingLeft: 40, paddingRight: 252 }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
+          >
             <div className="flex-1 min-w-0" ref={contentRef}>
               <AnimatePresence mode="wait">
                 <motion.div
@@ -512,7 +519,7 @@ export default function ExperienceSection() {
                 </motion.div>
               </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
