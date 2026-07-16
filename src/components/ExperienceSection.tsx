@@ -10,10 +10,15 @@ const MUTED = 'rgba(255,255,255,0.55)'
 
 // Fixed geometry
 const SLOT_SIZE = 52    // logo bubble diameter
-const SLOT_GAP = 50     // gap between logos
-const TRACK_HEIGHT = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 460px
-const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) => i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2)
-// [26, 128, 230, 332, 434]
+const SLOT_GAP = 50     // visual gap between logos
+const TRACK_HEIGHT = 660  // full line height (unchanged)
+const LOGO_BLOCK_H = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 460px
+const LOGO_OFFSET = (TRACK_HEIGHT - LOGO_BLOCK_H) / 2  // 100px top padding to center logos in track
+// Arrow snap positions — centered within the track
+const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) =>
+  LOGO_OFFSET + i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2
+)
+// [126, 228, 330, 432, 534]
 
 // Line SVG geometry
 // Line is on the LEFT side; circle is separate on the RIGHT side of the container
@@ -184,7 +189,7 @@ export default function ExperienceSection() {
           {/* ── LEFT: Fixed-spaced company list ── */}
           <div
             className="flex-shrink-0 flex flex-col"
-            style={{ gap: SLOT_GAP, paddingTop: 0 }}
+            style={{ gap: SLOT_GAP, paddingTop: LOGO_OFFSET }}
           >
             {COMPANIES.map((co, i) => (
               <button
