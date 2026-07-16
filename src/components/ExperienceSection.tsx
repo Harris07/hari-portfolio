@@ -205,7 +205,7 @@ export default function ExperienceSection() {
 
   const linePath = buildLinePath(arrowY)
 
-  const PHOTO_W = 320
+  const PHOTO_W = 480
   const PHOTO_H = 600
 
   return (
