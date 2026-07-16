@@ -71,9 +71,8 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Oct 2021 – Jan 2022',
         bullets: [
-          'Designed product flows and motion design for a gold investment platform targeting first-time investors.',
-          'Delivered end-to-end UI for onboarding, portfolio, and transaction experiences in 4 months.',
-          'Collaborated closely with engineering to ship pixel-perfect components on a tight timeline.',
+          'Owned the end-to-end design of customer-facing web and mobile experiences for a gold investment platform — from discovery to pixel-perfect delivery.',
+          'Established design guidelines, component standards, and best practices that gave the product a coherent, trustworthy visual language.',
         ],
       },
     ],
@@ -82,11 +81,14 @@ const COMPANIES: Company[] = [
     id: 'iofactory', name: 'IO Factory', logo: null, initials: 'IO',
     roles: [
       {
-        title: 'Product Designer', period: 'May 2019 – Oct 2021',
+        title: 'Product Designer', period: 'May 2019 – Sep 2021',
         bullets: [
-          'Designed across multiple client products — fintech, health, and e-commerce — spanning 0→1 and iteration phases.',
-          'Led user research, wireframing, and high-fidelity prototyping for 6+ shipped products over 2.5 years.',
-          'Built and maintained design systems that reduced handoff friction and accelerated delivery by 30%.',
+          'Designed new products, interfaces, and user experiences across 30+ SaaS platforms — including Pipeline, People, Budget, Mapbox, and VR Viewer.',
+          'Single-handedly drove design strategy and tactical execution across complex, multi-stakeholder projects from brief to ship.',
+          'Partnered with engineering and product managers to produce user flows, wireframes, high-fidelity mockups, and micro-interaction prototypes.',
+          'Simplified complex user interactions while preserving each product\'s brand personality and unique identity.',
+          'Defined design guidelines and best practices that standardised quality across the studio\'s portfolio.',
+          'Hired and mentored freelance designers and interns, scaling the team\'s capacity to meet product demand.',
         ],
       },
     ],
@@ -97,9 +99,10 @@ const COMPANIES: Company[] = [
       {
         title: 'UI/UX Designer', period: 'May 2018 – Apr 2019',
         bullets: [
-          'Designed UI for SaaS dashboards and mobile apps, translating complex data into intuitive interfaces.',
-          'Conducted usability testing sessions and iterated on designs based on user feedback.',
-          'Produced design specs, style guides, and assets for engineering handoff.',
+          'Led projects end-to-end — accountable not just for design delivery but for managing client relationships and expectations throughout.',
+          'Contributed hands-on at every stage, from early concept exploration through to detailed end-to-end implementation.',
+          'Shaped business development by crafting compelling design proposals for prospective clients.',
+          'Managed junior designers, setting direction and ensuring on-time delivery to a high standard.',
         ],
       },
     ],
@@ -110,9 +113,10 @@ const COMPANIES: Company[] = [
       {
         title: 'UI/UX Designer', period: 'Jul 2015 – Jul 2016',
         bullets: [
-          'Created visual designs and interaction flows for web and mobile products across diverse industries.',
-          'Developed graphic design assets, brand materials, and marketing collateral.',
-          'Collaborated with developers to ensure design fidelity through the build process.',
+          'Designed webpage layouts, wireframes, and interaction flows for web and mobile apps across a range of client industries.',
+          'Delivered digital marketing assets — ads, event creatives, sales decks, and brand collateral — at pace and to brief.',
+          'Upheld brand consistency by working within predefined brand guidelines on every project.',
+          'Collaborated closely with the Creative and Digital Marketing teams to ensure cohesive, on-brand output.',
         ],
       },
     ],
