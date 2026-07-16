@@ -192,8 +192,11 @@ export default function ExperienceSection() {
 
   const linePath = buildLinePath(arrowY)
 
+  const PHOTO_W = 220
+  const PHOTO_H = 600
+
   return (
-    <section id="experience" style={{ background: BG, fontFamily: "'Kanit', sans-serif" }}>
+    <section id="experience" style={{ background: BG, fontFamily: "'Kanit', sans-serif", position: 'relative', overflow: 'hidden' }}>
       <div style={{ height: 1, background: 'rgba(241,255,88,0.08)' }} />
       <div className="mx-auto px-6 md:px-12 py-24 md:py-32" style={{ maxWidth: 1480 }}>
 
@@ -340,8 +343,8 @@ export default function ExperienceSection() {
             </motion.div>
           </div>
 
-          {/* ── RIGHT: Role cards + Photo ── */}
-          <div className="flex flex-1 gap-6 lg:gap-8 min-w-0 items-start" style={{ paddingLeft: 40 }}>
+          {/* ── RIGHT: Role content (photo is outside container) ── */}
+          <div className="flex flex-1 min-w-0 items-start" style={{ paddingLeft: 40, paddingRight: PHOTO_W + 32 }}>
 
             {/* Role content — open layout, no cards */}
             <div className="flex-1 min-w-0" ref={contentRef}>
@@ -405,26 +408,30 @@ export default function ExperienceSection() {
               </AnimatePresence>
             </div>
 
-            {/* Photo — matches content height */}
-            <div
-              className="flex-shrink-0 hidden lg:block overflow-hidden rounded-2xl"
-              style={{
-                width: 180,
-                height: contentH ?? TRACK_HEIGHT,
-                border: `2px solid rgba(241,255,88,0.15)`,
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-                transition: 'height 0.4s ease',
-              }}
-            >
-              <img
-                src="/images/Portfolio pic.png"
-                alt="Hari Prasad L"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
-              />
-            </div>
-
           </div>
         </div>
+      </div>
+
+      {/* Photo — bleeds to right edge, fixed size, outside container */}
+      <div
+        className="hidden lg:block"
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: PHOTO_W,
+          height: PHOTO_H,
+          borderRadius: '16px 0 0 16px',
+          overflow: 'hidden',
+          boxShadow: '-20px 0 60px rgba(0,0,0,0.5)',
+        }}
+      >
+        <img
+          src="/images/Portfolio pic.png"
+          alt="Hari Prasad L"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
+        />
       </div>
     </section>
   )
