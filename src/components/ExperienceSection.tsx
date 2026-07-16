@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const ACCENT = '#F1FF58'
 const BG = '#111200'
-const CARD_BG = 'rgba(241,255,88,0.05)'
-const CARD_BORDER = 'rgba(241,255,88,0.12)'
+
 const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.55)'
 
