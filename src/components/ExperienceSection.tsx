@@ -357,7 +357,7 @@ export default function ExperienceSection() {
           </div>
 
           {/* ── RIGHT: Role content (photo is outside container) ── */}
-          <div className="flex flex-1 min-w-0 items-start" style={{ paddingLeft: 40, paddingRight: PHOTO_W + 32 }}>
+          <div className="flex flex-1 min-w-0 items-start" style={{ paddingLeft: 40, paddingRight: 252 }}>
 
             {/* Role content — open layout, no cards */}
             <div className="flex-1 min-w-0" ref={contentRef}>
