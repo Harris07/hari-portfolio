@@ -3,6 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Layers, BookOpen, Package, Target, Users, Sparkles, UserPlus, Trophy, TrendingUp, Layout, Megaphone, Shield, Workflow, PenTool, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+
+function getDuration(period: string): string {
+  const [startStr, endStr] = period.split(' – ')
+  const parseDate = (s: string) => {
+    if (s === 'Present') return new Date()
+    const [mon, yr] = s.split(' ')
+    return new Date(parseInt(yr), MONTHS.indexOf(mon))
+  }
+  const start = parseDate(startStr)
+  const end = parseDate(endStr)
+  const totalMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
+  const yrs = Math.floor(totalMonths / 12)
+  const mos = totalMonths % 12
+  if (yrs === 0) return `${mos} mo${mos !== 1 ? 's' : ''}`
+  if (mos === 0) return `${yrs} yr${yrs !== 1 ? 's' : ''}`
+  return `${yrs} yr${yrs !== 1 ? 's' : ''} ${mos} mo${mos !== 1 ? 's' : ''}`
+}
+
 const ACCENT = '#F1FF58'
 const BG = '#111200'
 
@@ -365,6 +384,10 @@ export default function ExperienceSection() {
                         <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
                         <span style={{ color: MUTED, fontSize: '0.85rem', fontFamily: "'Poppins', sans-serif" }}>
                           {role.period}
+                        </span>
+                        <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
+                        <span style={{ color: 'rgba(241,255,88,0.5)', fontSize: '0.82rem', fontFamily: "'Poppins', sans-serif" }}>
+                          {getDuration(role.period)}
                         </span>
                       </div>
 
