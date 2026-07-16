@@ -10,10 +10,10 @@ const MUTED = 'rgba(255,255,255,0.55)'
 
 // Fixed geometry
 const SLOT_SIZE = 52    // logo bubble diameter
-const SLOT_GAP = 100    // fixed gap between logos
-const TRACK_HEIGHT = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 660px
+const SLOT_GAP = 50     // gap between logos
+const TRACK_HEIGHT = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 460px
 const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) => i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2)
-// [26, 178, 330, 482, 634]
+// [26, 128, 230, 332, 434]
 
 // Line SVG geometry
 // Line is on the LEFT side; circle is separate on the RIGHT side of the container
@@ -179,7 +179,7 @@ export default function ExperienceSection() {
         </div>
 
         {/* Main layout */}
-        <div className="flex items-start gap-6 md:gap-10">
+        <div className="flex items-start gap-2 md:gap-3">
 
           {/* ── LEFT: Fixed-spaced company list ── */}
           <div
