@@ -22,7 +22,7 @@ const LINE_X = 16       // thin vertical line, left portion
 const BULGE_X = 4       // bulge peak — goes LEFT toward logos
 const CIRCLE_X = 68     // circle center x — right side, next to (not on) the line
 const CIRCLE_R = 28     // +20px diameter vs original 18r (36 → 56 diameter)
-const BULGE_SPREAD = 50
+const BULGE_SPREAD = 70
 
 function buildLinePath(arrowY: number): string {
   const top = 0
@@ -33,9 +33,10 @@ function buildLinePath(arrowY: number): string {
   const sb = y1 - arrowY
   const parts: string[] = [`M ${LINE_X} ${top}`]
   if (y0 > top) parts.push(`L ${LINE_X} ${y0}`)
+  // Wider control point spread makes the S-curve smooth, not pinched
   parts.push(
-    `C ${LINE_X} ${arrowY - sa * 0.45}, ${BULGE_X} ${arrowY - sa * 0.12}, ${BULGE_X} ${arrowY}`,
-    `C ${BULGE_X} ${arrowY + sb * 0.12}, ${LINE_X} ${arrowY + sb * 0.45}, ${LINE_X} ${y1}`,
+    `C ${LINE_X} ${arrowY - sa * 0.5}, ${BULGE_X} ${arrowY - sa * 0.35}, ${BULGE_X} ${arrowY}`,
+    `C ${BULGE_X} ${arrowY + sb * 0.35}, ${LINE_X} ${arrowY + sb * 0.5}, ${LINE_X} ${y1}`,
   )
   if (y1 < bot) parts.push(`L ${LINE_X} ${bot}`)
   return parts.join(' ')
