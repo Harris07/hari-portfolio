@@ -73,7 +73,7 @@ interface Company { id: string; name: string; logo: string | null; initials: str
 
 const COMPANIES: Company[] = [
   {
-    id: 'poshmark', name: 'Poshmark', logo: '/images/poshmark-logo.png', initials: 'PM',
+    id: 'poshmark', name: 'Poshmark', logo: '/company logos/appicon-iOS.png', initials: 'PM',
     roles: [
       {
         title: 'Product Designer', period: 'Feb 2022 – Present',
@@ -89,7 +89,7 @@ const COMPANIES: Company[] = [
     ],
   },
   {
-    id: 'goldsetu', name: 'Goldsetu', logo: null, initials: 'GS',
+    id: 'goldsetu', name: 'Goldsetu', logo: '/company logos/goldsetu.jpeg', initials: 'GS',
     roles: [
       {
         title: 'Product Designer', period: 'Oct 2021 – Jan 2022',
@@ -102,7 +102,7 @@ const COMPANIES: Company[] = [
     ],
   },
   {
-    id: 'iofactory', name: 'IO Factory', logo: null, initials: 'IO',
+    id: 'iofactory', name: 'IO Factory', logo: '/company logos/the_io_factory_logo.jpeg', initials: 'IO',
     roles: [
       {
         title: 'Product Designer', period: 'May 2019 – Sep 2021',
@@ -118,7 +118,7 @@ const COMPANIES: Company[] = [
     ],
   },
   {
-    id: 'kilobyte', name: 'Kilobyte Technologies', logo: null, initials: 'KB',
+    id: 'kilobyte', name: 'Kilobyte Technologies', logo: '/company logos/hellokilobyte_logo.jpg', initials: 'KB',
     roles: [
       {
         title: 'UI/UX Designer', period: 'May 2018 – Apr 2019',
@@ -132,7 +132,7 @@ const COMPANIES: Company[] = [
     ],
   },
   {
-    id: 'firius', name: 'Firius Technologies', logo: null, initials: 'FT',
+    id: 'firius', name: 'Firius Technologies', logo: '/company logos/Firius logo.jpg', initials: 'FT',
     roles: [
       {
         title: 'UI/UX Designer', period: 'Jul 2015 – Jul 2016',
@@ -252,7 +252,7 @@ export default function ExperienceSection() {
                 >
                   {co.logo ? (
                     <img src={co.logo} alt={co.name}
-                      style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
                   ) : (
                     <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
                   )}
