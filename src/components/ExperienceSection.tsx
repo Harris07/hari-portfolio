@@ -15,25 +15,30 @@ const TRACK_HEIGHT = 5 * SLOT_SIZE + 4 * SLOT_GAP  // 660px
 const SLOT_POSITIONS = Array.from({ length: 5 }, (_, i) => i * (SLOT_SIZE + SLOT_GAP) + SLOT_SIZE / 2)
 // [26, 178, 330, 482, 634]
 
-// Line SVG geometry
-const SVG_W = 58
-const LINE_X = 10     // baseline x of the straight line
-const BULGE_X = 38    // peak of the bulge (where circle center is)
+// Line SVG geometry — line on RIGHT side, bulge goes LEFT toward logos
+const SVG_W = 56
+const LINE_X = 46     // straight line sits on right side (toward content)
+const BULGE_X = 18    // bulge peak on left side (toward logos)
 const CIRCLE_R = 18   // arrow circle radius
 const BULGE_SPREAD = 52 // how far up/down the curve extends
 
 function buildLinePath(arrowY: number): string {
   const top = 0
   const bot = TRACK_HEIGHT
-  const y0 = arrowY - BULGE_SPREAD
-  const y1 = arrowY + BULGE_SPREAD
-  return [
-    `M ${LINE_X} ${top}`,
-    `L ${LINE_X} ${y0}`,
-    `C ${LINE_X} ${arrowY - BULGE_SPREAD * 0.45}, ${BULGE_X} ${arrowY - BULGE_SPREAD * 0.2}, ${BULGE_X} ${arrowY}`,
-    `C ${BULGE_X} ${arrowY + BULGE_SPREAD * 0.2}, ${LINE_X} ${arrowY + BULGE_SPREAD * 0.45}, ${LINE_X} ${y1}`,
-    `L ${LINE_X} ${bot}`,
-  ].join(' ')
+  // Clamp so curve never extends outside track bounds (fixes top stub)
+  const y0 = Math.max(top, arrowY - BULGE_SPREAD)
+  const y1 = Math.min(bot, arrowY + BULGE_SPREAD)
+  const sa = arrowY - y0  // available spread above
+  const sb = y1 - arrowY  // available spread below
+
+  const parts: string[] = [`M ${LINE_X} ${top}`]
+  if (y0 > top) parts.push(`L ${LINE_X} ${y0}`)
+  parts.push(
+    `C ${LINE_X} ${arrowY - sa * 0.45}, ${BULGE_X} ${arrowY - sa * 0.15}, ${BULGE_X} ${arrowY}`,
+    `C ${BULGE_X} ${arrowY + sb * 0.15}, ${LINE_X} ${arrowY + sb * 0.45}, ${LINE_X} ${y1}`,
+  )
+  if (y1 < bot) parts.push(`L ${LINE_X} ${bot}`)
+  return parts.join(' ')
 }
 
 interface Role { title: string; period: string; bullets: string[] }
@@ -286,9 +291,8 @@ export default function ExperienceSection() {
                 width: CIRCLE_R * 2,
                 height: CIRCLE_R * 2,
                 borderRadius: '50%',
-                background: 'rgba(20,22,0,0.85)',
-                border: `1.5px solid ${ACCENT}`,
-                boxShadow: `0 0 18px rgba(241,255,88,0.4), inset 0 0 8px rgba(241,255,88,0.08)`,
+                background: ACCENT,
+                boxShadow: `0 0 20px rgba(241,255,88,0.5), 0 4px 12px rgba(0,0,0,0.4)`,
                 cursor: dragging ? 'grabbing' : 'grab',
                 display: 'flex',
                 alignItems: 'center',
@@ -299,8 +303,8 @@ export default function ExperienceSection() {
             >
               {/* Double chevron up/down */}
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M3 5.5L7 2L11 5.5" stroke={ACCENT} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 8.5L7 12L11 8.5" stroke={ACCENT} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 5.5L7 2L11 5.5" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 8.5L7 12L11 8.5" stroke={BG} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </motion.div>
           </div>
