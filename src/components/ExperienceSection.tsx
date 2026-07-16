@@ -195,7 +195,7 @@ export default function ExperienceSection() {
   return (
     <section id="experience" style={{ background: BG, fontFamily: "'Kanit', sans-serif" }}>
       <div style={{ height: 1, background: 'rgba(241,255,88,0.08)' }} />
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32">
+      <div className="mx-auto px-6 md:px-12 py-24 md:py-32" style={{ maxWidth: 1480 }}>
 
         {/* Header */}
         <div className="mb-16 md:mb-20 text-center">
