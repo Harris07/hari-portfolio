@@ -198,12 +198,12 @@ export default function ExperienceSection() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-24 md:py-32">
 
         {/* Header */}
-        <div className="mb-16 md:mb-20">
+        <div className="mb-16 md:mb-20 text-center">
           <p className="uppercase tracking-[0.22em] text-xs font-semibold mb-3"
-            style={{ color: ACCENT, fontFamily: "'Poppins', sans-serif" }}>Career</p>
+            style={{ color: ACCENT, fontFamily: "'Poppins', sans-serif" }}>My Journey</p>
           <h2 className="font-semibold leading-tight"
             style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
-            Work Experience
+            Over The Years
           </h2>
         </div>
 
