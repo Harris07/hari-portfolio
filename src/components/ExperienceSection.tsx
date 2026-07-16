@@ -7,7 +7,7 @@ const ACCENT = '#F1FF58'
 const BG = '#111200'
 
 const WHITE = '#ffffff'
-const MUTED = 'rgba(255,255,255,0.55)'
+const MUTED = 'rgba(255,255,255,0.65)'
 
 // Fixed geometry
 const SLOT_SIZE = 52    // logo bubble diameter
