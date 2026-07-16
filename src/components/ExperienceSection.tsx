@@ -446,7 +446,7 @@ export default function ExperienceSection() {
         <img
           src="/images/Portfolio%20pic.png"
           alt="Hari Prasad L"
-          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'right top', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }}
         />
         {/* Blend edges into background */}
         <div style={{
