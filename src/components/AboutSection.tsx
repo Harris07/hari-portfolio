@@ -73,7 +73,7 @@ export default function AboutSection() {
               className="font-semibold leading-tight text-center"
               style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)', color: '#ffffff', fontFamily: "'Poppins', sans-serif" }}
             >
-              About me
+              About Me
             </h2>
           </div>
         </FadeIn>
