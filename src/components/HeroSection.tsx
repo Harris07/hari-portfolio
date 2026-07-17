@@ -9,20 +9,66 @@ const PORTRAIT_URL = '/images/portrait.png'
 
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [navVisible, setNavVisible] = useState(true)
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  useEffect(() => {
+    let lastY = window.scrollY
+    let scrollTimer: ReturnType<typeof setTimeout>
+
+    const onScroll = () => {
+      const currentY = window.scrollY
+      if (currentY > lastY && currentY > 60) {
+        setNavVisible(false) // scrolling down — hide
+      }
+      lastY = currentY
+      // show again when scroll stops
+      clearTimeout(scrollTimer)
+      scrollTimer = setTimeout(() => setNavVisible(true), 150)
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => { window.removeEventListener('scroll', onScroll); clearTimeout(scrollTimer) }
+  }, [])
+
   return (
     <section
       className="h-auto sm:h-screen flex flex-col relative pb-8 sm:pb-0"
       style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(241,255,88,0.1) 0%, transparent 65%), #0d0e12', overflowX: 'clip' }}
     >
-      {/* Navbar */}
+      {/* Navbar — fixed on mobile, static on desktop */}
+      <motion.div
+        className="md:hidden fixed top-0 left-0 right-0 z-40"
+        animate={{ y: navVisible ? 0 : '-100%' }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        style={{ background: 'rgba(13,14,18,0.85)', backdropFilter: 'blur(10px)' }}
+      >
+        <nav className="flex justify-between items-center px-6 py-4">
+          <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src="/images/h-logo.png" alt="Hari" style={{ height: 36, width: 'auto' }} />
+          </a>
+          <button
+            className="flex flex-col justify-center items-center gap-[5px]"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: 32, height: 32, padding: 0 }}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
+          >
+            <motion.span animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }} transition={{ duration: 0.25 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }} />
+            <motion.span animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }} transition={{ duration: 0.2 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }} />
+            <motion.span animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }} transition={{ duration: 0.25 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }} />
+          </button>
+        </nav>
+      </motion.div>
+
       <FadeIn delay={0} y={-20}>
-        <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
+        <nav className="hidden md:flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
 
           {/* Logo */}
           <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
@@ -55,29 +101,6 @@ export default function HeroSection() {
             Contact
           </Link>
 
-          {/* Hamburger button — mobile only */}
-          <button
-            className="md:hidden flex flex-col justify-center items-center gap-[5px] z-50 relative"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', width: 32, height: 32, padding: 0 }}
-            onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle menu"
-          >
-            <motion.span
-              animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.25 }}
-              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
-            />
-            <motion.span
-              animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.2 }}
-              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
-            />
-            <motion.span
-              animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.25 }}
-              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
-            />
-          </button>
           </div>
         </nav>
       </FadeIn>
