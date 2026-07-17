@@ -22,12 +22,15 @@ export default function HeroSection() {
     >
       {/* Navbar */}
       <FadeIn delay={0} y={-20}>
-        <nav className="relative flex justify-end items-center gap-10 md:gap-16 px-6 md:px-10 pt-6 md:pt-8">
+        <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
 
-          {/* Logo — absolute left */}
-          <a href="/" style={{ position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src="/images/h-logo.png" alt="Hari" style={{ height: 36, width: 'auto' }} />
+          {/* Logo */}
+          <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
+            <img src="/images/h-logo.png" alt="Hari" style={{ height: 40, width: 'auto' }} />
           </a>
+
+          {/* Right nav links */}
+          <div className="flex items-center gap-10 md:gap-16">
 
           {/* Desktop links */}
           {(['About', 'Projects'] as const).map((link) => (
@@ -75,6 +78,7 @@ export default function HeroSection() {
               style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
             />
           </button>
+          </div>
         </nav>
       </FadeIn>
 
