@@ -342,7 +342,7 @@ export default function ExperienceSection() {
         {/* Mobile photo — below content */}
         <motion.div
           className="lg:hidden mt-10 overflow-hidden"
-          style={{ borderRadius: 16, height: 400, position: 'relative' }}
+          style={{ borderRadius: 16, height: 400, position: 'relative', marginTop: -20 }}
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
