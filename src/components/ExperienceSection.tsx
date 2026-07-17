@@ -249,7 +249,7 @@ export default function ExperienceSection() {
                     background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
                     border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
                     boxShadow: i === active ? `0 0 18px rgba(241,255,88,0.3)` : 'none',
-                    opacity: i === active ? 1 : 0.8,
+                    opacity: i === active ? 1 : 0.7,
                     transition: 'all 0.3s',
                   }}
                 >
@@ -380,7 +380,7 @@ export default function ExperienceSection() {
                       background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
                       border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.1)'}`,
                       boxShadow: i === active ? `0 0 16px rgba(241,255,88,0.25)` : 'none',
-                      opacity: i === active ? 1 : 0.8,
+                      opacity: i === active ? 1 : 0.7,
                       transition: 'all 0.3s',
                     }}
                   >
