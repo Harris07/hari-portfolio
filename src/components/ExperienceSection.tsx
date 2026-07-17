@@ -274,11 +274,8 @@ export default function ExperienceSection() {
             {/* Tab line */}
             <div className="relative mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, width: `${COMPANIES.length * 60 + (COMPANIES.length - 1) * 10}px`, marginLeft: 8 }}>
               <motion.div
-                style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
-                animate={{
-                  left: `calc(${active * (100 / COMPANIES.length) + (100 / COMPANIES.length / 4)}% + ${active < 2 ? 7 : 3}px)`,
-                  width: `${100 / COMPANIES.length / 2}%`,
-                }}
+                style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT, width: 30 }}
+                animate={{ left: active * 70 + 15 }}
                 transition={{ duration: 0.35, ease: EASE }}
               />
             </div>
