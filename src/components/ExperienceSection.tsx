@@ -273,7 +273,7 @@ export default function ExperienceSection() {
             <div className="relative w-fit mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, minWidth: '100%' }}>
               <motion.div
                 style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
-                animate={{ left: `${(active / COMPANIES.length) * 100}%`, width: `${100 / COMPANIES.length}%` }}
+                animate={{ left: `${active * (100 / COMPANIES.length) + (100 / COMPANIES.length / 4)}%`, width: `${100 / COMPANIES.length / 2}%` }}
                 transition={{ duration: 0.35, ease: EASE }}
               />
             </div>
