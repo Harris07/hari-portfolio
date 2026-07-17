@@ -339,6 +339,27 @@ export default function ExperienceSection() {
           </AnimatePresence>
         </div>
 
+        {/* Mobile photo — below content */}
+        <motion.div
+          className="lg:hidden mt-10 overflow-hidden"
+          style={{ borderRadius: 16, height: 400, position: 'relative' }}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+        >
+          <img
+            src="/images/Portfolio%20pic.png"
+            alt="Hari Prasad L"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'left top', display: 'block' }}
+          />
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: `linear-gradient(to bottom, transparent 60%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 20%)`,
+            pointerEvents: 'none',
+          }} />
+        </motion.div>
+
         {/* ── DESKTOP layout (lg+) ── */}
         <div className="hidden lg:flex items-start gap-2 md:gap-3">
 
