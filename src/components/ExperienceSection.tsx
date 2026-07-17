@@ -229,57 +229,55 @@ export default function ExperienceSection() {
 
         {/* ── MOBILE layout (< lg) ── */}
         <div className="lg:hidden">
-          {/* Horizontal logo selector */}
-          <motion.div
-            className="flex gap-4 overflow-x-auto"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            {...fadeUp(0.1)}
-          >
-            {COMPANIES.map((co, i) => (
-              <button
-                key={co.id}
-                onClick={() => setActive(i)}
-                className="flex-shrink-0 flex flex-col items-center gap-2"
-                style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-              >
-                <div
-                  className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
-                  style={{
-                    width: 56, height: 56,
-                    background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
-                    border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
-                    boxShadow: i === active ? `0 0 18px rgba(241,255,88,0.3)` : 'none',
-                    opacity: i === active ? 1 : 0.7,
-                    transition: 'all 0.3s',
-                  }}
+          {/* Horizontal logo selector + tab line */}
+          <motion.div className="mb-8 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} {...fadeUp(0.1)}>
+            {/* Logos */}
+            <div className="flex gap-4 w-fit">
+              {COMPANIES.map((co, i) => (
+                <button
+                  key={co.id}
+                  onClick={() => setActive(i)}
+                  className="flex-shrink-0 flex flex-col items-center gap-2"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  {co.logo ? (
-                    <img src={co.logo} alt={co.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
-                  ) : (
-                    <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
-                  )}
-                </div>
-                <span style={{
-                  color: i === active ? ACCENT : MUTED,
-                  fontSize: '0.65rem', fontFamily: "'Poppins', sans-serif",
-                  fontWeight: i === active ? 600 : 400,
-                  whiteSpace: 'nowrap', transition: 'color 0.3s',
-                }}>
-                  {co.name.split(' ')[0]}
-                </span>
-              </button>
-            ))}
+                  <div
+                    className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
+                    style={{
+                      width: 56, height: 56,
+                      background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
+                      border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
+                      boxShadow: i === active ? `0 0 18px rgba(241,255,88,0.3)` : 'none',
+                      opacity: i === active ? 1 : 0.7,
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    {co.logo ? (
+                      <img src={co.logo} alt={co.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                    ) : (
+                      <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
+                    )}
+                  </div>
+                  <span style={{
+                    color: i === active ? ACCENT : MUTED,
+                    fontSize: '0.65rem', fontFamily: "'Poppins', sans-serif",
+                    fontWeight: i === active ? 600 : 400,
+                    whiteSpace: 'nowrap', transition: 'color 0.3s',
+                  }}>
+                    {co.name.split(' ')[0]}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {/* Tab line — same w-fit so it matches logos width */}
+            <div className="relative w-fit mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, minWidth: '100%' }}>
+              <motion.div
+                style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
+                animate={{ left: `${(active / COMPANIES.length) * 100}%`, width: `${100 / COMPANIES.length}%` }}
+                transition={{ duration: 0.35, ease: EASE }}
+              />
+            </div>
           </motion.div>
-
-          {/* Tab line indicator */}
-          <div className="relative mb-8" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, marginTop: 6 }}>
-            <motion.div
-              style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
-              animate={{ left: `${(active / COMPANIES.length) * 100}%`, width: `${100 / COMPANIES.length}%` }}
-              transition={{ duration: 0.35, ease: EASE }}
-            />
-          </div>
 
           {/* Mobile content */}
           <AnimatePresence mode="wait">
