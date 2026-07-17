@@ -22,11 +22,11 @@ export default function HeroSection() {
     >
       {/* Navbar */}
       <FadeIn delay={0} y={-20}>
-        <nav className="flex justify-between items-center gap-10 md:gap-16 px-6 md:px-10 pt-6 md:pt-8">
+        <nav className="relative flex justify-end items-center gap-10 md:gap-16 px-6 md:px-10 pt-6 md:pt-8">
 
-          {/* Logo */}
-          <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-            <img src="/images/h-logo.png" alt="Hari" style={{ height: 36, width: 'auto', opacity: 0.9 }} />
+          {/* Logo — absolute left */}
+          <a href="/" style={{ position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src="/images/h-logo.png" alt="Hari" style={{ height: 36, width: 'auto' }} />
           </a>
 
           {/* Desktop links */}
