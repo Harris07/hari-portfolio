@@ -272,17 +272,13 @@ export default function ExperienceSection() {
             ))}
           </motion.div>
 
-          {/* Dot indicators */}
-          <div className="flex gap-2 mb-8 justify-center">
-            {COMPANIES.map((_, i) => (
-              <button key={i} onClick={() => setActive(i)}
-                style={{
-                  width: i === active ? 24 : 6, height: 6, borderRadius: 3,
-                  background: i === active ? ACCENT : 'rgba(255,255,255,0.2)',
-                  border: 'none', cursor: 'pointer', padding: 0,
-                  transition: 'all 0.3s ease',
-                }} />
-            ))}
+          {/* Tab line indicator */}
+          <div className="relative mb-8" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2 }}>
+            <motion.div
+              style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
+              animate={{ left: `${(active / COMPANIES.length) * 100}%`, width: `${100 / COMPANIES.length}%` }}
+              transition={{ duration: 0.35, ease: EASE }}
+            />
           </div>
 
           {/* Mobile content */}
