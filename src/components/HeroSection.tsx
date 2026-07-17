@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import FadeIn from './FadeIn'
@@ -9,6 +9,11 @@ const PORTRAIT_URL = '/images/portrait.png'
 
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
 
   return (
     <section
@@ -80,6 +85,16 @@ export default function HeroSection() {
             style={{ background: 'rgba(13,14,18,0.92)', backdropFilter: 'blur(12px)' }}
             onClick={() => setMenuOpen(false)}
           >
+            {/* X close button */}
+            <button
+              onClick={e => { e.stopPropagation(); setMenuOpen(false) }}
+              style={{ position: 'absolute', top: 24, right: 24, background: 'none', border: 'none', cursor: 'pointer', color: '#D7E2EA', padding: 8 }}
+              aria-label="Close menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
             {(['About', 'Projects'] as const).map((link, i) => (
               <motion.a
                 key={link}
