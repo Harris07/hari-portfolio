@@ -68,50 +68,39 @@ export default function HeroSection() {
         </nav>
       </FadeIn>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu overlay — fullscreen */}
       <AnimatePresence>
         {menuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              className="md:hidden fixed inset-0 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{ background: 'rgba(0,0,0,0.5)' }}
-              onClick={() => setMenuOpen(false)}
-            />
-            {/* Drawer */}
-            <motion.div
-              className="md:hidden fixed top-0 right-0 h-full z-40 flex flex-col justify-center gap-10 px-10"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              style={{ background: '#0d0e12', width: 240, borderLeft: '1px solid rgba(241,255,88,0.08)' }}
-            >
-              {(['About', 'Projects'] as const).map((link, i) => (
-                <motion.a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.07, duration: 0.3 }}
-                  onClick={() => setMenuOpen(false)}
-                  className="text-2xl font-medium uppercase tracking-widest"
-                  style={{ color: '#D7E2EA', textDecoration: 'none' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
-                >
-                  {link}
-                </motion.a>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.24, duration: 0.3 }}
+          <motion.div
+            className="md:hidden fixed inset-0 z-50 flex flex-col items-center justify-center gap-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            style={{ background: 'rgba(13,14,18,0.92)', backdropFilter: 'blur(12px)' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            {(['About', 'Projects'] as const).map((link, i) => (
+              <motion.a
+                key={link}
+                href={`#${link.toLowerCase()}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 + i * 0.08, duration: 0.35 }}
+                onClick={() => setMenuOpen(false)}
+                className="text-3xl font-semibold uppercase tracking-widest"
+                style={{ color: '#D7E2EA', textDecoration: 'none' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
               >
+                {link}
+              </motion.a>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.24, duration: 0.35 }}
+            >
                 <Link
                   to="/contact"
                   onClick={() => setMenuOpen(false)}
@@ -123,8 +112,7 @@ export default function HeroSection() {
                   Contact
                 </Link>
               </motion.div>
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 
