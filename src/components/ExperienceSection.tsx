@@ -223,7 +223,7 @@ export default function ExperienceSection() {
             style={{ color: ACCENT, fontFamily: "'Poppins', sans-serif" }}>My Journey</p>
           <h2 className="font-semibold leading-tight"
             style={{ fontSize: 'clamp(2.2rem, 4.5vw, 3.6rem)', color: WHITE, fontFamily: "'Poppins', sans-serif" }}>
-            Over The Years
+            Over 8+ Years
           </h2>
         </motion.div>
 
