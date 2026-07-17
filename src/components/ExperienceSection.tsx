@@ -355,7 +355,7 @@ export default function ExperienceSection() {
           />
           <div style={{
             position: 'absolute', inset: 0,
-            background: `linear-gradient(to bottom, transparent 60%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 20%)`,
+            background: `linear-gradient(to bottom, ${BG} 0%, transparent 8%, transparent 60%, ${BG} 100%), linear-gradient(to right, ${BG} 0%, transparent 20%)`,
             pointerEvents: 'none',
           }} />
         </motion.div>
