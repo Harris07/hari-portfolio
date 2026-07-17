@@ -119,7 +119,7 @@ export default function HeroSection() {
                 <Link
                   to="/contact"
                   onClick={() => setMenuOpen(false)}
-                  className="text-2xl font-medium uppercase tracking-widest"
+                  className="text-3xl font-semibold uppercase tracking-widest"
                   style={{ color: '#D7E2EA', textDecoration: 'none' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
                   onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
