@@ -230,50 +230,55 @@ export default function ExperienceSection() {
         {/* ── MOBILE layout (< lg) ── */}
         <div className="lg:hidden">
           {/* Horizontal logo selector + tab line */}
-          <motion.div className="mb-8 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} {...fadeUp(0.1)}>
-            {/* Logos */}
-            <div className="flex w-fit" style={{ gap: 16 }}>
-              {COMPANIES.map((co, i) => (
-                <button
-                  key={co.id}
-                  onClick={() => setActive(i)}
-                  className="flex-shrink-0 flex flex-col items-center gap-2"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', width: 72, paddingTop: 6, paddingBottom: 2 }}
-                >
-                  <div
-                    className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
-                    style={{
-                      width: 56, height: 56,
-                      background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
-                      border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
-                      boxShadow: i === active ? `0 0 18px rgba(241,255,88,0.3)` : 'none',
-                      opacity: i === active ? 1 : 0.7,
-                      transition: 'all 0.3s',
-                    }}
+          <motion.div className="mb-8" {...fadeUp(0.1)}>
+            {/* Logos — overflow-x-auto on inner div so outer doesn't clip glow */}
+            <div style={{ overflowX: 'auto', overflowY: 'visible', scrollbarWidth: 'none' }}>
+              <div className="flex w-fit" style={{ gap: 10 }}>
+                {COMPANIES.map((co, i) => (
+                  <button
+                    key={co.id}
+                    onClick={() => setActive(i)}
+                    className="flex-shrink-0 flex flex-col items-center gap-2"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', width: 60, paddingTop: 8, paddingBottom: 2 }}
                   >
-                    {co.logo ? (
-                      <img src={co.logo} alt={co.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
-                    ) : (
-                      <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
-                    )}
-                  </div>
-                  <span style={{
-                    color: i === active ? ACCENT : MUTED,
-                    fontSize: '0.65rem', fontFamily: "'Poppins', sans-serif",
-                    fontWeight: i === active ? 600 : 400,
-                    whiteSpace: 'nowrap', transition: 'color 0.3s',
-                  }}>
-                    {co.name.split(' ')[0]}
-                  </span>
-                </button>
-              ))}
+                    <div
+                      className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
+                      style={{
+                        width: 52, height: 52,
+                        background: i === active ? 'rgba(241,255,88,0.12)' : 'rgba(255,255,255,0.06)',
+                        border: `2px solid ${i === active ? ACCENT : 'rgba(255,255,255,0.12)'}`,
+                        boxShadow: i === active ? `0 0 0 6px rgba(241,255,88,0.12), 0 0 18px rgba(241,255,88,0.35)` : 'none',
+                        opacity: i === active ? 1 : 0.7,
+                        transition: 'all 0.3s',
+                      }}
+                    >
+                      {co.logo ? (
+                        <img src={co.logo} alt={co.name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block' }} />
+                      ) : (
+                        <span style={{ color: i === active ? ACCENT : MUTED, fontSize: 12, fontWeight: 700 }}>{co.initials}</span>
+                      )}
+                    </div>
+                    <span style={{
+                      color: i === active ? ACCENT : MUTED,
+                      fontSize: '0.65rem', fontFamily: "'Poppins', sans-serif",
+                      fontWeight: i === active ? 600 : 400,
+                      whiteSpace: 'nowrap', transition: 'color 0.3s',
+                    }}>
+                      {co.name.split(' ')[0]}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
-            {/* Tab line — same w-fit so it matches logos width */}
-            <div className="relative mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, width: `${COMPANIES.length * 72 + (COMPANIES.length - 1) * 16}px` }}>
+            {/* Tab line */}
+            <div className="relative mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, width: `${COMPANIES.length * 60 + (COMPANIES.length - 1) * 10}px` }}>
               <motion.div
                 style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
-                animate={{ left: `${active * (100 / COMPANIES.length) + (100 / COMPANIES.length / 4)}%`, width: `${100 / COMPANIES.length / 2}%` }}
+                animate={{
+                  left: `calc(${active * (100 / COMPANIES.length) + (100 / COMPANIES.length / 4)}% + 3px)`,
+                  width: `${100 / COMPANIES.length / 2}%`,
+                }}
                 transition={{ duration: 0.35, ease: EASE }}
               />
             </div>
