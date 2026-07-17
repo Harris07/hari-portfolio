@@ -3,7 +3,7 @@ import AnimatedText from './AnimatedText'
 import ContactButton from './ContactButton'
 
 const ABOUT_TEXT =
-  'With 7+ years of experience in UI/UX and Product Design, I design intuitive, user-focused digital products that solve real problems and deliver measurable results. I combine strategic thinking, user research, and modern design principles to create experiences that are both beautiful and effective. Let’s turn great ideas into exceptional products.'
+  'With 8+ years of experience in UI/UX and Product Design, I design intuitive, user-focused digital products that solve real problems and deliver measurable results. I combine strategic thinking, user research, and modern design principles to create experiences that are both beautiful and effective. Let’s turn great ideas into exceptional products.'
 
 const MOON_URL = '/images/moon.png'
 const OBJ_BL_URL = '/images/obj-bl.png'
