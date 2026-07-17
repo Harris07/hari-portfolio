@@ -232,13 +232,13 @@ export default function ExperienceSection() {
           {/* Horizontal logo selector + tab line */}
           <motion.div className="mb-8 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} {...fadeUp(0.1)}>
             {/* Logos */}
-            <div className="flex gap-4 w-fit">
+            <div className="flex w-fit" style={{ gap: 16 }}>
               {COMPANIES.map((co, i) => (
                 <button
                   key={co.id}
                   onClick={() => setActive(i)}
                   className="flex-shrink-0 flex flex-col items-center gap-2"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', width: 72, paddingTop: 6, paddingBottom: 2 }}
                 >
                   <div
                     className="flex items-center justify-center rounded-full overflow-hidden transition-all duration-300"
@@ -270,7 +270,7 @@ export default function ExperienceSection() {
               ))}
             </div>
             {/* Tab line — same w-fit so it matches logos width */}
-            <div className="relative w-fit mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, minWidth: '100%' }}>
+            <div className="relative mt-3" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, width: `${COMPANIES.length * 72 + (COMPANIES.length - 1) * 16}px` }}>
               <motion.div
                 style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
                 animate={{ left: `${active * (100 / COMPANIES.length) + (100 / COMPANIES.length / 4)}%`, width: `${100 / COMPANIES.length / 2}%` }}
