@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import FadeIn from './FadeIn'
 import ContactButton from './ContactButton'
 import Magnet from './Magnet'
@@ -6,6 +8,8 @@ import Magnet from './Magnet'
 const PORTRAIT_URL = '/images/portrait.png'
 
 export default function HeroSection() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <section
       className="h-auto sm:h-screen flex flex-col relative pb-8 sm:pb-0"
@@ -13,12 +17,14 @@ export default function HeroSection() {
     >
       {/* Navbar */}
       <FadeIn delay={0} y={-20}>
-        <nav className="flex justify-end gap-10 md:gap-16 px-6 md:px-10 pt-6 md:pt-8">
+        <nav className="flex justify-end items-center gap-10 md:gap-16 px-6 md:px-10 pt-6 md:pt-8">
+
+          {/* Desktop links */}
           {(['About', 'Projects'] as const).map((link) => (
             <a
               key={link}
               href={`#${link.toLowerCase()}`}
-              className="text-sm md:text-lg lg:text-[1.4rem] font-medium uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
+              className="hidden md:block text-lg lg:text-[1.4rem] font-medium uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
               style={{ color: '#D7E2EA', textDecoration: 'none' }}
               onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
               onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
@@ -28,15 +34,99 @@ export default function HeroSection() {
           ))}
           <Link
             to="/contact"
-            className="text-sm md:text-lg lg:text-[1.4rem] font-medium uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
+            className="hidden md:block text-lg lg:text-[1.4rem] font-medium uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
             style={{ color: '#D7E2EA', textDecoration: 'none' }}
             onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
             onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
           >
             Contact
           </Link>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            className="md:hidden flex flex-col justify-center items-center gap-[5px] z-50 relative"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', width: 32, height: 32, padding: 0 }}
+            onClick={() => setMenuOpen(o => !o)}
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
+            />
+            <motion.span
+              animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.2 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
+            />
+            <motion.span
+              animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{ display: 'block', width: 22, height: 2, borderRadius: 2, background: '#D7E2EA' }}
+            />
+          </button>
         </nav>
       </FadeIn>
+
+      {/* Mobile menu overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="md:hidden fixed inset-0 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ background: 'rgba(0,0,0,0.5)' }}
+              onClick={() => setMenuOpen(false)}
+            />
+            {/* Drawer */}
+            <motion.div
+              className="md:hidden fixed top-0 right-0 h-full z-40 flex flex-col justify-center gap-10 px-10"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              style={{ background: '#0d0e12', width: 240, borderLeft: '1px solid rgba(241,255,88,0.08)' }}
+            >
+              {(['About', 'Projects'] as const).map((link, i) => (
+                <motion.a
+                  key={link}
+                  href={`#${link.toLowerCase()}`}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.07, duration: 0.3 }}
+                  onClick={() => setMenuOpen(false)}
+                  className="text-2xl font-medium uppercase tracking-widest"
+                  style={{ color: '#D7E2EA', textDecoration: 'none' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
+                >
+                  {link}
+                </motion.a>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.24, duration: 0.3 }}
+              >
+                <Link
+                  to="/contact"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-2xl font-medium uppercase tracking-widest"
+                  style={{ color: '#D7E2EA', textDecoration: 'none' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#F1FF58')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#D7E2EA')}
+                >
+                  Contact
+                </Link>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Hero Heading */}
       <div className="overflow-hidden">
