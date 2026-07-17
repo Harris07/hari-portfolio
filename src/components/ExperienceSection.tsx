@@ -231,7 +231,7 @@ export default function ExperienceSection() {
         <div className="lg:hidden">
           {/* Horizontal logo selector */}
           <motion.div
-            className="flex gap-4 overflow-x-auto pb-4 mb-8"
+            className="flex gap-4 overflow-x-auto"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             {...fadeUp(0.1)}
           >
@@ -273,7 +273,7 @@ export default function ExperienceSection() {
           </motion.div>
 
           {/* Tab line indicator */}
-          <div className="relative mb-8" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2 }}>
+          <div className="relative mb-8" style={{ height: 2, background: 'rgba(255,255,255,0.12)', borderRadius: 2, marginTop: 6 }}>
             <motion.div
               style={{ position: 'absolute', top: 0, height: 2, borderRadius: 2, background: ACCENT }}
               animate={{ left: `${(active / COMPANIES.length) * 100}%`, width: `${100 / COMPANIES.length}%` }}
