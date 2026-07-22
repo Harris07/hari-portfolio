@@ -47,7 +47,7 @@ function Phone({ src, alt = '', delay = 0, rotate = 0, shadow = true }: {
   src: string; alt?: string; delay?: number; rotate?: number; shadow?: boolean
 }) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-30px' })
+  const inView = useInView(ref, { once: true, margin: '120px' })
   return (
     <motion.div ref={ref}
       initial={{ opacity: 0, y: 60, rotate: rotate * 0.4 }}

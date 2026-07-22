@@ -170,7 +170,7 @@ const lp  = (a: number, b: number, t: number) => a + (b - a) * t
    0.58+      animations play — virtualAnim 0→3 via RAF (forward) or scroll (backward)
    0.94→1.00  whole section exits upward
 ─────────────────────────────────────────────────────────────── */
-const ANIM_P = 0.58  // progress where card animations begin
+const ANIM_P = 0.38  // progress where card animations begin (starts mid-zoom)
 
 function OnboardingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -637,12 +637,21 @@ export default function MotionDetailPage() {
               { value: '5', label: 'Animation categories shipped' },
               { value: '10+', label: 'Individual Lottie & GIF assets' },
               { value: '3', label: 'Platforms — iOS, Android, Web' },
-              { value: '4', label: 'Years of motion across Poshmark' },
-              { value: '100%', label: 'Built in After Effects + Lottie' },
-              { value: 'Live', label: "Across Poshmark's product today" },
             ].map(({ value, label }) => (
               <div key={label} className="p-6 rounded-2xl"
                 style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid' }}>
+                <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{value}</span>
+                <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>{label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-center gap-4 mt-4">
+            {[
+              { value: '4', label: 'Years of motion across Poshmark' },
+              { value: '100%', label: 'Built with Adobe Illustrator + After Effects.' },
+            ].map(({ value, label }) => (
+              <div key={label} className="p-6 rounded-2xl w-full md:w-[calc(33.333%-8px)]"
+                style={{ background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.08) 1px solid', maxWidth: 'calc(33.333% - 8px)' }}>
                 <span className="font-semibold block leading-none mb-2" style={{ color: WHITE, fontSize: 'clamp(1.8rem,3vw,2.6rem)' }}>{value}</span>
                 <span className="text-xs font-light" style={{ color: 'rgba(255,255,255,0.65)' }}>{label}</span>
               </div>

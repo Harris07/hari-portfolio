@@ -10,6 +10,7 @@ const PORTRAIT_URL = '/images/portrait.png'
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [navVisible, setNavVisible] = useState(true)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -22,6 +23,7 @@ export default function HeroSection() {
 
     const onScroll = () => {
       const currentY = window.scrollY
+      setScrolled(currentY > 10)
       if (currentY > lastY && currentY > 60) {
         setNavVisible(false) // scrolling down — hide
       }
@@ -45,7 +47,11 @@ export default function HeroSection() {
         className="md:hidden fixed top-0 left-0 right-0 z-40"
         animate={{ y: navVisible ? 0 : '-100%' }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        style={{ background: 'rgba(13,14,18,0.85)', backdropFilter: 'blur(10px)' }}
+        style={{
+          background: scrolled ? 'rgba(13,14,18,0.85)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(10px)' : 'none',
+          transition: 'background 0.3s ease, backdrop-filter 0.3s ease'
+        }}
       >
         <nav className="flex justify-between items-center px-6 py-4">
           <a href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
@@ -100,6 +106,26 @@ export default function HeroSection() {
           >
             Contact
           </Link>
+          <a
+            href="/resume.pdf"
+            download
+            className="hidden md:flex items-center gap-2 text-sm lg:text-base font-semibold uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
+            style={{
+              color: '#F1FF58',
+              textDecoration: 'none',
+              border: '1.5px solid #F1FF58',
+              borderRadius: 999,
+              padding: '7px 16px',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(241,255,88,0.10)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3v13M7 11l5 5 5-5"/>
+              <path d="M5 20h14"/>
+            </svg>
+            Resume
+          </a>
 
           </div>
         </nav>
@@ -159,6 +185,36 @@ export default function HeroSection() {
                   Contact
                 </Link>
               </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.32, duration: 0.35 }}
+            >
+              <a
+                href="/resume.pdf"
+                download
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 px-8 py-3 hover:scale-105 active:scale-95 transition-transform duration-200"
+                style={{
+                  color: '#F1FF58',
+                  textDecoration: 'none',
+                  border: '2px solid #F1FF58',
+                  borderRadius: 9999,
+                  fontFamily: "'Kanit', sans-serif",
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  whiteSpace: 'nowrap',
+                  fontSize: '0.75rem',
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3v13M7 11l5 5 5-5"/>
+                  <path d="M5 20h14"/>
+                </svg>
+                Resume
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

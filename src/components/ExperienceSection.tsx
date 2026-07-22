@@ -72,12 +72,13 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Feb 2022 – Present',
         bullets: [
-          { Icon: Zap, heading: 'Motion & Delight at Scale', body: 'Crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers across the Poshmark app.' },
           { Icon: TrendingUp, heading: 'Seller Growth & Engagement', body: 'Designed Listing Streaks end-to-end, driving a 14% weekly lister conversion uplift. Also led casual seller initiatives and the Push Prompt Post-Listing Creation flow to reduce first-time seller order cancellations.' },
-          { Icon: Layers, heading: 'Major Product Initiatives', body: 'Drove design for Consignment, App Redesign, Closet Page Redesign, Reposh, Bulk System Actions, and New KYC flow (Project Socure) — spanning 0→1 features and large-scale system work.' },
-          { Icon: Workflow, heading: 'Multi-project Ownership', body: 'Took on full ownership of the Ops Pod, managing and delivering multiple concurrent projects while maintaining high design quality and strong stakeholder alignment.' },
-          { Icon: Package, heading: 'Cross-market Expansion', body: 'Collaborated closely with stakeholders to deliver Canada Purolator and Overweight Shipping Labels — extending Poshmark\'s logistics experience to new markets.' },
-          { Icon: BookOpen, heading: 'Design Quality & Standards', body: 'Established a high bar for craft from day one — adapting to the design system within weeks, contributing to guidelines, and setting a benchmark for visual quality and attention to detail across the team.' },
+          { Icon: TrendingUp, heading: 'Case Tracker: Ops Impact', body: 'Designed Case Tracker, cutting duplicate case rate by 52% (13.0% → 6.2%) and absolute duplicates by 58% (~6,400 fewer/week). Web case volume dropped 23%, validating deflection at the form.' },
+          { Icon: Users, heading: 'Cross-functional & Global Collaboration', body: 'Partnered closely with product managers and engineers across India, the US, and Korea, aligning on product direction, shipping velocity, and design quality across time zones.' },
+          { Icon: Layers, heading: 'Product Ownership at Scale', body: 'Took full ownership of the Ops Pod and drove design across Consignment, App Redesign, Closet Page Redesign, Reposh, Bulk System Actions, and New KYC flow (Project Socure), delivering multiple concurrent 0→1 and large-scale initiatives with strong stakeholder alignment.' },
+          { Icon: Zap, heading: 'Motion & Delight at Scale', body: 'Crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers across the Poshmark app.' },
+          { Icon: Package, heading: 'Cross-market Expansion', body: 'Collaborated closely with stakeholders to deliver Canada Purolator and Overweight Shipping Labels, extending Poshmark\'s logistics experience to new markets.' },
+          { Icon: BookOpen, heading: 'Design Quality & Standards', body: 'Established a high bar for craft from day one, adapting to the design system within weeks, contributing to guidelines, and setting a benchmark for visual quality and attention to detail across the team.' },
         ],
       },
     ],
@@ -88,9 +89,9 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'Oct 2021 – Jan 2022',
         bullets: [
-          { Icon: Layers, heading: 'End-to-end Product Design', body: 'Owned the full design of customer-facing web and mobile experiences for a gold investment platform — from discovery to pixel-perfect delivery.' },
+          { Icon: Layers, heading: 'Web & Mobile Product Design', body: 'Designed customer-facing web and mobile experiences for a gold investment platform, from discovery to pixel-perfect delivery.' },
           { Icon: BookOpen, heading: 'Design Language & Standards', body: 'Established design guidelines, component standards, and best practices that gave the product a coherent, trustworthy visual language.' },
-          { Icon: Zap, heading: 'Motion Design', body: 'Brought the brand to life through motion — animated the company logo and crafted presentation videos that elevated how the product was communicated to stakeholders and users alike.' },
+          { Icon: Zap, heading: 'Motion Design', body: 'Brought the brand to life through motion, animating the company logo and crafting presentation videos that elevated how the product was communicated to stakeholders and users alike.' },
         ],
       },
     ],
@@ -101,7 +102,7 @@ const COMPANIES: Company[] = [
       {
         title: 'Product Designer', period: 'May 2019 – Sep 2021',
         bullets: [
-          { Icon: Package, heading: '30+ SaaS Products Shipped', body: 'Designed new products, interfaces, and user experiences across 30+ SaaS platforms — including Pipeline, People, Budget, Mapbox, and VR Viewer.' },
+          { Icon: Package, heading: '30+ SaaS Products Shipped', body: 'Designed new products, interfaces, and user experiences across 30+ SaaS platforms, including Pipeline, People, Budget, Mapbox, and VR Viewer.' },
           { Icon: Target, heading: 'Strategy to Execution', body: 'Single-handedly drove design strategy and tactical execution across complex, multi-stakeholder projects from brief to ship.' },
           { Icon: Users, heading: 'Engineering Collaboration', body: 'Partnered with engineering and product managers to produce user flows, wireframes, high-fidelity mockups, and micro-interaction prototypes.' },
           { Icon: Sparkles, heading: 'Brand-led Simplicity', body: "Simplified complex user interactions while preserving each product's brand personality and unique identity." },
@@ -117,7 +118,7 @@ const COMPANIES: Company[] = [
       {
         title: 'UI/UX Designer', period: 'May 2018 – Apr 2019',
         bullets: [
-          { Icon: Trophy, heading: 'Client Ownership', body: 'Led projects end-to-end — accountable not just for design delivery but for managing client relationships and expectations throughout.' },
+          { Icon: Trophy, heading: 'Client Ownership', body: 'Led projects end-to-end, accountable not just for design delivery but for managing client relationships and expectations throughout.' },
           { Icon: Layers, heading: 'Concept to Implementation', body: 'Contributed hands-on at every stage, from early concept exploration through to detailed end-to-end implementation.' },
           { Icon: TrendingUp, heading: 'Business Development', body: 'Shaped business development by crafting compelling design proposals for prospective clients.' },
           { Icon: Users, heading: 'Team Management', body: 'Managed junior designers, setting direction and ensuring on-time delivery to a high standard.' },
@@ -132,7 +133,7 @@ const COMPANIES: Company[] = [
         title: 'UI/UX Designer', period: 'Jul 2015 – Jul 2016',
         bullets: [
           { Icon: Layout, heading: 'Web & Mobile Interfaces', body: 'Designed webpage layouts, wireframes, and interaction flows for web and mobile apps across a range of client industries.' },
-          { Icon: Megaphone, heading: 'Marketing & Brand Assets', body: 'Delivered digital marketing assets — ads, event creatives, sales decks, and brand collateral — at pace and to brief.' },
+          { Icon: Megaphone, heading: 'Marketing & Brand Assets', body: 'Delivered digital marketing assets: ads, event creatives, sales decks, and brand collateral, at pace and to brief.' },
           { Icon: Shield, heading: 'Brand Consistency', body: 'Upheld brand consistency by working within predefined brand guidelines on every project.' },
           { Icon: PenTool, heading: 'Creative Collaboration', body: 'Collaborated closely with the Creative and Digital Marketing teams to ensure cohesive, on-brand output.' },
         ],
@@ -231,7 +232,7 @@ export default function ExperienceSection() {
         <div className="lg:hidden">
           {/* Horizontal logo selector + tab line */}
           <motion.div className="mb-8" {...fadeUp(0.1)}>
-            {/* Logos — overflow-x-auto on inner div so outer doesn't clip glow */}
+            {/* Logos. overflow-x-auto on inner div so outer doesn't clip glow */}
             <div style={{ overflowX: 'auto', overflowY: 'visible', scrollbarWidth: 'none', paddingLeft: 8 }}>
               <div className="flex w-fit" style={{ gap: 10 }}>
                 {COMPANIES.map((co, i) => (
@@ -282,6 +283,7 @@ export default function ExperienceSection() {
           </motion.div>
 
           {/* Mobile content */}
+          <div style={{ overflowX: 'hidden' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
@@ -334,9 +336,10 @@ export default function ExperienceSection() {
               ))}
             </motion.div>
           </AnimatePresence>
+          </div>
         </div>
 
-        {/* Mobile photo — below content */}
+        {/* Mobile photo. below content */}
         <motion.div
           className="lg:hidden mt-10 overflow-hidden"
           style={{ borderRadius: 16, height: 400, position: 'relative', marginTop: -20, clipPath: 'inset(15px 0 0 0 round 16px)' }}
@@ -472,7 +475,7 @@ export default function ExperienceSection() {
           {/* RIGHT: Role content */}
           <motion.div
             className="flex flex-1 min-w-0 items-start"
-            style={{ paddingLeft: 40, paddingRight: 252 }}
+            style={{ paddingLeft: 40, paddingRight: 302 }}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -542,7 +545,7 @@ export default function ExperienceSection() {
         </div>
       </div>
 
-      {/* Photo — desktop only, bleeds right edge */}
+      {/* Photo. desktop only, bleeds right edge */}
       <motion.div
         className="hidden lg:block"
         initial={{ opacity: 0, x: 80 }}
@@ -552,7 +555,7 @@ export default function ExperienceSection() {
         style={{
           position: 'absolute', right: 0, top: 190,
           width: PHOTO_W, height: 850,
-          borderRadius: '16px 0 0 16px', overflow: 'hidden',
+          borderRadius: '16px 0 0 16px', overflow: 'hidden', clipPath: 'inset(0 0 0 35px round 16px 0 0 16px)',
         }}
       >
         <img
