@@ -23,7 +23,7 @@ function getDuration(period: string): string {
 }
 
 const ACCENT = '#F1FF58'
-const BG = '#0d0c01'
+const BG = '#100e01'
 const WHITE = '#ffffff'
 const MUTED = 'rgba(255,255,255,0.65)'
 
