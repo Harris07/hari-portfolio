@@ -108,7 +108,7 @@ export default function HeroSection() {
           </Link>
           <a
             href="/resume.pdf"
-            download
+            download="Hari Prasad L Product Designer Resume"
             className="hidden md:flex items-center gap-2 text-sm lg:text-base font-semibold uppercase tracking-wider transition-all duration-200 hover:-translate-y-0.5"
             style={{
               color: '#F1FF58',
@@ -192,7 +192,7 @@ export default function HeroSection() {
             >
               <a
                 href="/resume.pdf"
-                download
+                download="Hari Prasad L Product Designer Resume"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-2 px-8 py-3 hover:scale-105 active:scale-95 transition-transform duration-200"
                 style={{
