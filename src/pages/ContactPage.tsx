@@ -59,7 +59,7 @@ function FadeUp({ children, delay = 0, className = '' }: {
 const SOCIALS = [
   { label: 'Email',    sub: 'hari1895@gmail.com',                                  href: 'mailto:hari1895@gmail.com',                                    icon: <MailIcon /> },
   { label: 'Phone',    sub: '+91 97918 27347',                                     href: 'tel:+919791827347',                                             icon: <PhoneIcon /> },
-  { label: 'LinkedIn', sub: 'linkedin.com/in/hari-prasad-l-308308156',             href: 'https://linkedin.com/in/hari-prasad-l-308308156',               icon: <LinkedInIcon /> },
+  { label: 'LinkedIn', sub: 'linkedin.com/in/hari-prasad-l',                        href: 'https://www.linkedin.com/in/hari-prasad-l-308308156/',          icon: <LinkedInIcon /> },
   { label: 'Behance',  sub: 'behance.net/chikoodesigns',                           href: 'https://www.behance.net/chikoodesigns',                         icon: <BehanceIcon /> },
 ]
 
