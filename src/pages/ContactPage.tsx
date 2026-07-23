@@ -130,6 +130,38 @@ export default function ContactPage() {
             transition={{ delay: 0.3, duration: 0.7 }}>
             Whether you have a project in mind, a role to fill, or just want to talk design — my inbox is always open.
           </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.42, duration: 0.7 }}
+            style={{ marginTop: 32 }}
+          >
+            <a
+              href="/resume.pdf"
+              download="Hari Prasad L Product Designer Resume"
+              className="inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform duration-200"
+              style={{
+                color: '#F1FF58',
+                textDecoration: 'none',
+                border: '2px solid #F1FF58',
+                borderRadius: 9999,
+                fontFamily: "'Kanit', sans-serif",
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                whiteSpace: 'nowrap',
+                fontSize: '0.75rem',
+                padding: '10px 24px',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(241,255,88,0.10)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v13M7 11l5 5 5-5"/>
+                <path d="M5 20h14"/>
+              </svg>
+              Resume
+            </a>
+          </motion.div>
         </div>
       </section>
 
