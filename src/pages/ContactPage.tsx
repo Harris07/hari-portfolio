@@ -138,7 +138,7 @@ export default function ContactPage() {
             <a
               href="/resume.pdf"
               download="Hari Prasad L Product Designer Resume"
-              className="inline-flex items-center gap-2 hover:scale-105 active:scale-95 transition-transform duration-200"
+              className="inline-flex items-center gap-2 px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 hover:scale-105 active:scale-95 transition-transform duration-200"
               style={{
                 color: '#F1FF58',
                 textDecoration: 'none',
@@ -149,8 +149,7 @@ export default function ContactPage() {
                 textTransform: 'uppercase',
                 letterSpacing: '0.1em',
                 whiteSpace: 'nowrap',
-                fontSize: '0.75rem',
-                padding: '10px 24px',
+                fontSize: 'clamp(0.75rem, 1.5vw, 1rem)',
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(241,255,88,0.10)' }}
               onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent' }}
