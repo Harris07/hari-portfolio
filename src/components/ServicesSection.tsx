@@ -70,7 +70,7 @@ export default function ServicesSection() {
           </p>
           <h2 className="font-semibold leading-tight"
             style={{ color: WHITE, fontSize: 'clamp(2.4rem, 5vw, 4rem)', fontFamily: "'Poppins', sans-serif" }}>
-            Services
+            Craft & Capabilities
           </h2>
         </FadeUp>
 
