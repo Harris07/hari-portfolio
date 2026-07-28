@@ -136,7 +136,7 @@ export default function ContactPage() {
             style={{ marginTop: 32 }}
           >
             <a
-              href="/resume.pdf"
+              href="/Hari%20Prasad%20L%20Product%20Designer%20Resume.pdf"
               download="Hari Prasad L Product Designer Resume"
               className="inline-flex items-center gap-2 px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 hover:scale-105 active:scale-95 transition-transform duration-200"
               style={{
