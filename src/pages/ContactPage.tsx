@@ -191,7 +191,7 @@ export default function ContactPage() {
                   {/* Label */}
                   <div>
                     <span className="block font-semibold text-base mb-1" style={{ color: WHITE }}>{s.label}</span>
-                    <span className="text-xs font-light" style={{ color: MUTED }}>{s.sub}</span>
+                    <span className="text-xs font-light break-all" style={{ color: MUTED }}>{s.sub}</span>
                   </div>
                 </motion.a>
               ))}
