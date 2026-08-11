@@ -74,12 +74,12 @@ const COMPANIES: Company[] = [
         bullets: [
           { Icon: TrendingUp, heading: 'Seller Growth & Engagement', body: 'Designed Listing Streaks end-to-end, driving a 14% weekly lister conversion uplift. Also led casual seller initiatives and the Push Prompt Post-Listing Creation flow to reduce first-time seller order cancellations.' },
           { Icon: TrendingUp, heading: 'Case Tracker: Ops Impact', body: 'Designed Case Tracker, cutting duplicate case rate by 52% (13.0% → 6.2%) and absolute duplicates by 58% (~6,400 fewer/week). Web case volume dropped 23%, validating deflection at the form.' },
+          { Icon: Bot, heading: 'AI-Powered Design Tooling', body: 'Built a Figma plugin powered by Claude AI that automatically converts iOS mocks to Android, swapping platform-specific components in seconds. Eliminated hours of manual redrawing for the entire team and made cross-platform parity a one-click workflow.' },
           { Icon: Users, heading: 'Cross-functional & Global Collaboration', body: 'Partnered closely with product managers and engineers across India, the US, and Korea, aligning on product direction, shipping velocity, and design quality across time zones.' },
           { Icon: Layers, heading: 'Product Ownership at Scale', body: 'Took full ownership of the Ops Pod and drove design across Consignment, App Redesign, Closet Page Redesign, Reposh, Bulk System Actions, and New KYC flow (Project Socure), delivering multiple concurrent 0→1 and large-scale initiatives with strong stakeholder alignment.' },
           { Icon: Zap, heading: 'Motion & Delight at Scale', body: 'Crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers across the Poshmark app.' },
           { Icon: Package, heading: 'Cross-market Expansion', body: 'Collaborated closely with stakeholders to deliver Canada Purolator and Overweight Shipping Labels, extending Poshmark\'s logistics experience to new markets.' },
           { Icon: BookOpen, heading: 'Design Quality & Standards', body: 'Established a high bar for craft from day one, adapting to the design system within weeks, contributing to guidelines, and setting a benchmark for visual quality and attention to detail across the team.' },
-          { Icon: Bot, heading: 'AI-Powered Design Tooling', body: 'Built a Figma plugin powered by Claude AI that automatically converts iOS mocks to Android, swapping platform-specific components in seconds. Eliminated hours of manual redrawing for the entire team and made cross-platform parity a one-click workflow.' },
         ],
       },
     ],
