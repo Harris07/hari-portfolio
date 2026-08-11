@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useLayoutEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Layers, BookOpen, Package, Target, Users, Sparkles, UserPlus, Trophy, TrendingUp, Layout, Megaphone, Shield, PenTool, Zap, Cpu } from 'lucide-react'
+import { Layers, BookOpen, Package, Target, Users, Sparkles, UserPlus, Trophy, TrendingUp, Layout, Megaphone, Shield, PenTool, Zap, Bot } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -79,7 +79,7 @@ const COMPANIES: Company[] = [
           { Icon: Zap, heading: 'Motion & Delight at Scale', body: 'Crafted Pull-to-Refresh, confetti sale celebrations, micro-interactions, and onboarding animations that bring emotional delight to millions of sellers across the Poshmark app.' },
           { Icon: Package, heading: 'Cross-market Expansion', body: 'Collaborated closely with stakeholders to deliver Canada Purolator and Overweight Shipping Labels, extending Poshmark\'s logistics experience to new markets.' },
           { Icon: BookOpen, heading: 'Design Quality & Standards', body: 'Established a high bar for craft from day one, adapting to the design system within weeks, contributing to guidelines, and setting a benchmark for visual quality and attention to detail across the team.' },
-          { Icon: Cpu, heading: 'AI-Powered Design Tooling', body: 'Built a Figma plugin powered by Claude AI that automatically converts iOS mocks to Android, swapping platform-specific components in seconds. Eliminated hours of manual redrawing for the entire team and made cross-platform parity a one-click workflow.' },
+          { Icon: Bot, heading: 'AI-Powered Design Tooling', body: 'Built a Figma plugin powered by Claude AI that automatically converts iOS mocks to Android, swapping platform-specific components in seconds. Eliminated hours of manual redrawing for the entire team and made cross-platform parity a one-click workflow.' },
         ],
       },
     ],
