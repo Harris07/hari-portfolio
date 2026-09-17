@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowLeft, TrendingUp, ShieldCheck, BarChart2, Handshake } from 'lucide-react'
+import { ArrowLeft, TrendingUp, ShieldCheck, BarChart2, Handshake, XCircle } from 'lucide-react'
 import NextProjectSection from '../components/NextProjectSection'
 import { PROJECTS } from '../data/projects'
 
@@ -392,14 +392,14 @@ export default function ListingStreaksDetailPage() {
               <Heading>Closing the behavioral gap between listing and retention.</Heading>
             </FadeUp>
             <FadeUp delay={0.1} className="md:pt-12">
-              <Body>Internal cohort data established a clear behavioral pattern: sellers who list at least once per week for four consecutive weeks transition from casual to habitual — and habitual listers are disproportionately more likely to remain active at 90 and 180 days. Yet pre-launch data showed weekly streakster counts declining at −4.5% YoY, signaling that no existing surface was closing the gap between first listing and sustained repetition. Listing Streaks was the designed intervention: make the behavioral target visible, reward its achievement, and architect a recovery path so that one missed week does not become permanent abandonment.</Body>
+              <Body>Internal cohort data established a clear behavioral pattern: sellers who list at least once per week for four consecutive weeks transition from casual to habitual — and habitual listers are disproportionately more likely to remain active at 90 and 180 days. Yet pre-launch data showed weekly streakster counts declining at −4.5% YoY, signaling that no existing surface was closing the gap between first listing and sustained repetition. That gap — between a seller's first listing and a durable weekly habit — is the problem Listing Streaks set out to close.</Body>
             </FadeUp>
           </div>
           <FadeUp delay={0.15} className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
-              { v: '14%', d: 'of active sellers converted to weekly listers at baseline' },
-              { v: '2×', d: 'Target increase in weekly lister conversion' },
-              { v: '10%', d: 'Target growth in Habitual Listers' },
+              { v: '14%', d: 'of active sellers were weekly listers at baseline' },
+              { v: '4.5%', d: 'YoY streakster decline Listing Streaks was built to reverse' },
+              { v: '4 wks', d: 'consecutive listings that turn a casual seller habitual' },
             ].map(({ v, d }) => (
               <div key={v} className="p-7 rounded-2xl" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${BORDER}` }}>
                 <span className="font-semibold block mb-2" style={{ color: A, fontSize: 'clamp(2.4rem,4vw,3.2rem)', lineHeight: 1 }}>{v}</span>
@@ -431,15 +431,95 @@ export default function ListingStreaksDetailPage() {
         </div>
       </section>
 
-      {/* ── COMPETITOR RESEARCH ── */}
+      {/* ── COMPETITIVE RESEARCH (DIRECT COMPETITORS) ── */}
       <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
         <div className="max-w-5xl mx-auto">
           <FadeUp className="mb-4">
-            <SectionLabel>Competitor Research</SectionLabel>
+            <SectionLabel>Competitive Research</SectionLabel>
+            <Heading>The direct rivals — and the retention gap they leave open.</Heading>
+          </FadeUp>
+          <FadeUp delay={0.08} className="mb-14">
+            <Body className="max-w-2xl mt-4">
+              Poshmark's real competitors — Mercari, The RealReal, and Whatnot — compete on price, inventory, and reach. But none has built a mechanic that turns consistent listing into a rewarding habit. Their retention is transactional, volume-gated, or coerced — leaving the highest-leverage seller-retention play wide open.
+            </Body>
+          </FadeUp>
+
+          <FadeUp delay={0.12}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+              {[
+                {
+                  app: 'Mercari',
+                  tag: 'C2C Marketplace',
+                  friction: 'Whiplash fee changes — a surprise $2 payout fee in 2025 drew FTC complaints and a public walk-back. US GMV has been negative three years running.',
+                  approach: 'One-off sign-up credits, while older listings lose search visibility — inactivity is penalized, consistency is never rewarded.',
+                  gap: 'No streak or habit mechanic in the seller journey.',
+                },
+                {
+                  app: 'The RealReal',
+                  tag: 'Luxury Consignment',
+                  friction: 'Sellers net as little as 20% after commissions, and a 2025 overhaul cut payouts further. Seller sentiment sits near 1.8★.',
+                  approach: 'A loyalty bonus tied to sales volume — it rewards how much you sell, never how consistently you show up.',
+                  gap: 'No streak or habit mechanic in the seller journey.',
+                },
+                {
+                  app: 'Whatnot',
+                  tag: 'Live Commerce',
+                  friction: 'Sellers average ~23 hrs/week; daily streamers earn 100–250× monthly ones. Burnout is widespread and static listings rank second-class.',
+                  approach: 'Its Rewards Club is buyer-facing. Seller consistency is coerced by the algorithm, not designed to be sustainable.',
+                  gap: 'No streak or habit mechanic in the seller journey.',
+                },
+              ].map(({ app, tag, friction, approach, gap }) => (
+                <div key={app} className="rounded-2xl p-6 flex flex-col gap-4"
+                  style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
+                  <div className="flex items-center gap-3">
+                    {/* Logo placeholder — replace with brand SVG later */}
+                    <div style={{ width: 40, height: 40, borderRadius: 10, border: '1px dashed rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span className="font-semibold text-sm" style={{ color: MUTED }}>{app[0]}</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm" style={{ color: WHITE }}>{app}</p>
+                      <p className="text-xs uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.28)' }}>{tag}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Core seller friction</p>
+                      <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{friction}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest mb-1" style={{ color: A }}>Retention approach</p>
+                      <p className="text-xs font-light leading-relaxed" style={{ color: MUTED }}>{approach}</p>
+                    </div>
+                  </div>
+                  <div className="mt-auto pt-3 flex items-start gap-2" style={{ borderTop: `1px solid ${BORDER}` }}>
+                    <XCircle size={15} color={A} strokeWidth={2} style={{ flexShrink: 0, marginTop: 1 }} />
+                    <p className="text-xs font-medium leading-relaxed" style={{ color: WHITE }}>{gap}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeUp>
+
+          <FadeUp delay={0.2}>
+            <div className="p-7 rounded-2xl" style={{ background: 'rgba(201,23,126,0.06)', border: '1px solid rgba(201,23,126,0.18)' }}>
+              <p className="text-sm leading-relaxed" style={{ color: WHITE }}>
+                <span style={{ color: A, fontWeight: 600 }}>The through-line: </span>
+                Mercari's retention is transactional, The RealReal's is volume-gated, Whatnot's is coerced. No direct competitor turns consistent listing into a habit sellers actually want to keep — the exact gap Listing Streaks fills, at the lowest possible effort bar of one listing a week.
+              </p>
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ── STREAK-MECHANIC RESEARCH ── */}
+      <section className="py-28 px-6 md:px-10" style={{ background: BG }}>
+        <div className="max-w-5xl mx-auto">
+          <FadeUp className="mb-4">
+            <SectionLabel>Streak-Mechanic Research</SectionLabel>
             <Heading>How the best streak mechanics work.</Heading>
           </FadeUp>
           <FadeUp delay={0.08} className="mb-14">
-            <Body className="max-w-2xl mt-4">Before designing Poshmark's streak system, I studied five products that have made streaks a core retention driver — each solving the same problem differently: making users feel a cost to stopping.</Body>
+            <Body className="max-w-2xl mt-4">These aren't Poshmark's market competitors — they're the products that have made streaks a core retention driver. I studied five of them to understand how the mechanic works, each solving the same problem differently: making users feel a cost to stopping.</Body>
           </FadeUp>
 
           <FadeUp delay={0.12}>
@@ -538,7 +618,7 @@ export default function ListingStreaksDetailPage() {
           </FadeUp>
           <FadeUp delay={0.08} className="mb-14">
             <Body className="max-w-2xl mt-4">
-              Across every competitor studied, the same friction points surfaced. The opportunity wasn't to copy a streak mechanic — it was to solve the problems they all left unsolved.
+              Both research tracks pointed to the same conclusion. Poshmark's direct competitors leave consistency unrewarded; the products that mastered streaks reward the wrong thing. Each gap below is an opening Listing Streaks was designed to close.
             </Body>
           </FadeUp>
 
@@ -549,28 +629,33 @@ export default function ListingStreaksDetailPage() {
               {[
                 {
                   number: '01',
-                  title: 'Streaks are disconnected from real value',
-                  body: 'Duolingo, Snapchat, and LinkedIn all reward the act of opening the app — not the outcome the user cares about. Sellers don\'t want to "be active," they want to earn. No competitor ties streak maintenance directly to income growth.',
+                  title: 'Consistency itself goes unrewarded',
+                  body: "Mercari leans on one-off sign-up credits, The RealReal rewards raw sales volume, and Whatnot's perks are buyer-facing. Across every direct competitor, the reward is tied to how much you sell — never to showing up consistently. The most durable seller behavior is the one no rival incentivizes.",
                 },
                 {
                   number: '02',
-                  title: 'Social pressure is generic or absent',
-                  body: "Snapchat's bilateral system works because both parties feel the cost. But no commerce platform has translated that mutual accountability into a seller-to-buyer or seller-to-seller context — leaving a massive social retention lever untapped.",
+                  title: 'Retention is transactional, not intrinsic',
+                  body: "Rivals pull extrinsic levers — fees, credits, commission tiers — that often breed resentment (Mercari's fee revolt, The RealReal's shrinking payouts). None gives sellers an intrinsic reason to return. Streak products prove the opposite works: Duolingo and Snapchat retain millions on the pure satisfaction of not breaking a number.",
+                },
+                {
+                  number: '03',
+                  title: 'Consistency is punished or coerced, never made easy',
+                  body: "Mercari quietly buries the listings of inactive sellers; Whatnot's algorithm rewards daily streaming to the point of burnout (~23 hrs/week). No competitor lowers the effort bar to make steady selling feel forgiving and sustainable — the exact gap a one-listing-a-week cadence closes.",
                 },
                 {
                   number: '04',
-                  title: 'No progressive difficulty or mastery arc',
-                  body: 'Every streak studied is flat — day 1 and day 100 feel identical. There is no system that makes a seller feel they are becoming better at the craft, only one that makes them feel they are surviving a countdown.',
+                  title: 'Streaks reward activity, not earnings',
+                  body: 'Even the best streak mechanics — Duolingo, Snapchat, LinkedIn — reward the act of opening the app, not the outcome the user cares about. Sellers don\'t want to "be active," they want to earn. No product, in commerce or out, ties a streak directly to income growth.',
                 },
                 {
                   number: '05',
-                  title: 'Freeze mechanics feel punitive, not supportive',
-                  body: 'Streak freezes exist as a paid escape hatch (Duolingo) or a one-time lifeline (Snapchat). None frame the break as a natural part of seller life — vacations, illness, busy weeks — making the product feel adversarial.',
+                  title: 'Social accountability is untapped in commerce',
+                  body: "Snapchat's bilateral streak works because both sides feel the cost. No commerce platform has translated that mutual accountability into a seller-to-buyer trust signal — leaving a seller's reliability invisible and a proven retention lever completely unused.",
                 },
                 {
                   number: '06',
-                  title: 'Discovery of the streak is passive',
-                  body: 'Users learn about the streak only after they\'ve already started one. No competitor designs the first-time streak moment as a deliberate onboarding hook — the mechanic is discovered, not introduced.',
+                  title: 'No progression or mastery arc',
+                  body: "Every streak studied is flat — day 1 and week 50 feel identical — and no marketplace makes a seller feel they are mastering the craft. Consistency should compound into status and tangible perks, not just reset a countdown.",
                 },
               ].map(({ number, title, body }) => (
                 <div key={number} className="p-6 rounded-2xl flex flex-col gap-3"
@@ -589,19 +674,19 @@ export default function ListingStreaksDetailPage() {
                 {
                   Icon: TrendingUp,
                   title: 'Tie streaks to earnings, not activity',
-                  body: 'Design the streak around listings that sell — not just any listing. When sellers see a direct line between streak consistency and income, the mechanic becomes self-reinforcing. The motivation is intrinsic.',
+                  body: 'V1 keeps the bar deliberately low — one listing a week — to remove friction and build the habit first. The next evolution ties that established consistency to listings that sell, so the streak compounds into income rather than vanity activity. When sellers see a direct line between showing up and earning, the loop becomes self-reinforcing and intrinsically motivated.',
                   tag: 'Core differentiator',
                 },
                 {
                   Icon: ShieldCheck,
-                  title: 'Introduce a grace period as a feature, not a workaround',
-                  body: "Frame a 24-hour grace window as a built-in seller courtesy — a recognition that life happens. This removes anxiety without removing stakes, and models Poshmark as a product that's on the seller's side.",
+                  title: 'Make the forgiving cadence a feature, not a workaround',
+                  body: "The bar is intentionally low — a single listing keeps the week alive, giving sellers up to a 6-day cushion to fit it around real life. Framed as a deliberate courtesy rather than a loophole, this removes anxiety without removing stakes, and positions Poshmark as a product that's on the seller's side.",
                   tag: 'Retention lever',
                 },
                 {
                   Icon: BarChart2,
                   title: 'Build a mastery arc into the streak progression',
-                  body: 'Design milestones at 7, 30, 90, and 365 days with unlockable benefits — early access, promoted listings, seller badges. Sellers should feel they are leveling up, not just surviving.',
+                  body: "Reward every unbroken 4-week cycle — one listing a week, four weeks in a row. Each completed streak unlocks tangible perks: free shipping, an exclusive app icon, and seller badges. Sellers should feel they are leveling up and earning status, not just surviving.",
                   tag: 'Engagement depth',
                 },
                 {
@@ -858,8 +943,8 @@ export default function ListingStreaksDetailPage() {
               <SectionLabel>Graceful Recovery</SectionLabel>
               <Heading size="md">Designing for the exit, not just the entry.</Heading>
               <div className="mt-6 flex flex-col gap-4">
-                <Body>Loss aversion research consistently shows that the threat of losing a held asset is a stronger motivator than the prospect of gaining an equivalent one. A broken streak, if handled poorly, converts that psychological principle against the product — the seller feels punished and disengages permanently. The design intervention was to reframe the broken state not as an ending but as an access interruption: "List now to regain access to your rewards." The CTA language was chosen precisely for the word "regain" — it asserts that the reward relationship is intact, merely paused.</Body>
-                <Body>The bottom sheet surfaces only on the first post-lapse visit, preventing repeated negative exposure. Once dismissed, the streak page resets to the familiar W1 state — identical visual hierarchy to the initial onboarding view. There is no permanent penalty badge, no "streak ended" tombstone. The reset communicates: the system is ready when you are.</Body>
+                <Body>Loss aversion makes a mishandled break dangerous — the seller feels punished and disengages for good. So the broken state is reframed as an access interruption, not an ending: the CTA reads "List now to regain access to your rewards," asserting the reward relationship is only paused. The sheet appears just once per lapse, then the page resets cleanly to the familiar week-1 view — no penalty badge, no "streak ended" tombstone. The message: the system is ready when you are.</Body>
+                <Body>That covers the unplanned break; a planned absence gets its own escape hatch. Vacation Hold lets sellers pause the streak before stepping away — the clock stops and nothing breaks — then resume listing once a week, right where they left off. Time away becomes a supported part of seller life, not a threat to hard-earned progress.</Body>
               </div>
             </FadeUp>
             <div className="flex justify-center gap-4 md:gap-6">
