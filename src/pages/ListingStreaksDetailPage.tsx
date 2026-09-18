@@ -524,7 +524,7 @@ export default function ListingStreaksDetailPage() {
             <Heading>How the best streak mechanics work.</Heading>
           </FadeUp>
           <FadeUp delay={0.08} className="mb-14">
-            <Body className="max-w-2xl mt-4">These aren't Poshmark's market competitors — they're the products that have made streaks a core retention driver. I studied five of them to understand how the mechanic works, each solving the same problem differently: making users feel a cost to stopping.</Body>
+            <Body className="max-w-2xl mt-4">These aren't Poshmark's market competitors — they're the products that have made streaks a core retention driver. I studied four of them to understand how the mechanic works, each solving the same problem differently: making users feel a cost to stopping.</Body>
           </FadeUp>
 
           <FadeUp delay={0.12}>
@@ -556,15 +556,6 @@ export default function ListingStreaksDetailPage() {
                   hook: 'Compounding reward — each streak day adds +1% gold value to that task. Missing a day damages your avatar HP and harms your party members.',
                   mechanic: 'No freeze. RPG damage is the penalty — social accountability at group scale.',
                   logo: '/images/logo-habitica.svg',
-                },
-                {
-                  app: 'BeReal',
-                  tag: 'Social',
-                  image: '/images/competitor-bereal.jpg',
-                  tracks: 'Daily dual-camera post within a random 2-minute window',
-                  hook: '5-day minimum before the flame icon appears — front-loads commitment so only proven users see the mechanic. Late posts within the same day still count.',
-                  mechanic: 'No restore or freeze. Zero-tolerance reset, but late posts add a flexibility buffer.',
-                  logo: '/images/logo-bereal.svg',
                 },
                 {
                   app: 'LinkedIn Games',
