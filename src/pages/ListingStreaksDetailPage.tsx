@@ -450,6 +450,7 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'Mercari',
                   tag: 'C2C Marketplace',
+                  logo: '/images/mercari.jpeg',
                   friction: 'Whiplash fee changes — a surprise $2 payout fee in 2025 drew FTC complaints and a public walk-back. US GMV has been negative three years running.',
                   approach: 'One-off sign-up credits, while older listings lose search visibility — inactivity is penalized, consistency is never rewarded.',
                   gap: 'No streak or habit mechanic in the seller journey.',
@@ -457,6 +458,7 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'The RealReal',
                   tag: 'Luxury Consignment',
+                  logo: '/images/therealreal.jpeg',
                   friction: 'Sellers net as little as 20% after commissions, and a 2025 overhaul cut payouts further. Seller sentiment sits near 1.8★.',
                   approach: 'A loyalty bonus tied to sales volume — it rewards how much you sell, never how consistently you show up.',
                   gap: 'No streak or habit mechanic in the seller journey.',
@@ -464,17 +466,17 @@ export default function ListingStreaksDetailPage() {
                 {
                   app: 'Whatnot',
                   tag: 'Live Commerce',
+                  logo: '/images/whatnot.svg',
                   friction: 'Sellers average ~23 hrs/week; daily streamers earn 100–250× monthly ones. Burnout is widespread and static listings rank second-class.',
                   approach: 'Its Rewards Club is buyer-facing. Seller consistency is coerced by the algorithm, not designed to be sustainable.',
                   gap: 'No streak or habit mechanic in the seller journey.',
                 },
-              ].map(({ app, tag, friction, approach, gap }) => (
+              ].map(({ app, tag, friction, approach, gap, logo }) => (
                 <div key={app} className="rounded-2xl p-6 flex flex-col gap-4"
                   style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                   <div className="flex items-center gap-3">
-                    {/* Logo placeholder — replace with brand SVG later */}
-                    <div style={{ width: 40, height: 40, borderRadius: 10, border: '1px dashed rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span className="font-semibold text-sm" style={{ color: MUTED }}>{app[0]}</span>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: '#fff' }}>
+                      <img src={logo} alt={`${app} logo`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <div>
                       <p className="font-semibold text-sm" style={{ color: WHITE }}>{app}</p>
