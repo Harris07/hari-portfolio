@@ -451,6 +451,7 @@ export default function ListingStreaksDetailPage() {
                   app: 'Mercari',
                   tag: 'C2C Marketplace',
                   logo: '/images/mercari.jpeg',
+                  logoBg: '#fff',
                   friction: 'Whiplash fee changes — a surprise $2 payout fee in 2025 drew FTC complaints and a public walk-back. US GMV has been negative three years running.',
                   approach: 'One-off sign-up credits, while older listings lose search visibility — inactivity is penalized, consistency is never rewarded.',
                   gap: 'No streak or habit mechanic in the seller journey.',
@@ -459,6 +460,7 @@ export default function ListingStreaksDetailPage() {
                   app: 'The RealReal',
                   tag: 'Luxury Consignment',
                   logo: '/images/therealreal.jpeg',
+                  logoBg: '#fff',
                   friction: 'Sellers net as little as 20% after commissions, and a 2025 overhaul cut payouts further. Seller sentiment sits near 1.8★.',
                   approach: 'A loyalty bonus tied to sales volume — it rewards how much you sell, never how consistently you show up.',
                   gap: 'No streak or habit mechanic in the seller journey.',
@@ -467,15 +469,16 @@ export default function ListingStreaksDetailPage() {
                   app: 'Whatnot',
                   tag: 'Live Commerce',
                   logo: '/images/whatnot.svg',
+                  logoBg: 'transparent',
                   friction: 'Sellers average ~23 hrs/week; daily streamers earn 100–250× monthly ones. Burnout is widespread and static listings rank second-class.',
                   approach: 'Its Rewards Club is buyer-facing. Seller consistency is coerced by the algorithm, not designed to be sustainable.',
                   gap: 'No streak or habit mechanic in the seller journey.',
                 },
-              ].map(({ app, tag, friction, approach, gap, logo }) => (
+              ].map(({ app, tag, friction, approach, gap, logo, logoBg }) => (
                 <div key={app} className="rounded-2xl p-6 flex flex-col gap-4"
                   style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${BORDER}` }}>
                   <div className="flex items-center gap-3">
-                    <div style={{ width: 40, height: 40, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: '#fff' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, overflow: 'hidden', flexShrink: 0, background: logoBg }}>
                       <img src={logo} alt={`${app} logo`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <div>
